@@ -6,3 +6,18 @@ prefix: Slurp
 authors: [ KrijnInc ]
 description: This plugin will make you and your friends slurp some drinks.
 website: slurp.krijninc.dev
+commands:
+  giveshot:
+    description: Give shots to an other player
+    usage: <playername> <amound>
+  givesip:
+    description: Give sips to an other player
+    usage: <playername> <amound>
+  stats:
+    description: Show your current drinking stats
+  takeshot:
+    description: Register a taken shot to the server
+    usage: <amound>
+  takesip:
+    description: Register a taken sip to the server
+    usage: <amound>

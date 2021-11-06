@@ -6,17 +6,25 @@ import dev.krijninc.slurp.Slurp;
 
 import java.io.*;
 import java.net.http.HttpResponse;
+import java.util.Random;
 import java.util.UUID;
 
 public class DrunkServer {
     private UUID uuid;
     private String apiToken;
+    private long seed = 80085;
+    private double modifier = 1;
 
     public static DrunkServer registerServer() throws IOException, InterruptedException {
         Gson gson = new Gson();
         HttpResponse<String> response = DashboardServerConnector.postNoAuth("/server");
-        System.out.println(response.statusCode());
-        return gson.fromJson(response.body(), DrunkServer.class);
+        DrunkServer server = gson.fromJson(response.body(), DrunkServer.class);
+
+        // Generate new seed, we are a new Server after all.
+        Random random = new Random();
+        server.setSeed(random.nextLong());
+
+        return server;
     }
 
     public void save() throws IOException {
@@ -44,4 +52,12 @@ public class DrunkServer {
         return this.uuid;
     }
     public String getApiToken() { return this.apiToken; }
+
+    public Long getSeed() { return this.seed; }
+    public void setSeed(long seed) {
+        this.seed = seed;
+    }
+
+    public double getModifier() { return modifier; }
+    public void setModifier(double modifier) { this.modifier = modifier; }
 }

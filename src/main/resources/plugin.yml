@@ -21,3 +21,6 @@ commands:
   takesip:
     description: Register a taken sip to the server
     usage: <amound>
+  drinkingmode:
+    description: Get or set the drinking difficulty
+    usage: (optional) <mode>

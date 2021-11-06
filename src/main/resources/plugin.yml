@@ -1,0 +1,8 @@
+name: Slurp
+version: '${project.version}'
+main: dev.krijninc.slurp.Slurp
+api-version: 1.17
+prefix: Slurp
+authors: [ KrijnInc ]
+description: This plugin will make you and your friends slurp some drinks.
+website: slurp.krijninc.dev

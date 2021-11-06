@@ -1,7 +1,5 @@
 package dev.krijninc.slurp;
 
-import dev.krijninc.slurp.entities.DrunkServer;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -9,7 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class DashboardServerConnector {
-    private static final String endpoint = ConfigLoader.getString("self-hosted-dashboard-url") != null ? ConfigLoader.getString("self-hosted-dashboard-url") : "https://slurp.deno.dev/v1";
+    private static final String endpoint = ConfigLoader.getString("self-hosted-dashboard-url").equals("") ? "https://slurp.deno.dev/v1" : ConfigLoader.getString("self-hosted-dashboard-url");
 
     public static HttpResponse<String> postNoAuth(String path) throws IOException, InterruptedException {
         String postEndpoint = endpoint + path;
@@ -21,7 +19,9 @@ public class DashboardServerConnector {
                 .build();
 
         var client = HttpClient.newHttpClient();
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Slurp.getFancyLogger().info("Requests responed with status code " + response.statusCode());
+        return response;
     }
 
     public static HttpResponse<String> post(String path) throws IOException, InterruptedException {
@@ -35,7 +35,9 @@ public class DashboardServerConnector {
                 .build();
 
         var client = HttpClient.newHttpClient();
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Slurp.getFancyLogger().info("Requests responed with status code " + response.statusCode());
+        return response;
     }
 
     public static HttpResponse<String> post(String path, String body) throws IOException, InterruptedException {
@@ -49,6 +51,8 @@ public class DashboardServerConnector {
                 .build();
 
         var client = HttpClient.newHttpClient();
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Slurp.getFancyLogger().info("Requests responded with status code " + response.statusCode());
+        return response;
     }
 }

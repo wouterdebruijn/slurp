@@ -9,18 +9,18 @@ website: slurp.krijninc.dev
 commands:
   giveshot:
     description: Give shots to an other player
-    usage: <playername> <amound>
+    usage: /giveshot <playername> <amound>
   givesip:
     description: Give sips to an other player
-    usage: <playername> <amound>
+    usage: /givesip <playername> <amound>
   stats:
     description: Show your current drinking stats
   takeshot:
     description: Register a taken shot to the server
-    usage: <amound>
+    usage: /takeshot <amound>
   takesip:
     description: Register a taken sip to the server
-    usage: <amound>
+    usage: /takesip <amound>
   drinkingmode:
     description: Get or set the drinking difficulty
-    usage: (optional) <mode>
+    usage: /drinkingmode <mode?>

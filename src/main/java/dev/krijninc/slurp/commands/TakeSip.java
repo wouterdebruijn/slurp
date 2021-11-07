@@ -1,21 +1,39 @@
 package dev.krijninc.slurp.commands;
 
+import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
+import dev.krijninc.slurp.entities.DrunkPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TakeSip implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player player = (Player) sender;
-        DrunkEntry entry = new DrunkEntry(player.getUniqueId(), -1, 0);
+        if (!(sender instanceof Player player)) {
+            return false;
+        }
+
         try {
-            entry.save();
-        } catch (Exception e) {
+            int sipCount;
+            if (args[0] == null || Integer.parseInt(args[0]) < 1) {
+                sipCount = -1;
+            } else {
+                sipCount = Integer.parseInt(args[0]);
+            }
+
+            DrunkEntry entry = new DrunkEntry(player.getUniqueId(), sipCount, 0);
+                DrunkEntry savedEntry = entry.save();
+                player.sendMessage(ChatColor.GREEN + String.format("You have taken %d %s!", savedEntry.getSips(), savedEntry.getSips() > 1 ? "sips" : "sip"));
+        } catch (NumberFormatException e) {
+            player.sendMessage(ChatColor.RED + "Provided arguments must be a number!");
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return false;
@@ -23,6 +41,19 @@ public class TakeSip implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (!(sender instanceof Player player)) {
+            return null;
+        }
+
+        if (args.length == 1) {
+            ArrayList<String> options = new ArrayList<>();
+
+            DrunkPlayer drunkPlayer = Slurp.getDrunkPlayer(((Player) sender).getUniqueId());
+            for (int i=1; i <= drunkPlayer.remaining.sips; i++) {
+                options.add(""+i);
+            }
+            return options;
+        }
         return null;
     }
 }

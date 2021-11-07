@@ -22,15 +22,16 @@ public class TakeSip implements TabExecutor {
 
         try {
             int sipCount;
-            if (args[0] == null || Integer.parseInt(args[0]) < 1) {
+            if (args.length == 0 || Integer.parseInt(args[0]) < 1) {
                 sipCount = -1;
             } else {
-                sipCount = Integer.parseInt(args[0]);
+                sipCount = Integer.parseInt(args[0]) * -1;
             }
 
             DrunkEntry entry = new DrunkEntry(player.getUniqueId(), sipCount, 0);
-                DrunkEntry savedEntry = entry.save();
-                player.sendMessage(ChatColor.GREEN + String.format("You have taken %d %s!", savedEntry.getSips(), savedEntry.getSips() > 1 ? "sips" : "sip"));
+            DrunkEntry savedEntry = entry.save();
+            player.sendMessage(ChatColor.GREEN + String.format("You have taken %d %s!", savedEntry.getSips() * -1, savedEntry.getSips() * -1 > 1 ? "sips" : "sip"));
+            return true;
         } catch (NumberFormatException e) {
             player.sendMessage(ChatColor.RED + "Provided arguments must be a number!");
         } catch (IOException | InterruptedException e) {

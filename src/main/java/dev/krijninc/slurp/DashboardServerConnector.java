@@ -30,6 +30,7 @@ public class DashboardServerConnector {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + Slurp.getDrunkServer().getToken())
                 .build();
 
         var client = HttpClient.newHttpClient();

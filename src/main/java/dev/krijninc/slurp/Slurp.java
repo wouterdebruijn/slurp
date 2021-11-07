@@ -1,13 +1,18 @@
 package dev.krijninc.slurp;
 
+import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.entities.DrunkServer;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 public final class Slurp extends JavaPlugin {
 
     private static JavaPlugin plugin;
     private static DrunkServer server;
     private static FancyLogger fancyLogger;
+    private static final HashMap<UUID, DrunkPlayer> drunkPlayers = new HashMap<>();
 
     public static JavaPlugin getPlugin() {
         return plugin;
@@ -16,6 +21,12 @@ public final class Slurp extends JavaPlugin {
         return fancyLogger;
     }
     public static DrunkServer getDrunkServer() { return server; }
+    public static DrunkPlayer getDrunkPlayer(UUID uuid) {
+        return drunkPlayers.get(uuid);
+    }
+    public static void setDrunkPlayer(DrunkPlayer player) {
+        drunkPlayers.put(player.getUuid(), player);
+    }
 
     @Override
     public void onEnable() {

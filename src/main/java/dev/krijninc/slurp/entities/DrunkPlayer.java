@@ -7,17 +7,20 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class DrunkPlayer {
-    private UUID uuid;
-    private UUID playerUUID;
+    private final UUID uuid;
 
-    public Consumables remaining;
-    public Consumables taken;
-    public Consumables giveable;
+    public Consumables remaining = new Consumables();
+    public Consumables taken = new Consumables();
 
-    public boolean isDrinkingBuddy;
+    public boolean isDrinkingBuddy = false;
     public boolean isDrinking = true;
 
     public Player getBukkitPlayer() {
-        return Slurp.getPlugin().getServer().getPlayer(this.playerUUID);
+        return Slurp.getPlugin().getServer().getPlayer(this.uuid);
+    }
+    public UUID getUuid() { return this.uuid; }
+
+    public DrunkPlayer(UUID uuid) {
+        this.uuid = uuid;
     }
 }

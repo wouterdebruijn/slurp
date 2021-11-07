@@ -24,13 +24,27 @@ public class DashboardServerConnector {
         return response;
     }
 
+    public static HttpResponse<String> get(String path) throws IOException, InterruptedException {
+        String postEndpoint = endpoint + path;
+
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(postEndpoint))
+                .header("Content-Type", "application/json")
+                .build();
+
+        var client = HttpClient.newHttpClient();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Slurp.getFancyLogger().info("Requests responed with status code " + response.statusCode());
+        return response;
+    }
+
     public static HttpResponse<String> post(String path) throws IOException, InterruptedException {
         String postEndpoint = endpoint + path;
 
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + Slurp.getDrunkServer().getApiToken())
+                .header("Authorization", "Bearer " + Slurp.getDrunkServer().getToken())
                 .POST(HttpRequest.BodyPublishers.ofString("{}"))
                 .build();
 
@@ -46,7 +60,7 @@ public class DashboardServerConnector {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + Slurp.getDrunkServer().getApiToken())
+                .header("Authorization", "Bearer " + Slurp.getDrunkServer().getToken())
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class DrunkServer {
     private UUID uuid;
-    private String apiToken;
+    private String token;
     private long seed = 80085;
     private double modifier = 1;
 
@@ -51,7 +51,7 @@ public class DrunkServer {
     public UUID getUuid() {
         return this.uuid;
     }
-    public String getApiToken() { return this.apiToken; }
+    public String getToken() { return this.token; }
 
     public Long getSeed() { return this.seed; }
     public void setSeed(long seed) {

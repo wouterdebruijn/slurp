@@ -1,9 +1,12 @@
 package dev.krijninc.slurp;
 
+import com.google.gson.Gson;
 import dev.krijninc.slurp.entities.DrunkPlayer;
+import dev.krijninc.slurp.entities.DrunkPlayerCollection;
 import dev.krijninc.slurp.entities.DrunkServer;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -57,11 +60,27 @@ public final class Slurp extends JavaPlugin {
             e.printStackTrace();
         }
 
+        // Fill the player storage with existing players;
+        try {
+            HttpResponse<String> response = DashboardServerConnector.get("/player?server=" + server.getUuid());
+            Gson gson = new Gson();
+
+            DrunkPlayerCollection drunkPlayerCollection = gson.fromJson(response.body(), DrunkPlayerCollection.class);
+            for (DrunkPlayer player : drunkPlayerCollection.players) {
+                setDrunkPlayer(player);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         fancyLogger.info("Registering commands to JavaPlugin.");
         CommandLoader.load();
 
         fancyLogger.info("Registering events to JavaPlugin.");
         getServer().getPluginManager().registerEvents(new EventListener(), this);
+
+        drunkPlayers.forEach((uuid, _drunkPlayer) -> getLogger().info(String.format("Player in list: %s", uuid)));
     }
 
     @Override

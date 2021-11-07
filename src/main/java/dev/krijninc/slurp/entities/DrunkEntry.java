@@ -13,15 +13,19 @@ public class DrunkEntry {
     private final int sips;
     private final int shots;
 
-    public DrunkEntry(UUID uuid, int sips, int shots) {
+    public DrunkEntry(UUID uuid, double sips, double shots) {
         this.player = uuid;
-        this.sips = sips;
-        this.shots = shots;
+
+        if (shots % 1.0 > 0) {
+            this.sips = (int) (shots * 20 + sips);
+        } else {
+            this.sips = (int) sips;
+        }
+        this.shots = (int) shots;
     }
 
-    public void save() throws IOException, InterruptedException {
+    public DrunkEntry save() throws IOException, InterruptedException {
         Gson gson = new Gson();
-
         // Notify backend of the change.
         HttpResponse<String> response = DashboardServerConnector.post("/entry", gson.toJson(this));
 
@@ -49,5 +53,14 @@ public class DrunkEntry {
 
         // Update the player in local storage
         Slurp.setDrunkPlayer(storedPlayer);
+        return returnEntry;
+    }
+
+    public int getSips() {
+        return sips;
+    }
+
+    public int getShots() {
+        return shots;
     }
 }

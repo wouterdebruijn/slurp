@@ -69,12 +69,6 @@ public class EventListener implements Listener {
                 DrunkPlayer p = Slurp.getDrunkPlayer(player.getUniqueId());
                 Slurp.getSidebarManager().createSidebar(p);
             }
-
-            DrunkPlayer p = Slurp.getDrunkPlayer(player.getUniqueId());
-            Gson gson = new Gson();
-            String t = gson.toJson(p);
-            Slurp.getFancyLogger().info(t);
-
         } catch (Exception e) {
             e.printStackTrace();
             Slurp.getFancyLogger().severe("Could not register new player on dashboard backend!");

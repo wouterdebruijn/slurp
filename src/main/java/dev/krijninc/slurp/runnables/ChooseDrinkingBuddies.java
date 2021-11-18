@@ -55,7 +55,7 @@ public class ChooseDrinkingBuddies extends BukkitRunnable {
             Slurp.setDrunkPlayer(drunkPlayer);
         }
 
-        Slurp.getPlugin().getServer().broadcastMessage(ChatColor.GREEN + "The new drinking buddies have been chosen!");
+        Slurp.broadcastMessage(ChatColor.GREEN + "The new drinking buddies have been chosen!");
     }
 
     public ArrayList<Player> getDrinkingBuddies() {

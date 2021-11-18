@@ -34,7 +34,7 @@ public class DrunkEntry {
 
         DrunkPlayer storedPlayer = Slurp.getDrunkPlayer(returnEntry.player);
 
-        // Create a new player if we did't have one.
+        // Create a new player if we didn't have one.
         if (storedPlayer == null) {
             storedPlayer = new DrunkPlayer(this.player);
         }
@@ -45,10 +45,10 @@ public class DrunkEntry {
 
         // Update the total taken sips. (We add when we have subtracted from the remaining
         if (returnEntry.shots < 0) {
-            storedPlayer.taken.shots =- returnEntry.shots;
+            storedPlayer.taken.shots -= returnEntry.shots;
         }
         if (returnEntry.sips < 0) {
-            storedPlayer.taken.sips =- returnEntry.sips;
+            storedPlayer.taken.sips -= returnEntry.sips;
         }
 
         // Update the player in local storage

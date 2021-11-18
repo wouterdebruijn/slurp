@@ -52,13 +52,24 @@ public class DrunkServer {
     public UUID getUuid() {
         return this.uuid;
     }
-    public String getToken() { return this.token; }
 
-    public Long getSeed() { return this.seed; }
+    public String getToken() {
+        return this.token;
+    }
+
+    public Long getSeed() {
+        return this.seed;
+    }
+
     public void setSeed(long seed) {
         this.seed = seed;
     }
 
-    public double getModifier() { return modifier; }
-    public void setModifier(double modifier) { this.modifier = modifier; }
+    public double getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(double modifier) {
+        this.modifier = modifier;
+    }
 }

@@ -5,7 +5,6 @@ import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.exceptions.FetchException;
 import dev.krijninc.slurp.helpers.DashboardServerConnector;
 
-import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.UUID;
 

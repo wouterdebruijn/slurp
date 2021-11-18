@@ -11,8 +11,6 @@ import dev.krijninc.slurp.runnables.ChooseDrinkingBuddies;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,19 +29,32 @@ public final class Slurp extends JavaPlugin {
     public static JavaPlugin getPlugin() {
         return plugin;
     }
+
     public static FancyLogger getFancyLogger() {
         return fancyLogger;
     }
-    public static SidebarManager getSidebarManager() { return sidebarManager; }
-    public static DrunkServer getDrunkServer() { return server; }
+
+    public static SidebarManager getSidebarManager() {
+        return sidebarManager;
+    }
+
+    public static DrunkServer getDrunkServer() {
+        return server;
+    }
+
     public static DrunkPlayer getDrunkPlayer(UUID uuid) {
         return drunkPlayers.get(uuid);
     }
-    public static HashMap<UUID, DrunkPlayer> getDrunkPlayers() { return drunkPlayers; }
+
+    public static HashMap<UUID, DrunkPlayer> getDrunkPlayers() {
+        return drunkPlayers;
+    }
+
     public static void setDrunkPlayer(DrunkPlayer player) {
         drunkPlayers.put(player.getUuid(), player);
         sidebarManager.createSidebar(player);
     }
+
     public static ArrayList<Player> getDrinkingBuddies() {
         return chooseDrinkingBuddies.getDrinkingBuddies();
     }

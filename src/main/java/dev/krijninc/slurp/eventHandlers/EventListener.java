@@ -36,7 +36,7 @@ public class EventListener implements Listener {
     public EventListener() {
         coalOreEventHandler = new CoalOreEventHandler(2 * modifier, generateChance(0.1, 0.2));
         copperOreEventHandler = new CopperOreEventHandler(generateAmount(3), generateChance(0.4, 0.6));
-        diamondOreEventHandler = new DiamondOreEventHandler((int) (1 * modifier) , generateChance(0.8, 1));
+        diamondOreEventHandler = new DiamondOreEventHandler((int) (1 * modifier), generateChance(0.8, 1));
         emeraldOreEventHandler = new EmeraldOreEventHandler(generateAmount(5, 14), generateChance(0.8, 1));
         goldOreEventHandler = new GoldOreEventHandler(generateAmount(4), generateChance(0.4, 0.6));
         ironOreEventHandler = new IronOreEventHandler(generateAmount(3), generateChance(0.4, 0.6));

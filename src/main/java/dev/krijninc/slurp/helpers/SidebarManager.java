@@ -4,9 +4,10 @@ import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
-
-import java.util.ArrayList;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 public class SidebarManager {
     ScoreboardManager scoreboardManager;

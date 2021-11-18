@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +50,8 @@ public class TakeSip implements TabExecutor {
             ArrayList<String> options = new ArrayList<>();
 
             DrunkPlayer drunkPlayer = Slurp.getDrunkPlayer(((Player) sender).getUniqueId());
-            for (int i=1; i <= drunkPlayer.remaining.sips; i++) {
-                options.add(""+i);
+            for (int i = 1; i <= drunkPlayer.remaining.sips; i++) {
+                options.add("" + i);
             }
             return options;
         }

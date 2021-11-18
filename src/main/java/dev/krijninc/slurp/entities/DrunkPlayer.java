@@ -18,7 +18,10 @@ public class DrunkPlayer {
     public Player getBukkitPlayer() {
         return Slurp.getPlugin().getServer().getPlayer(this.uuid);
     }
-    public UUID getUuid() { return this.uuid; }
+
+    public UUID getUuid() {
+        return this.uuid;
+    }
 
     public DrunkPlayer(UUID uuid) {
         this.uuid = uuid;

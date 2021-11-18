@@ -5,10 +5,8 @@ import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.entities.DrunkPlayerCollection;
 import dev.krijninc.slurp.entities.DrunkServer;
 import dev.krijninc.slurp.eventHandlers.EventListener;
-import dev.krijninc.slurp.helpers.CommandLoader;
-import dev.krijninc.slurp.helpers.ConfigLoader;
-import dev.krijninc.slurp.helpers.DashboardServerConnector;
-import dev.krijninc.slurp.helpers.FancyLogger;
+import dev.krijninc.slurp.helpers.*;
+import dev.krijninc.slurp.runnables.ChooseDrinkingBuddies;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.net.http.HttpResponse;
@@ -87,6 +85,17 @@ public final class Slurp extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventListener(), this);
 
         drunkPlayers.forEach((uuid, _drunkPlayer) -> getLogger().info(String.format("Player in list: %s", uuid)));
+
+        if (ConfigLoader.getBoolean("drinking-buddy-enabled")) {
+            ChooseDrinkingBuddies chooseDrinkingBuddiesRunnable = new ChooseDrinkingBuddies(ConfigLoader.getInt("drinking-buddy-group-size"));
+            chooseDrinkingBuddiesRunnable.runTaskTimer(this, 0, 20L * ConfigLoader.getInt("drinking-buddy-interval"));
+        }
+
+        try {
+            SidebarManager sidebar = new SidebarManager();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -1,2 +1,12 @@
-# Provide your custom dashboard url here if you self-host the dashboard.
+# Provide your custom dashboard url here if you self-host the dashboard. An empty string will default to the provided dashboard service
+# NO TRAILING SLASHES!
+# Example: https://example.com:4000
 self-hosted-dashboard-url: ''
+
+
+# Enable drinking buddies
+drinking-buddy-enabled: true
+# Change the size of a buddy group (Default: 2 players)
+drinking-buddy-group-size: 2
+# Change the interval of choosing new drinking buddies in seconds. (Default: 900 (900 seconds = 15 minutes))
+drinking-buddy-interval: 900

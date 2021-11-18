@@ -3,6 +3,7 @@ package dev.krijninc.slurp.commands;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
 import dev.krijninc.slurp.entities.DrunkPlayer;
+import dev.krijninc.slurp.exceptions.FetchException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -34,8 +35,8 @@ public class TakeSip implements TabExecutor {
             return true;
         } catch (NumberFormatException e) {
             player.sendMessage(ChatColor.RED + "Provided arguments must be a number!");
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (FetchException e) {
+            player.sendMessage(ChatColor.DARK_RED + "Internal Server error, check console for details.");
         }
         return false;
     }

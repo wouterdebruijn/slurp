@@ -2,6 +2,7 @@ package dev.krijninc.slurp.entities;
 
 import com.google.gson.Gson;
 import dev.krijninc.slurp.Slurp;
+import dev.krijninc.slurp.exceptions.FetchException;
 import dev.krijninc.slurp.helpers.DashboardServerConnector;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class DrunkEntry {
         this.shots = (int) shots;
     }
 
-    public DrunkEntry save() throws IOException, InterruptedException {
+    public DrunkEntry save() throws FetchException {
         Gson gson = new Gson();
         // Notify backend of the change.
         HttpResponse<String> response = DashboardServerConnector.post("/entry", gson.toJson(this));

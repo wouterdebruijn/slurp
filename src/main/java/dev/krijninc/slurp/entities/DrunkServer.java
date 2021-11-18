@@ -2,6 +2,7 @@ package dev.krijninc.slurp.entities;
 
 import com.google.gson.Gson;
 import dev.krijninc.slurp.Slurp;
+import dev.krijninc.slurp.exceptions.FetchException;
 import dev.krijninc.slurp.helpers.DashboardServerConnector;
 
 import java.io.*;
@@ -15,7 +16,7 @@ public class DrunkServer {
     private long seed = 80085;
     private double modifier = 1;
 
-    public static DrunkServer registerServer() throws IOException, InterruptedException {
+    public static DrunkServer registerServer() throws FetchException {
         Gson gson = new Gson();
         HttpResponse<String> response = DashboardServerConnector.postNoAuth("/server");
         DrunkServer server = gson.fromJson(response.body(), DrunkServer.class);

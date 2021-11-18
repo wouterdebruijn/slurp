@@ -5,11 +5,16 @@ import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.entities.DrunkPlayerCollection;
 import dev.krijninc.slurp.entities.DrunkServer;
 import dev.krijninc.slurp.eventHandlers.EventListener;
+import dev.krijninc.slurp.exceptions.FetchException;
 import dev.krijninc.slurp.helpers.*;
 import dev.krijninc.slurp.runnables.ChooseDrinkingBuddies;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -29,6 +34,7 @@ public final class Slurp extends JavaPlugin {
     public static FancyLogger getFancyLogger() {
         return fancyLogger;
     }
+    public static SidebarManager getSidebarManager() { return sidebarManager; }
     public static DrunkServer getDrunkServer() { return server; }
     public static DrunkPlayer getDrunkPlayer(UUID uuid) {
         return drunkPlayers.get(uuid);
@@ -73,9 +79,10 @@ public final class Slurp extends JavaPlugin {
                 fancyLogger.info("Using existing uuid and access token for dashboard backend.");
                 server = drunkServer;
             }
-        } catch (Exception e) {
+        } catch (FetchException e) {
             fancyLogger.severe("Error while registering server to dashboard service.");
-            e.printStackTrace();
+        } catch (Exception e) {
+            fancyLogger.severe("Error while saving server to local cache.");
         }
 
         // Fill the player storage with existing players;
@@ -88,6 +95,7 @@ public final class Slurp extends JavaPlugin {
                 setDrunkPlayer(player);
             }
         } catch (Exception e) {
+            fancyLogger.severe("Could not contact backend server!");
             e.printStackTrace();
         }
 

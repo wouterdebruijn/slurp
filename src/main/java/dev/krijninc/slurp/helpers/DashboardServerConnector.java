@@ -1,6 +1,7 @@
 package dev.krijninc.slurp.helpers;
 
 import dev.krijninc.slurp.Slurp;
+import dev.krijninc.slurp.exceptions.FetchException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -9,9 +10,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class DashboardServerConnector {
-    private static final String endpoint = ConfigLoader.getString("self-hosted-dashboard-url").equals("") ? "https://slurp.deno.dev/v1" : ConfigLoader.getString("self-hosted-dashboard-url");
+    private static final String endpoint = ConfigLoader.getString("self-hosted-dashboard-url").equals("") ? "https://slurp.deno.dev/v1" : ConfigLoader.getString("self-hosted-dashboard-url") + "/v1";
 
-    public static HttpResponse<String> postNoAuth(String path) throws IOException, InterruptedException {
+    public static HttpResponse<String> postNoAuth(String path) throws FetchException {
         String postEndpoint = endpoint + path;
 
         var request = HttpRequest.newBuilder()
@@ -20,13 +21,23 @@ public class DashboardServerConnector {
                 .POST(HttpRequest.BodyPublishers.ofString("{}"))
                 .build();
 
-        var client = HttpClient.newHttpClient();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        Slurp.getFancyLogger().info("Requests responed with status code " + response.statusCode());
-        return response;
+        try {
+            var client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200 && response.statusCode() != 409) {
+                reportError(response);
+            }
+            return response;
+        } catch (IOException e) {
+            Slurp.getFancyLogger().severe("Could not connect to dashboard: " + postEndpoint);
+            throw new FetchException();
+        } catch (InterruptedException e) {
+            Slurp.getFancyLogger().severe("Connection to dashboard was interrupted! (" + endpoint + ")");
+            throw new FetchException();
+        }
     }
 
-    public static HttpResponse<String> get(String path) throws IOException, InterruptedException {
+    public static HttpResponse<String> get(String path) throws FetchException {
         String postEndpoint = endpoint + path;
 
         var request = HttpRequest.newBuilder()
@@ -35,29 +46,23 @@ public class DashboardServerConnector {
                 .header("Authorization", "Bearer " + Slurp.getDrunkServer().getToken())
                 .build();
 
-        var client = HttpClient.newHttpClient();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        Slurp.getFancyLogger().info("Requests responed with status code " + response.statusCode());
-        return response;
+        try {
+            var client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200 && response.statusCode() != 409) {
+                reportError(response);
+            }
+            return response;
+        } catch (IOException e) {
+            Slurp.getFancyLogger().severe("Could not connect to dashboard: " + postEndpoint);
+            throw new FetchException();
+        } catch (InterruptedException e) {
+            Slurp.getFancyLogger().severe("Connection to dashboard was interrupted! (" + endpoint + ")");
+            throw new FetchException();
+        }
     }
 
-    public static HttpResponse<String> post(String path) throws IOException, InterruptedException {
-        String postEndpoint = endpoint + path;
-
-        var request = HttpRequest.newBuilder()
-                .uri(URI.create(postEndpoint))
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + Slurp.getDrunkServer().getToken())
-                .POST(HttpRequest.BodyPublishers.ofString("{}"))
-                .build();
-
-        var client = HttpClient.newHttpClient();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        Slurp.getFancyLogger().info("Requests responed with status code " + response.statusCode());
-        return response;
-    }
-
-    public static HttpResponse<String> post(String path, String body) throws IOException, InterruptedException {
+    public static HttpResponse<String> post(String path, String body) throws FetchException {
         String postEndpoint = endpoint + path;
 
         var request = HttpRequest.newBuilder()
@@ -67,9 +72,36 @@ public class DashboardServerConnector {
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
-        var client = HttpClient.newHttpClient();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        Slurp.getFancyLogger().info("Requests responded with status code " + response.statusCode());
-        return response;
+        try {
+            var client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200 && response.statusCode() != 409) {
+                reportError(response, body);
+            }
+            return response;
+        } catch (IOException e) {
+            Slurp.getFancyLogger().severe("Could not connect to dashboard: " + postEndpoint);
+            throw new FetchException();
+        } catch (InterruptedException e) {
+            Slurp.getFancyLogger().severe("Connection to dashboard was interrupted! (" + endpoint + ")");
+            throw new FetchException();
+        }
+    }
+
+    private static void reportError(HttpResponse<String> response) {
+        FancyLogger logger = Slurp.getFancyLogger();
+
+        logger.severe("Request to endpoint failed!");
+        logger.severe("Server responded with status code: " + response.statusCode() + ". Response body:");
+        logger.info(response.body());
+    }
+
+    private static void reportError(HttpResponse<String> response, String requestBody) {
+        FancyLogger logger = Slurp.getFancyLogger();
+
+        logger.severe("Request to endpoint failed!");
+        logger.severe("Server responded with status code: " + response.statusCode() + ". Response body:");
+        logger.info(response.body());
+        logger.info("Request body: " + requestBody);
     }
 }

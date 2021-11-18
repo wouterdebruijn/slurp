@@ -42,7 +42,6 @@ public class SidebarManager {
             int scoreboardCount = 5;
 
             for (Player player : Slurp.getDrinkingBuddies()) {
-                System.out.println("buddy: " + player.getDisplayName());
                 objective.getScore(ChatColor.AQUA + "- " + player.getDisplayName()).setScore(scoreboardCount--);
                 if (scoreboardCount == 0) break;
             }

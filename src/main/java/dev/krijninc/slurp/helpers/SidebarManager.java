@@ -6,6 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
+import java.util.ArrayList;
+
 public class SidebarManager {
     ScoreboardManager scoreboardManager;
 
@@ -17,27 +19,36 @@ public class SidebarManager {
     }
 
     public void createSidebar(DrunkPlayer p) {
+        // Check if player is online
+        Player minecraftPlayer = p.getBukkitPlayer();
+        if (minecraftPlayer == null) return;
+
         Scoreboard playerBoard = scoreboardManager.getNewScoreboard();
 
         Objective objective = playerBoard.registerNewObjective("slurpStats", "dummy", ChatColor.GOLD + "Slurp");
 
-        objective.getScore(ChatColor.GRAY + "===============").setScore(12);
-        objective.getScore(ChatColor.GREEN + "Taken:").setScore(11);
-        objective.getScore(ChatColor.GOLD + "Shots: " + p.taken.shots).setScore(10);
-        objective.getScore(ChatColor.YELLOW + "Sips: " + p.taken.sips).setScore(9);
-        objective.getScore("  ").setScore(8);
-        objective.getScore(ChatColor.RED + "Remaining:").setScore(7);
-        objective.getScore(ChatColor.GOLD + "Shots: " + p.remaining.shots).setScore(6);
-        objective.getScore(ChatColor.YELLOW + "Sips: " + p.remaining.sips).setScore(5);
+        objective.getScore(ChatColor.GRAY + "===============").setScore(15);
+        objective.getScore(ChatColor.GREEN + "Taken:").setScore(14);
+        objective.getScore(ChatColor.GOLD + " Shots: " + p.taken.shots).setScore(13);
+        objective.getScore(ChatColor.YELLOW + " Sips: " + p.taken.sips).setScore(12);
+        objective.getScore("  ").setScore(11);
+        objective.getScore(ChatColor.RED + "Remaining:").setScore(10);
+        objective.getScore(ChatColor.GOLD + " Shots: " + p.remaining.shots).setScore(9);
+        objective.getScore(ChatColor.YELLOW + " Sips: " + p.remaining.sips).setScore(8);
+        objective.getScore("   ").setScore(7);
+        if (p.isDrinkingBuddy) {
+            objective.getScore(ChatColor.DARK_GRAY + "Drinking Buddy:").setScore(6);
+            int scoreboardCount = 2;
+
+            for (Player player : Slurp.getDrinkingBuddies()) {
+                objective.getScore("-" + player.getDisplayName()).setScore(scoreboardCount--);
+                if (scoreboardCount == 0) break;
+            }
+        }
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        Player minecraftPlayer = p.getBukkitPlayer();
-        if (minecraftPlayer != null) {
-            minecraftPlayer.setScoreboard(playerBoard);
-            Slurp.getFancyLogger().info("Set new scoreboard for player " + minecraftPlayer.getDisplayName());
-        } else {
-            Slurp.getFancyLogger().warning("Could not set scoreboard for player " + p.getUuid());
-        }
+        minecraftPlayer.setScoreboard(playerBoard);
+        Slurp.getFancyLogger().info("Set new scoreboard for player " + minecraftPlayer.getDisplayName());
     }
 }

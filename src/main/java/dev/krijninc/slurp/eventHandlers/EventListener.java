@@ -1,14 +1,18 @@
 package dev.krijninc.slurp.eventHandlers;
 
+import com.google.gson.Gson;
 import dev.krijninc.slurp.Slurp;
+import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.eventHandlers.blockBreakEvents.*;
 import dev.krijninc.slurp.helpers.DashboardServerConnector;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.net.http.HttpResponse;
 import java.util.Random;
 
 public class EventListener implements Listener {
@@ -47,8 +51,30 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         try {
-            Slurp.getFancyLogger().info("Player joined adding player to the dashboard");
-            DashboardServerConnector.post("/player", String.format("{\"uuid\": \"%s\"}", event.getPlayer().getUniqueId()));
+            Player player = event.getPlayer();
+            DrunkPlayer savedDrunkPlayer = Slurp.getDrunkPlayer(player.getUniqueId());
+
+            if (savedDrunkPlayer == null) {
+                Slurp.getFancyLogger().info("New Player joined adding to dashboard.");
+                HttpResponse<String> response = DashboardServerConnector.post("/player", String.format("{\"uuid\": \"%s\"}", event.getPlayer().getUniqueId()));
+
+                // If the dashboard created a new player, we save that player to the local cache.
+                if (response.statusCode() == 200) {
+                    Gson gson = new Gson();
+                    DrunkPlayer responsePlayer = gson.fromJson(response.body(), DrunkPlayer.class);
+                    Slurp.setDrunkPlayer(responsePlayer);
+                }
+            } else {
+                // Show the existing player their scoreboard.
+                DrunkPlayer p = Slurp.getDrunkPlayer(player.getUniqueId());
+                Slurp.getSidebarManager().createSidebar(p);
+            }
+
+            DrunkPlayer p = Slurp.getDrunkPlayer(player.getUniqueId());
+            Gson gson = new Gson();
+            String t = gson.toJson(p);
+            Slurp.getFancyLogger().info(t);
+
         } catch (Exception e) {
             e.printStackTrace();
             Slurp.getFancyLogger().severe("Could not register new player on dashboard backend!");

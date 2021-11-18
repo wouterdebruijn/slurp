@@ -18,6 +18,8 @@ public final class Slurp extends JavaPlugin {
     private static JavaPlugin plugin;
     private static DrunkServer server;
     private static FancyLogger fancyLogger;
+    private static SidebarManager sidebarManager;
+
     private static final HashMap<UUID, DrunkPlayer> drunkPlayers = new HashMap<>();
 
     public static JavaPlugin getPlugin() {
@@ -33,6 +35,7 @@ public final class Slurp extends JavaPlugin {
     public static HashMap<UUID, DrunkPlayer> getDrunkPlayers() { return drunkPlayers; }
     public static void setDrunkPlayer(DrunkPlayer player) {
         drunkPlayers.put(player.getUuid(), player);
+        sidebarManager.createSidebar(player);
     }
 
     @Override
@@ -45,6 +48,13 @@ public final class Slurp extends JavaPlugin {
         fancyLogger.info("Loading configuration file.");
         ConfigLoader.saveDefaults();
         ConfigLoader.load();
+
+        // Register sidebar manager
+        try {
+            sidebarManager = new SidebarManager();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Register the server to the dashboard backend, if needed.
         try {
@@ -76,7 +86,6 @@ public final class Slurp extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         fancyLogger.info("Registering commands to JavaPlugin.");
         CommandLoader.load();

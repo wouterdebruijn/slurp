@@ -5,10 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class StoneEventHandler extends BlockBreakEventHandler {
-    protected final Material[] materials = new Material[]{Material.STONE, Material.DEEPSLATE};
-
     public StoneEventHandler(double amount, double chance) {
-        super(amount, chance);
+        super(amount, chance, new Material[]{Material.STONE, Material.DEEPSLATE});
     }
 
     @Override

@@ -5,10 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class LapisOreEventHandler extends BlockBreakEventHandler {
-    protected final Material[] materials = new Material[]{Material.LAPIS_ORE, Material.DEEPSLATE_LAPIS_ORE};
-
     public LapisOreEventHandler(double amount, double chance) {
-        super(amount, chance);
+        super(amount, chance, new Material[]{Material.LAPIS_ORE, Material.DEEPSLATE_LAPIS_ORE});
     }
 
     @Override

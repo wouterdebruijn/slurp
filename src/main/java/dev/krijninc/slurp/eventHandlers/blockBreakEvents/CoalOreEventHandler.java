@@ -5,10 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class CoalOreEventHandler extends BlockBreakEventHandler {
-    protected final Material[] materials = new Material[]{Material.COAL_ORE, Material.DEEPSLATE_COAL_ORE};
-
     public CoalOreEventHandler(double amount, double chance) {
-        super(amount, chance);
+        super(amount, chance, new Material[]{Material.COAL_ORE, Material.DEEPSLATE_COAL_ORE});
     }
 
     @Override

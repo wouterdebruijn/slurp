@@ -5,10 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class QuartzOreEventHandler extends BlockBreakEventHandler {
-    protected final Material[] materials = new Material[]{Material.NETHER_QUARTZ_ORE};
-
     public QuartzOreEventHandler(double amount, double chance) {
-        super(amount, chance);
+        super(amount, chance, new Material[]{Material.NETHER_QUARTZ_ORE});
     }
 
     @Override

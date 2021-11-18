@@ -5,10 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class RedstoneOreEventHandler extends BlockBreakEventHandler {
-    protected final Material[] materials = new Material[]{Material.REDSTONE_ORE, Material.DEEPSLATE_REDSTONE_ORE};
-
     public RedstoneOreEventHandler(double amount, double chance) {
-        super(amount, chance);
+        super(amount, chance, new Material[]{Material.REDSTONE_ORE, Material.DEEPSLATE_REDSTONE_ORE});
     }
 
     @Override

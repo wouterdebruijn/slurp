@@ -5,10 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class NetherGoldOreEventHandler extends BlockBreakEventHandler {
-    protected final Material[] materials = new Material[]{Material.NETHER_GOLD_ORE};
-
     public NetherGoldOreEventHandler(double amount, double chance) {
-        super(amount, chance);
+        super(amount, chance, new Material[]{Material.NETHER_GOLD_ORE});
     }
 
     @Override

@@ -5,10 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class IronOreEventHandler extends BlockBreakEventHandler {
-    protected final Material[] materials = new Material[]{Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE};
-
     public IronOreEventHandler(double amount, double chance) {
-        super(amount, chance);
+        super(amount, chance, new Material[]{Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE});
     }
 
     @Override

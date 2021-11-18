@@ -15,6 +15,8 @@ public class ChooseDrinkingBuddies extends BukkitRunnable {
 
     private final int drinkingBuddieGroupSize;
 
+    private final ArrayList<Player> drinkingBuddies = new ArrayList<>();
+
     public ChooseDrinkingBuddies(int groupSize) {
         this.drinkingBuddieGroupSize = groupSize;
     }
@@ -36,7 +38,6 @@ public class ChooseDrinkingBuddies extends BukkitRunnable {
         if (playerList.size() < drinkingBuddieGroupSize) return;
 
         Random random = new Random();
-        ArrayList<Player> drinkingBuddies = new ArrayList<>();
 
         for (int i = 0; i < drinkingBuddieGroupSize; i++) {
             Player player = playerList.remove(random.nextInt(playerList.size()));
@@ -50,10 +51,10 @@ public class ChooseDrinkingBuddies extends BukkitRunnable {
 
         // TODO: Update chat system
         Slurp.getPlugin().getServer().broadcastMessage(ChatColor.GREEN + "The new drinking buddies are: ");
-        drinkingBuddies.forEach(buddy -> {
-            Slurp.getPlugin().getServer().broadcastMessage(ChatColor.GREEN + buddy.getDisplayName());
-        });
+        drinkingBuddies.forEach(buddy -> Slurp.getPlugin().getServer().broadcastMessage(ChatColor.GREEN + buddy.getDisplayName()));
+    }
 
-
+    public ArrayList<Player> getDrinkingBuddies() {
+        return drinkingBuddies;
     }
 }

@@ -19,6 +19,7 @@ public final class Slurp extends JavaPlugin {
     private static DrunkServer server;
     private static FancyLogger fancyLogger;
     private static SidebarManager sidebarManager;
+    private static ChooseDrinkingBuddies chooseDrinkingBuddies;
 
     private static final HashMap<UUID, DrunkPlayer> drunkPlayers = new HashMap<>();
 
@@ -36,6 +37,9 @@ public final class Slurp extends JavaPlugin {
     public static void setDrunkPlayer(DrunkPlayer player) {
         drunkPlayers.put(player.getUuid(), player);
         sidebarManager.createSidebar(player);
+    }
+    public static ArrayList<Player> getDrinkingBuddies() {
+        return chooseDrinkingBuddies.getDrinkingBuddies();
     }
 
     @Override
@@ -96,14 +100,8 @@ public final class Slurp extends JavaPlugin {
         drunkPlayers.forEach((uuid, _drunkPlayer) -> getLogger().info(String.format("Player in list: %s", uuid)));
 
         if (ConfigLoader.getBoolean("drinking-buddy-enabled")) {
-            ChooseDrinkingBuddies chooseDrinkingBuddiesRunnable = new ChooseDrinkingBuddies(ConfigLoader.getInt("drinking-buddy-group-size"));
-            chooseDrinkingBuddiesRunnable.runTaskTimer(this, 0, 20L * ConfigLoader.getInt("drinking-buddy-interval"));
-        }
-
-        try {
-            SidebarManager sidebar = new SidebarManager();
-        } catch (Exception e) {
-            e.printStackTrace();
+            chooseDrinkingBuddies = new ChooseDrinkingBuddies(ConfigLoader.getInt("drinking-buddy-group-size"));
+            chooseDrinkingBuddies.runTaskTimer(this, 0, 20L * ConfigLoader.getInt("drinking-buddy-interval"));
         }
     }
 

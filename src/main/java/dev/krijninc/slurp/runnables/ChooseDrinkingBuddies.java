@@ -31,6 +31,9 @@ public class ChooseDrinkingBuddies extends BukkitRunnable {
             Slurp.setDrunkPlayer(drunkPlayer);
         });
 
+        // Clear the local array;
+        drinkingBuddies.clear();
+
         // Create new drinking buddies from online player list.
         ArrayList<Player> playerList = new ArrayList<>(Slurp.getPlugin().getServer().getOnlinePlayers());
 
@@ -43,15 +46,16 @@ public class ChooseDrinkingBuddies extends BukkitRunnable {
             Player player = playerList.remove(random.nextInt(playerList.size()));
             Slurp.getFancyLogger().info("Player: " + player.getDisplayName() + " has been chosen as a drinking buddy");
             drinkingBuddies.add(player);
+        }
 
+        // Only write the data after we have chosen all the buddies. Sidebar wouldn't be able to display the complete drinking buddy list.
+        for (Player player : drinkingBuddies) {
             DrunkPlayer drunkPlayer = Slurp.getDrunkPlayer(player.getUniqueId());
             drunkPlayer.isDrinkingBuddy = true;
             Slurp.setDrunkPlayer(drunkPlayer);
         }
 
-        // TODO: Update chat system
-        Slurp.getPlugin().getServer().broadcastMessage(ChatColor.GREEN + "The new drinking buddies are: ");
-        drinkingBuddies.forEach(buddy -> Slurp.getPlugin().getServer().broadcastMessage(ChatColor.GREEN + buddy.getDisplayName()));
+        Slurp.getPlugin().getServer().broadcastMessage(ChatColor.GREEN + "The new drinking buddies have been chosen!");
     }
 
     public ArrayList<Player> getDrinkingBuddies() {

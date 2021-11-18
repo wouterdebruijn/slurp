@@ -38,11 +38,12 @@ public class SidebarManager {
         objective.getScore(ChatColor.YELLOW + " Sips: " + p.remaining.sips).setScore(8);
         objective.getScore("   ").setScore(7);
         if (p.isDrinkingBuddy) {
-            objective.getScore(ChatColor.DARK_GRAY + "Drinking Buddy:").setScore(6);
-            int scoreboardCount = 2;
+            objective.getScore(ChatColor.BLUE + "Drinking Buddies:").setScore(6);
+            int scoreboardCount = 5;
 
             for (Player player : Slurp.getDrinkingBuddies()) {
-                objective.getScore("-" + player.getDisplayName()).setScore(scoreboardCount--);
+                System.out.println("buddy: " + player.getDisplayName());
+                objective.getScore(ChatColor.AQUA + "- " + player.getDisplayName()).setScore(scoreboardCount--);
                 if (scoreboardCount == 0) break;
             }
         }

@@ -3,6 +3,7 @@
 # Example: https://example.com:4000
 self-hosted-dashboard-url: ''
 
+slurp-prefix: '[Slurp] '
 
 # Enable drinking buddies
 drinking-buddy-enabled: true

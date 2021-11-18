@@ -30,12 +30,12 @@ public class TakeSip implements TabExecutor {
 
             DrunkEntry entry = new DrunkEntry(player.getUniqueId(), sipCount, 0);
             DrunkEntry savedEntry = entry.save();
-            player.sendMessage(ChatColor.GREEN + String.format("You have taken %d %s!", savedEntry.getSips() * -1, savedEntry.getSips() * -1 > 1 ? "sips" : "sip"));
+            Slurp.sendMessage(player, ChatColor.GREEN + String.format("You have taken %d %s!", savedEntry.getSips() * -1, savedEntry.getSips() * -1 > 1 ? "sips" : "sip"));
             return true;
         } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Provided arguments must be a number!");
+            Slurp.sendMessage(player, ChatColor.RED + "Provided arguments must be a number!");
         } catch (FetchException e) {
-            player.sendMessage(ChatColor.DARK_RED + "Internal Server error, check console for details.");
+            Slurp.sendMessage(player, ChatColor.DARK_RED + "Internal Server error, check console for details.");
         }
         return false;
     }

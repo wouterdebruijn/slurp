@@ -11,6 +11,5 @@ public class QuartzOreEventHandler extends BlockBreakEventHandler {
 
     @Override
     protected void handleEvent(BlockBreakEvent event) {
-        event.getPlayer().sendMessage("HI! Quartz " + amount);
     }
 }

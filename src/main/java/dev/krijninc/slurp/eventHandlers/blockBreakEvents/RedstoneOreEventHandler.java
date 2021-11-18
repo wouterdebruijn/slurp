@@ -11,6 +11,5 @@ public class RedstoneOreEventHandler extends BlockBreakEventHandler {
 
     @Override
     protected void handleEvent(BlockBreakEvent event) {
-        event.getPlayer().sendMessage("HI! Redstone " + amount);
     }
 }

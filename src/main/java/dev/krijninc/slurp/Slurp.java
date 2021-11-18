@@ -8,13 +8,13 @@ import dev.krijninc.slurp.eventHandlers.EventListener;
 import dev.krijninc.slurp.exceptions.FetchException;
 import dev.krijninc.slurp.helpers.*;
 import dev.krijninc.slurp.runnables.ChooseDrinkingBuddies;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Array;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public final class Slurp extends JavaPlugin {
 
@@ -57,6 +57,17 @@ public final class Slurp extends JavaPlugin {
 
     public static ArrayList<Player> getDrinkingBuddies() {
         return chooseDrinkingBuddies.getDrinkingBuddies();
+    }
+
+    public static void broadcastMessage(String message) {
+        for (Player player : getPlugin().getServer().getOnlinePlayers()) {
+            player.sendMessage(ChatColor.YELLOW + ConfigLoader.getString("slurp-prefix") + message);
+        }
+    }
+
+    public static void sendMessage(Player player, String message) {
+        String messageListString = String.join("", message);
+        player.sendMessage(ChatColor.YELLOW + ConfigLoader.getString("slurp-prefix") + messageListString);
     }
 
     @Override

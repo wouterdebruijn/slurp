@@ -11,6 +11,5 @@ public class CopperOreEventHandler extends BlockBreakEventHandler {
 
     @Override
     protected void handleEvent(BlockBreakEvent event) {
-        event.getPlayer().sendMessage("HI! Copper " + amount);
     }
 }

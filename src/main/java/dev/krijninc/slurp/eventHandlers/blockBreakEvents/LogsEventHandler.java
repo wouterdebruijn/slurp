@@ -11,6 +11,5 @@ public class LogsEventHandler extends BlockBreakEventHandler {
 
     @Override
     protected void handleEvent(BlockBreakEvent event) {
-        event.getPlayer().sendMessage("HI! Logs " + amount);
     }
 }

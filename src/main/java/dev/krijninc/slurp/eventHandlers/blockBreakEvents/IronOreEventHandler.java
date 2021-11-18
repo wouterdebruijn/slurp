@@ -11,6 +11,5 @@ public class IronOreEventHandler extends BlockBreakEventHandler {
 
     @Override
     protected void handleEvent(BlockBreakEvent event) {
-        event.getPlayer().sendMessage("HI! Iron " + amount);
     }
 }

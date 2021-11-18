@@ -11,6 +11,5 @@ public class LapisOreEventHandler extends BlockBreakEventHandler {
 
     @Override
     protected void handleEvent(BlockBreakEvent event) {
-        event.getPlayer().sendMessage("HI! Lapis " + amount);
     }
 }

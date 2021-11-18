@@ -11,6 +11,5 @@ public class StoneEventHandler extends BlockBreakEventHandler {
 
     @Override
     protected void handleEvent(BlockBreakEvent event) {
-        event.getPlayer().sendMessage("HI! Stone " + amount);
     }
 }

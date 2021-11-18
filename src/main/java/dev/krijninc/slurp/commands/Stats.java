@@ -20,14 +20,13 @@ public class Stats implements TabExecutor {
         DrunkPlayer playerStats = Slurp.getDrunkPlayer(player.getUniqueId());
 
         if (playerStats == null) {
-            sender.sendMessage(ChatColor.RED + "You don't have any records yet!");
+            Slurp.sendMessage((Player) sender, ChatColor.RED + "You don't have any records yet!");
             return false;
         }
 
         // Send the current stats for the sender
-        sender.sendMessage(String.format(ChatColor.GREEN + "====== Stats ======\n" +
+        Slurp.sendMessage((Player) sender, String.format(ChatColor.GREEN + "====== Stats ======\n" +
                 ChatColor.YELLOW + " - Remaining shots: %d\n - Remaining sips: %d\n - Taken shots: %d\n - Taken sips: %d", playerStats.remaining.shots, playerStats.remaining.sips, playerStats.taken.shots, playerStats.taken.sips));
-
         return false;
     }
 

@@ -1,4 +1,4 @@
-package dev.krijninc.slurp;
+package dev.krijninc.slurp.helpers;
 
 import org.bukkit.ChatColor;
 
@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class FancyLogger {
     private final Logger logger;
 
-    protected FancyLogger(Logger logger) {
+    public FancyLogger(Logger logger) {
         this.logger = logger;
     }
 

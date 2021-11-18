@@ -1,6 +1,5 @@
 package dev.krijninc.slurp.commands;
 
-import dev.krijninc.slurp.Consumables;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkPlayer;
 import org.bukkit.ChatColor;

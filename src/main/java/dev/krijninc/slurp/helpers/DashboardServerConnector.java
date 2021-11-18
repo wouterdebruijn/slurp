@@ -1,4 +1,6 @@
-package dev.krijninc.slurp;
+package dev.krijninc.slurp.helpers;
+
+import dev.krijninc.slurp.Slurp;
 
 import java.io.IOException;
 import java.net.URI;

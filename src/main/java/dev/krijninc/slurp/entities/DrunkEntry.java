@@ -1,7 +1,7 @@
 package dev.krijninc.slurp.entities;
 
 import com.google.gson.Gson;
-import dev.krijninc.slurp.DashboardServerConnector;
+import dev.krijninc.slurp.helpers.DashboardServerConnector;
 import dev.krijninc.slurp.Slurp;
 
 import java.io.IOException;

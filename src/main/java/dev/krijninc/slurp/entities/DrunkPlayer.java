@@ -1,6 +1,6 @@
 package dev.krijninc.slurp.entities;
 
-import dev.krijninc.slurp.Consumables;
+import dev.krijninc.slurp.types.Consumables;
 import dev.krijninc.slurp.Slurp;
 import org.bukkit.entity.Player;
 

@@ -1,5 +1,7 @@
-package dev.krijninc.slurp;
+package dev.krijninc.slurp.eventHandlers;
 
+import dev.krijninc.slurp.helpers.DashboardServerConnector;
+import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.eventHandlers.blockBreakEvents.*;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -11,18 +13,18 @@ import java.util.Random;
 
 public class EventListener implements Listener {
 
-    CoalOreEventHandler coalOreEventHandler;
-    CopperOreEventHandler copperOreEventHandler;
-    DiamondOreEventHandler diamondOreEventHandler;
-    EmeraldOreEventHandler emeraldOreEventHandler;
-    GoldOreEventHandler goldOreEventHandler;
-    IronOreEventHandler ironOreEventHandler;
-    LapisOreEventHandler lapisOreEventHandler;
-    LogsEventHandler logsEventHandler;
-    NetherGoldOreEventHandler netherGoldOreEventHandler;
-    QuartzOreEventHandler quartzOreEventHandler;
-    RedstoneOreEventHandler redstoneOreEventHandler;
-    StoneEventHandler stoneEventHandler;
+    private final CoalOreEventHandler coalOreEventHandler;
+    private final CopperOreEventHandler copperOreEventHandler;
+    private final DiamondOreEventHandler diamondOreEventHandler;
+    private final EmeraldOreEventHandler emeraldOreEventHandler;
+    private final GoldOreEventHandler goldOreEventHandler;
+    private final IronOreEventHandler ironOreEventHandler;
+    private final LapisOreEventHandler lapisOreEventHandler;
+    private final LogsEventHandler logsEventHandler;
+    private final NetherGoldOreEventHandler netherGoldOreEventHandler;
+    private final QuartzOreEventHandler quartzOreEventHandler;
+    private final RedstoneOreEventHandler redstoneOreEventHandler;
+    private final StoneEventHandler stoneEventHandler;
 
     Random random = new Random(Slurp.getDrunkServer().getSeed());
     double modifier = Slurp.getDrunkServer().getModifier();
@@ -55,14 +57,21 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void blockBreakEvent(BlockBreakEvent event) {
-
         Material blockType = event.getBlock().getType();
 
-        if (blockType == Material.IRON_ORE || blockType == Material.DEEPSLATE_IRON_ORE) {
-            ironOreEventHandler.execute(event);
-        } else if (blockType == Material.GOLD_ORE || blockType == Material.DEEPSLATE_GOLD_ORE) {
-            goldOreEventHandler.execute(event);
-        }
+        // Execute all the handlers. They have material checking. TODO: For loop this stuff.
+        coalOreEventHandler.execute(event, blockType);
+        copperOreEventHandler.execute(event, blockType);
+        diamondOreEventHandler.execute(event, blockType);
+        emeraldOreEventHandler.execute(event, blockType);
+        goldOreEventHandler.execute(event, blockType);
+        ironOreEventHandler.execute(event, blockType);
+        lapisOreEventHandler.execute(event, blockType);
+        logsEventHandler.execute(event, blockType);
+        netherGoldOreEventHandler.execute(event, blockType);
+        quartzOreEventHandler.execute(event, blockType);
+        redstoneOreEventHandler.execute(event, blockType);
+        stoneEventHandler.execute(event, blockType);
     }
 
     private double generateAmount(int max) {

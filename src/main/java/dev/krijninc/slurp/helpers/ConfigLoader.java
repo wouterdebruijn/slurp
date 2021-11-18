@@ -1,5 +1,6 @@
-package dev.krijninc.slurp;
+package dev.krijninc.slurp.helpers;
 
+import dev.krijninc.slurp.Slurp;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 

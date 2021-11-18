@@ -1,4 +1,4 @@
-package dev.krijninc.slurp;
+package dev.krijninc.slurp.types;
 
 public class Consumables {
     public int shots = 0;

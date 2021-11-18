@@ -4,6 +4,11 @@ import com.google.gson.Gson;
 import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.entities.DrunkPlayerCollection;
 import dev.krijninc.slurp.entities.DrunkServer;
+import dev.krijninc.slurp.eventHandlers.EventListener;
+import dev.krijninc.slurp.helpers.CommandLoader;
+import dev.krijninc.slurp.helpers.ConfigLoader;
+import dev.krijninc.slurp.helpers.DashboardServerConnector;
+import dev.krijninc.slurp.helpers.FancyLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.net.http.HttpResponse;
@@ -27,6 +32,7 @@ public final class Slurp extends JavaPlugin {
     public static DrunkPlayer getDrunkPlayer(UUID uuid) {
         return drunkPlayers.get(uuid);
     }
+    public static HashMap<UUID, DrunkPlayer> getDrunkPlayers() { return drunkPlayers; }
     public static void setDrunkPlayer(DrunkPlayer player) {
         drunkPlayers.put(player.getUuid(), player);
     }

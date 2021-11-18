@@ -1,8 +1,8 @@
 package dev.krijninc.slurp.entities;
 
 import com.google.gson.Gson;
-import dev.krijninc.slurp.helpers.DashboardServerConnector;
 import dev.krijninc.slurp.Slurp;
+import dev.krijninc.slurp.helpers.DashboardServerConnector;
 
 import java.io.*;
 import java.net.http.HttpResponse;

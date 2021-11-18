@@ -1,7 +1,7 @@
 package dev.krijninc.slurp.entities;
 
-import dev.krijninc.slurp.types.Consumables;
 import dev.krijninc.slurp.Slurp;
+import dev.krijninc.slurp.types.Consumables;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

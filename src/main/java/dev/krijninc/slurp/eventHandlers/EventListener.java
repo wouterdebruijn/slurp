@@ -1,8 +1,8 @@
 package dev.krijninc.slurp.eventHandlers;
 
-import dev.krijninc.slurp.helpers.DashboardServerConnector;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.eventHandlers.blockBreakEvents.*;
+import dev.krijninc.slurp.helpers.DashboardServerConnector;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

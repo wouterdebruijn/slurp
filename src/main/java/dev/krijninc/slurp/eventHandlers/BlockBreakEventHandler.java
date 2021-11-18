@@ -1,6 +1,5 @@
 package dev.krijninc.slurp.eventHandlers;
 
-import dev.krijninc.slurp.Slurp;
 import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 

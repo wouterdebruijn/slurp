@@ -3,7 +3,7 @@ package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
 import dev.krijninc.slurp.eventHandlers.BlockBreakEventHandler;
-import dev.krijninc.slurp.eventHandlers.SipsHandler;
+import dev.krijninc.slurp.eventHandlers.ConsumeHandler;
 import dev.krijninc.slurp.exceptions.FetchException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,7 +42,7 @@ public class StoneEventHandler extends BlockBreakEventHandler {
     protected void handleEvent(BlockBreakEvent event) {
         Player player = event.getPlayer();
         try {
-            ArrayList<DrunkEntry> createdEntries = SipsHandler.everyoneDrinks(new ArrayList<>(), (int) amount, getRemainingSips());
+            ArrayList<DrunkEntry> createdEntries = ConsumeHandler.everyoneDrinks(new ArrayList<>(), (int) amount, getRemainingSips());
 
             for (DrunkEntry entry : createdEntries) {
                 sendMessage(player, entry);

@@ -3,7 +3,7 @@ package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
 import dev.krijninc.slurp.eventHandlers.BlockBreakEventHandler;
-import dev.krijninc.slurp.eventHandlers.SipsHandler;
+import dev.krijninc.slurp.eventHandlers.ConsumeHandler;
 import dev.krijninc.slurp.exceptions.FetchException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,7 +23,7 @@ public class LapisOreEventHandler extends BlockBreakEventHandler {
         try {
 
             ArrayList<DrunkEntry> createdEntries;
-            createdEntries = SipsHandler.serverSplit(new ArrayList<>(), 0, (int) amount, false);
+            createdEntries = ConsumeHandler.serverSplit(new ArrayList<>(), 0, (int) amount, false);
 
             for (DrunkEntry entry : createdEntries) {
                 sendMessage(player, entry);

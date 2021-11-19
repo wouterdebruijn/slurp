@@ -1,8 +1,9 @@
-package dev.krijninc.slurp.eventHandlers;
+package dev.krijninc.slurp.helpers;
 
 import com.google.gson.Gson;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkPlayer;
+import dev.krijninc.slurp.eventHandlers.PlayerDeathEventHandler;
 import dev.krijninc.slurp.eventHandlers.blockBreakEvents.*;
 import dev.krijninc.slurp.helpers.DashboardServerConnector;
 import org.bukkit.Material;

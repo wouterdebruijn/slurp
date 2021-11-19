@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
-public class SipsHandler {
+public class ConsumeHandler {
     private static final Random random = new Random();
 
     public static ArrayList<DrunkEntry> serverSplit(ArrayList<UUID> excludedPlayers, int amountShots, int amountSips, boolean fairSplit) throws FetchException {

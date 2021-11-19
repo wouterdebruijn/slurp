@@ -1,7 +1,9 @@
 package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 
+import dev.krijninc.slurp.entities.DrunkEntry;
 import dev.krijninc.slurp.eventHandlers.BlockBreakEventHandler;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class LogsEventHandler extends BlockBreakEventHandler {
@@ -10,6 +12,12 @@ public class LogsEventHandler extends BlockBreakEventHandler {
     }
 
     @Override
-    protected void handleEvent(BlockBreakEvent event) {
+    protected void sendMessage(Player trigger, DrunkEntry entry) {
+
+    }
+
+    @Override
+    protected void handleEvent(BlockBreakEvent blockBreakEvent) {
+
     }
 }

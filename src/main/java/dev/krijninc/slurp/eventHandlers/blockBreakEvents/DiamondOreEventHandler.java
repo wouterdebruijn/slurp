@@ -3,7 +3,7 @@ package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
 import dev.krijninc.slurp.eventHandlers.BlockBreakEventHandler;
-import dev.krijninc.slurp.eventHandlers.SipsHandler;
+import dev.krijninc.slurp.eventHandlers.ConsumeHandler;
 import dev.krijninc.slurp.exceptions.FetchException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,7 +43,7 @@ public class DiamondOreEventHandler extends BlockBreakEventHandler {
     protected void handleEvent(BlockBreakEvent event) {
         Player player = event.getPlayer();
         try {
-            ArrayList<DrunkEntry> createdEntries = SipsHandler.serverSplit(new ArrayList<>(List.of(player.getUniqueId())), (int) amount, getRemainingSips(), false);
+            ArrayList<DrunkEntry> createdEntries = ConsumeHandler.serverSplit(new ArrayList<>(List.of(player.getUniqueId())), (int) amount, getRemainingSips(), false);
 
             for (DrunkEntry entry : createdEntries) {
                 sendMessage(player, entry);

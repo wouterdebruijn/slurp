@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.Random;
 
@@ -38,8 +39,23 @@ public class EventListener implements Listener {
     private final LanternPlaceEventHandler lanternPlaceEventHandler;
     private final TorchPlaceEventHandler torchPlaceEventHandler;
 
-    Random random = new Random(Slurp.getDrunkServer().getSeed());
-    double modifier = Slurp.getDrunkServer().getModifier();
+    private final Random random = new Random(Slurp.getDrunkServer().getSeed());
+
+    public void setModifier(double modifier) {
+        this.modifier = modifier;
+        Slurp.getDrunkServer().setModifier(modifier);
+        try {
+            Slurp.getDrunkServer().save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public double getModifier() {
+        return modifier;
+    }
+
+    private double modifier = Slurp.getDrunkServer().getModifier();
 
     public EventListener() {
         coalOreEventHandler = new CoalOreEventHandler(2 * modifier, generateChance(0.1, 0.2), generateInt(0, 3));
@@ -49,7 +65,7 @@ public class EventListener implements Listener {
         goldOreEventHandler = new GoldOreEventHandler(generateAmount(6), generateChance(0.4, 0.6), generateInt(0, 3));
         ironOreEventHandler = new IronOreEventHandler(generateAmount(3), generateChance(0.4, 0.6), generateInt(0, 3));
         lapisOreEventHandler = new LapisOreEventHandler(generateAmount(5), generateChance(0.6, 0.8));
-        logsEventHandler = new LogsEventHandler(generateAmount(3), generateChance(0.0, 0.1));
+        logsEventHandler = new LogsEventHandler(generateAmount(1), generateChance(0.0, 0.05));
         netherGoldOreEventHandler = new NetherGoldOreEventHandler(generateAmount(4), generateChance(0.0, 0.2), generateInt(0, 3));
         quartzOreEventHandler = new QuartzOreEventHandler(generateAmount(5), generateChance(0.1, 0.3), generateInt(0, 3));
         redstoneOreEventHandler = new RedstoneOreEventHandler(generateAmount(4), generateChance(0.3, 0.5), generateInt(0, 3));

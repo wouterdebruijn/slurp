@@ -24,6 +24,12 @@ public final class Slurp extends JavaPlugin {
     private static SidebarManager sidebarManager;
     private static ChooseDrinkingBuddies chooseDrinkingBuddies;
 
+    public static EventListener getEventListener() {
+        return eventListener;
+    }
+
+    private static EventListener eventListener;
+
     private static final HashMap<UUID, DrunkPlayer> drunkPlayers = new HashMap<>();
 
     public static JavaPlugin getPlugin() {
@@ -129,7 +135,8 @@ public final class Slurp extends JavaPlugin {
         CommandLoader.load();
 
         fancyLogger.info("Registering events to JavaPlugin.");
-        getServer().getPluginManager().registerEvents(new EventListener(), this);
+        eventListener = new EventListener();
+        getServer().getPluginManager().registerEvents(eventListener, this);
 
         drunkPlayers.forEach((uuid, _drunkPlayer) -> getLogger().info(String.format("Player in list: %s", uuid)));
 

@@ -6,8 +6,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import java.util.Arrays;
 
 public abstract class BlockBreakEventHandler extends EventHandler<BlockBreakEvent> {
-    protected double amount;
-    protected double chance;
     protected final Material[] materials;
 
     public BlockBreakEventHandler(double amount, double chance, Material[] materials) {

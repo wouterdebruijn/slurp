@@ -3,8 +3,10 @@
 # Example: https://example.com:4000
 self-hosted-dashboard-url: ''
 
+# Prefix for all slurp responses, example: '[Slurp] '
 slurp-prefix: '[Slurp] '
 
+# The multiplication ratio of shots to sips. Fractional shots will be converted to sips. Default: 20 (20 sips will be one shot)
 shots-to-sips-multiplier: 20
 
 # Enable drinking buddies
@@ -13,3 +15,5 @@ drinking-buddy-enabled: true
 drinking-buddy-group-size: 2
 # Change the interval of choosing new drinking buddies in seconds. (Default: 900 (900 seconds = 15 minutes))
 drinking-buddy-interval: 900
+
+slurp-console-debug-info: false

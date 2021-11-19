@@ -6,9 +6,11 @@ import java.util.logging.Logger;
 
 public class FancyLogger {
     private final Logger logger;
+    private final boolean enableInfo;
 
-    public FancyLogger(Logger logger) {
+    public FancyLogger(Logger logger, boolean enableInfo) {
         this.logger = logger;
+        this.enableInfo = enableInfo;
     }
 
     public void warning(String msg) {

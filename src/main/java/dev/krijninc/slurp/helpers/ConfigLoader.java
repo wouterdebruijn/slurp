@@ -30,4 +30,8 @@ public class ConfigLoader {
     public static int getInt(String key) {
         return config.getInt(key);
     }
+
+    public static void setObject(String key, Object value) {
+        config.set(key, value);
+    }
 }

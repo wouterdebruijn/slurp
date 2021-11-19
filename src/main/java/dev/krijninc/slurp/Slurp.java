@@ -84,12 +84,13 @@ public final class Slurp extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         plugin = this;
-        fancyLogger = new FancyLogger(this.getLogger());
 
         // Load (and maybe generate) the configuration file
         fancyLogger.info("Loading configuration file.");
         ConfigLoader.saveDefaults();
         ConfigLoader.load();
+
+        fancyLogger = new FancyLogger(this.getLogger(), ConfigLoader.getBoolean("slurp-console-debug-info"));
 
         // Register sidebar manager
         try {

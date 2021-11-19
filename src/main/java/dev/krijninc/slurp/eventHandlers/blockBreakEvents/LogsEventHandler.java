@@ -31,7 +31,7 @@ public class LogsEventHandler extends BlockBreakEventHandler {
     protected void handleEvent(BlockBreakEvent event) {
         try {
             Player player = event.getPlayer();
-            ArrayList<DrunkEntry> entries = ConsumeHandler.serverNoSplit(new ArrayList<>(), 0, (int) amount);
+            ArrayList<DrunkEntry> entries = ConsumeHandler.serverNoSplit(new ArrayList<>(), (int) amount, 0);
             sendMessage(player, entries.get(entries.size() - 1));
 
             buddyNotifier(entries);

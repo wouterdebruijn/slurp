@@ -2,20 +2,14 @@ package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
-import dev.krijninc.slurp.eventHandlers.BlockBreakEventHandler;
 import dev.krijninc.slurp.eventHandlers.BlockBreakRandomEventHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
 
 public class IronOreEventHandler extends BlockBreakRandomEventHandler {
     public IronOreEventHandler(double amount, double chance, int eventType) {
         super(amount, chance, new Material[]{Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE}, eventType);
-    }
-
-    @Override
-    protected void handleEvent(BlockBreakEvent event) {
     }
 
     protected void sendMessage(Player trigger, DrunkEntry entry) {

@@ -72,7 +72,7 @@ public final class Slurp extends JavaPlugin {
 
     public static void sendMessage(Player player, String message) {
         String messageListString = String.join("", message);
-        player.sendMessage(ChatColor.YELLOW + ConfigLoader.getString("slurp-prefix") + messageListString);
+        player.sendMessage(ChatColor.YELLOW + ConfigLoader.getString("slurp-prefix") + ChatColor.GREEN + messageListString);
     }
 
     @Override

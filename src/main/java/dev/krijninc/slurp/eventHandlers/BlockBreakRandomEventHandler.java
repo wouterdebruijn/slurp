@@ -3,6 +3,7 @@ package dev.krijninc.slurp.eventHandlers;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
 import dev.krijninc.slurp.exceptions.FetchException;
+import dev.krijninc.slurp.helpers.ConsumeHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,12 +29,17 @@ public abstract class BlockBreakRandomEventHandler extends BlockBreakEventHandle
                 for (DrunkEntry entry : createdEntries) {
                     sendMessage(player, entry);
                 }
+                buddyNotifier(createdEntries);
             } else if (eventType == 2) {
-                DrunkEntry entry = ConsumeHandler.serverNoSplit(new ArrayList<>(), 0, (int) amount);
-                sendMessage(player, entry);
+                ArrayList<DrunkEntry> entries = ConsumeHandler.serverNoSplit(new ArrayList<>(), 0, (int) amount);
+                sendMessage(player, entries.get(entries.size() - 1));
+
+                buddyNotifier(entries);
             } else {
-                DrunkEntry entry = ConsumeHandler.playerDrinks(player, 0, (int) amount);
-                sendMessage(player, entry);
+                ArrayList<DrunkEntry> entries = ConsumeHandler.playerDrinks(player, 0, (int) amount);
+                sendMessage(player, entries.get(entries.size() - 1));
+
+                buddyNotifier(entries);
             }
         } catch (FetchException e) {
             Slurp.broadcastMessage(ChatColor.DARK_RED + "Internal Server error, check console for details.");

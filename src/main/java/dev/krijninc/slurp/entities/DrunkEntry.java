@@ -13,9 +13,23 @@ public class DrunkEntry {
     private final UUID player;
     private final int sips;
     private final int shots;
+    private final boolean buddyEntry;
 
     public DrunkEntry(UUID uuid, double sips, double shots) {
         this.player = uuid;
+        buddyEntry = false;
+
+        if (shots % 1.0 > 0) {
+            this.sips = (int) (shots * ConfigLoader.getInt("shots-to-sips-multiplier") + sips);
+        } else {
+            this.sips = (int) sips;
+        }
+        this.shots = (int) shots;
+    }
+
+    public DrunkEntry(UUID uuid, double sips, double shots, boolean buddyEntry) {
+        this.player = uuid;
+        this.buddyEntry = buddyEntry;
 
         if (shots % 1.0 > 0) {
             this.sips = (int) (shots * ConfigLoader.getInt("shots-to-sips-multiplier") + sips);
@@ -67,5 +81,9 @@ public class DrunkEntry {
 
     public UUID getPlayer() {
         return player;
+    }
+
+    public boolean isBuddyEntry() {
+        return buddyEntry;
     }
 }

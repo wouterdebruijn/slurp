@@ -1,7 +1,8 @@
-package dev.krijninc.slurp.eventHandlers;
+package dev.krijninc.slurp.helpers;
 
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
+import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.exceptions.FetchException;
 import dev.krijninc.slurp.types.Consumables;
 import org.bukkit.entity.Player;
@@ -85,17 +86,41 @@ public class ConsumeHandler {
         for (HashMap.Entry<UUID, Consumables> entry : consumablesMap.entrySet()) {
             DrunkEntry drunkEntry = new DrunkEntry(entry.getKey(), entry.getValue().sips, entry.getValue().shots);
             entries.add(drunkEntry.save());
+
+            if (Slurp.getDrunkPlayer(drunkEntry.getPlayer()).isDrinkingBuddy) {
+                for (Player drinkingBuddy : Slurp.getDrinkingBuddies()) {
+                    if (!drinkingBuddy.getUniqueId().equals(entry.getKey())) {
+                        DrunkEntry buddyEntry = new DrunkEntry(drinkingBuddy.getUniqueId(), amountSips, amountShots, true);
+                        buddyEntry.save();
+                        entries.add(buddyEntry);
+                    }
+                }
+            }
         }
         return entries;
     }
 
-    public static DrunkEntry serverNoSplit(ArrayList<UUID> excludedPlayers, int amountShots, int amountSips) throws FetchException {
+    public static ArrayList<DrunkEntry> serverNoSplit(ArrayList<UUID> excludedPlayers, int amountShots, int amountSips) throws FetchException {
         ArrayList<Player> participatingPlayers = getParticipatingPlayers(excludedPlayers);
 
         Player randomPlayer = participatingPlayers.get(random.nextInt(participatingPlayers.size()));
         DrunkEntry entry = new DrunkEntry(randomPlayer.getUniqueId(), amountSips, amountShots);
+
+        ArrayList<DrunkEntry> entries = new ArrayList<>();
+
+        if (Slurp.getDrunkPlayer(randomPlayer.getUniqueId()).isDrinkingBuddy) {
+            for (Player drinkingBuddy : Slurp.getDrinkingBuddies()) {
+                if (!drinkingBuddy.getUniqueId().equals(randomPlayer.getUniqueId())) {
+                    DrunkEntry buddyEntry = new DrunkEntry(drinkingBuddy.getUniqueId(), amountSips, amountShots, true);
+                    buddyEntry.save();
+                    entries.add(buddyEntry);
+                }
+            }
+        }
+
         entry.save();
-        return entry;
+        entries.add(entry);
+        return entries;
     }
 
     public static ArrayList<DrunkEntry> everyoneDrinks(ArrayList<UUID> excludedPlayers, int amountShots, int amountSips) throws FetchException {
@@ -112,10 +137,24 @@ public class ConsumeHandler {
         return entries;
     }
 
-    public static DrunkEntry playerDrinks(Player player, int amountShots, int amountSips) throws FetchException {
+    public static ArrayList<DrunkEntry> playerDrinks(Player player, int amountShots, int amountSips) throws FetchException {
         DrunkEntry entry = new DrunkEntry(player.getUniqueId(), amountSips, amountShots);
+
+        ArrayList<DrunkEntry> entries = new ArrayList<>();
+
+        if (Slurp.getDrunkPlayer(player.getUniqueId()).isDrinkingBuddy) {
+            for (Player drinkingBuddy : Slurp.getDrinkingBuddies()) {
+                if (!drinkingBuddy.getUniqueId().equals(player.getUniqueId())) {
+                    DrunkEntry buddyEntry = new DrunkEntry(drinkingBuddy.getUniqueId(), amountSips, amountShots, true);
+                    buddyEntry.save();
+                    entries.add(buddyEntry);
+                }
+            }
+        }
+
         entry.save();
-        return entry;
+        entries.add(entry);
+        return entries;
     }
 
     public static void playerGives(Player player, int amountShots, int amountSips) {

@@ -34,7 +34,7 @@ public class EventListener implements Listener {
     double modifier = Slurp.getDrunkServer().getModifier();
 
     public EventListener() {
-        coalOreEventHandler = new CoalOreEventHandler(2 * modifier, generateChance(0.1, 0.2));
+        coalOreEventHandler = new CoalOreEventHandler(2 * modifier, generateChance(0.1, 0.2), generateInt(0, 3));
         copperOreEventHandler = new CopperOreEventHandler(generateAmount(3), generateChance(0.4, 0.6));
         diamondOreEventHandler = new DiamondOreEventHandler((int) (1 * modifier), generateChance(0.8, 1));
         emeraldOreEventHandler = new EmeraldOreEventHandler(generateAmount(5, 14), generateChance(0.8, 1));
@@ -99,12 +99,17 @@ public class EventListener implements Listener {
         stoneEventHandler.execute(event, blockType);
     }
 
+    // TODO: REFACTOR THESE FUNCTIONS
     private double generateAmount(int max) {
         return generateAmount(2, max);
     }
 
     private double generateAmount(int min, int max) {
-        return (random.nextInt(max + 1 - min) + min * modifier);
+        return (generateInt(min, max) * modifier);
+    }
+
+    private int generateInt(int min, int max) {
+        return (random.nextInt(max + 1 - min) + min);
     }
 
     private double generateChance(double min, double max) {

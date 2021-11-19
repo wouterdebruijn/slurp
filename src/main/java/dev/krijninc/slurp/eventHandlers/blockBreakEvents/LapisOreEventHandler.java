@@ -22,12 +22,12 @@ public class LapisOreEventHandler extends BlockBreakEventHandler {
         Player player = event.getPlayer();
         try {
 
-        ArrayList<DrunkEntry> createdEntries;
-        createdEntries = SipsHandler.serverSplit(new ArrayList<>(), 0, (int) amount, false);
+            ArrayList<DrunkEntry> createdEntries;
+            createdEntries = SipsHandler.serverSplit(new ArrayList<>(), 0, (int) amount, false);
 
-        for (DrunkEntry entry : createdEntries) {
-            sendMessage(player, entry);
-        }
+            for (DrunkEntry entry : createdEntries) {
+                sendMessage(player, entry);
+            }
         } catch (FetchException e) {
             Slurp.broadcastMessage(ChatColor.DARK_RED + "Internal Server error, check console for details.");
         }

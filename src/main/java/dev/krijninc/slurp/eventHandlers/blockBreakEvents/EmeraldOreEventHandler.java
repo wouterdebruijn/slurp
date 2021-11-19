@@ -12,7 +12,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class EmeraldOreEventHandler extends BlockBreakEventHandler {
     public EmeraldOreEventHandler(double amount, double chance) {

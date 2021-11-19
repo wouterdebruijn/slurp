@@ -2,16 +2,11 @@ package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
-import dev.krijninc.slurp.eventHandlers.BlockBreakEventHandler;
 import dev.krijninc.slurp.eventHandlers.BlockBreakRandomEventHandler;
-import dev.krijninc.slurp.eventHandlers.SipsHandler;
-import dev.krijninc.slurp.exceptions.FetchException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
 
-import java.util.ArrayList;
 
 public class CopperOreEventHandler extends BlockBreakRandomEventHandler {
     public CopperOreEventHandler(double amount, double chance, int eventType) {

@@ -12,9 +12,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Executable;
 import java.net.http.HttpResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public final class Slurp extends JavaPlugin {
 
@@ -59,7 +60,9 @@ public final class Slurp extends JavaPlugin {
         return chooseDrinkingBuddies.getDrinkingBuddies();
     }
 
-    public static void chooseNewDrinkingBuddies() {chooseDrinkingBuddies.run(); }
+    public static void chooseNewDrinkingBuddies() {
+        chooseDrinkingBuddies.run();
+    }
 
     public static void broadcastMessage(String message) {
         for (Player player : getPlugin().getServer().getOnlinePlayers()) {

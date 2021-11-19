@@ -37,7 +37,7 @@ public class SipsHandler {
                 // Add the shot to the player.
                 Consumables consumables = consumablesMap.get(p.getUniqueId());
                 if (consumables == null) consumables = new Consumables();
-                consumables.shots ++;
+                consumables.shots++;
                 consumablesMap.put(p.getUniqueId(), consumables);
             }
 
@@ -53,18 +53,18 @@ public class SipsHandler {
                 // Add the sip to the player.
                 Consumables consumables = consumablesMap.get(p.getUniqueId());
                 if (consumables == null) consumables = new Consumables();
-                consumables.sips ++;
+                consumables.sips++;
                 consumablesMap.put(p.getUniqueId(), consumables);
             }
         } else {
             for (int i = 0; i < amountShots; i++) {
-                 // Remove random player from the current list.
+                // Remove random player from the current list.
                 Player p = participatingPlayers.get(random.nextInt(participatingPlayerAmount));
 
                 // Add the shot to the player.
                 Consumables consumables = consumablesMap.get(p.getUniqueId());
                 if (consumables == null) consumables = new Consumables();
-                consumables.shots ++;
+                consumables.shots++;
                 consumablesMap.put(p.getUniqueId(), consumables);
             }
 
@@ -75,14 +75,14 @@ public class SipsHandler {
                 // Add the sip to the player.
                 Consumables consumables = consumablesMap.get(p.getUniqueId());
                 if (consumables == null) consumables = new Consumables();
-                consumables.sips ++;
+                consumables.sips++;
                 consumablesMap.put(p.getUniqueId(), consumables);
             }
         }
 
         ArrayList<DrunkEntry> entries = new ArrayList<>();
 
-        for(HashMap.Entry<UUID, Consumables> entry : consumablesMap.entrySet()) {
+        for (HashMap.Entry<UUID, Consumables> entry : consumablesMap.entrySet()) {
             DrunkEntry drunkEntry = new DrunkEntry(entry.getKey(), entry.getValue().sips, entry.getValue().shots);
             entries.add(drunkEntry.save());
         }

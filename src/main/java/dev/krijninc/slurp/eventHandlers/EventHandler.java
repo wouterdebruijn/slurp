@@ -51,7 +51,7 @@ abstract public class EventHandler<Event> {
                     else if (entry.getSips() > 0)
                         Slurp.sendMessage(player, "Your drinking buddy gave you " + sipString(entry.getSips()));
                     else
-                        Slurp.sendMessage(player, "Your drinking buddy gave you " + sipString(entry.getShots()));
+                        Slurp.sendMessage(player, "Your drinking buddy gave you " + shotString(entry.getShots()));
                 }
             }
         }

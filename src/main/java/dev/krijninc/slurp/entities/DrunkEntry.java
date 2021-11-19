@@ -3,6 +3,7 @@ package dev.krijninc.slurp.entities;
 import com.google.gson.Gson;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.exceptions.FetchException;
+import dev.krijninc.slurp.helpers.ConfigLoader;
 import dev.krijninc.slurp.helpers.DashboardServerConnector;
 
 import java.net.http.HttpResponse;
@@ -17,7 +18,7 @@ public class DrunkEntry {
         this.player = uuid;
 
         if (shots % 1.0 > 0) {
-            this.sips = (int) (shots * 20 + sips);
+            this.sips = (int) (shots * ConfigLoader.getInt("shots-to-sips-multiplier") + sips);
         } else {
             this.sips = (int) sips;
         }

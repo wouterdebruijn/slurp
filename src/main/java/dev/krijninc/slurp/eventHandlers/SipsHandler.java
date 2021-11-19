@@ -98,6 +98,20 @@ public class SipsHandler {
         return entry;
     }
 
+    public static ArrayList<DrunkEntry> everyoneDrinks(ArrayList<UUID> excludedPlayers, int amountShots, int amountSips) throws FetchException {
+        ArrayList<Player> participatingPlayers = getParticipatingPlayers(excludedPlayers);
+
+        ArrayList<DrunkEntry> entries = new ArrayList<>();
+
+        for (Player player : participatingPlayers) {
+            DrunkEntry entry = new DrunkEntry(player.getUniqueId(), amountSips, amountShots);
+            entry.save();
+            entries.add(entry);
+        }
+
+        return entries;
+    }
+
     public static DrunkEntry playerDrinks(Player player, int amountShots, int amountSips) throws FetchException {
         DrunkEntry entry = new DrunkEntry(player.getUniqueId(), amountSips, amountShots);
         entry.save();

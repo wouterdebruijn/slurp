@@ -12,7 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Array;
+import java.lang.reflect.Executable;
 import java.net.http.HttpResponse;
 import java.util.*;
 
@@ -58,6 +58,8 @@ public final class Slurp extends JavaPlugin {
     public static ArrayList<Player> getDrinkingBuddies() {
         return chooseDrinkingBuddies.getDrinkingBuddies();
     }
+
+    public static void chooseNewDrinkingBuddies() {chooseDrinkingBuddies.run(); }
 
     public static void broadcastMessage(String message) {
         for (Player player : getPlugin().getServer().getOnlinePlayers()) {

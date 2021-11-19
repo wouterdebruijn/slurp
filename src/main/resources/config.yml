@@ -5,6 +5,8 @@ self-hosted-dashboard-url: ''
 
 slurp-prefix: '[Slurp] '
 
+shots-to-sips-multiplier: 20
+
 # Enable drinking buddies
 drinking-buddy-enabled: true
 # Change the size of a buddy group (Default: 2 players)

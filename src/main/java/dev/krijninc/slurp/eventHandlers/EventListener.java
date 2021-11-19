@@ -35,16 +35,16 @@ public class EventListener implements Listener {
 
     public EventListener() {
         coalOreEventHandler = new CoalOreEventHandler(2 * modifier, generateChance(0.1, 0.2), generateInt(0, 3));
-        copperOreEventHandler = new CopperOreEventHandler(generateAmount(3), generateChance(0.4, 0.6));
+        copperOreEventHandler = new CopperOreEventHandler(generateAmount(3), generateChance(0.4, 0.6), generateInt(0, 3));
         diamondOreEventHandler = new DiamondOreEventHandler((int) (1 * modifier), generateChance(0.8, 1));
         emeraldOreEventHandler = new EmeraldOreEventHandler(generateAmount(5, 14), generateChance(0.8, 1));
-        goldOreEventHandler = new GoldOreEventHandler(generateAmount(4), generateChance(0.4, 0.6));
-        ironOreEventHandler = new IronOreEventHandler(generateAmount(3), generateChance(0.4, 0.6));
-        lapisOreEventHandler = new LapisOreEventHandler(generateAmount(4), generateChance(0.6, 0.8));
+        goldOreEventHandler = new GoldOreEventHandler(generateAmount(6), generateChance(0.4, 0.6), generateInt(0, 3));
+        ironOreEventHandler = new IronOreEventHandler(generateAmount(3), generateChance(0.4, 0.6), generateInt(0, 3));
+        lapisOreEventHandler = new LapisOreEventHandler(generateAmount(5), generateChance(0.6, 0.8));
         logsEventHandler = new LogsEventHandler(generateAmount(3), generateChance(0.0, 0.1));
         netherGoldOreEventHandler = new NetherGoldOreEventHandler(generateAmount(4), generateChance(0.0, 0.2));
         quartzOreEventHandler = new QuartzOreEventHandler(generateAmount(5), generateChance(0.1, 0.3));
-        redstoneOreEventHandler = new RedstoneOreEventHandler(generateAmount(4), generateChance(0.3, 0.5));
+        redstoneOreEventHandler = new RedstoneOreEventHandler(generateAmount(4), generateChance(0.3, 0.5), generateInt(0, 3));
         stoneEventHandler = new StoneEventHandler((int) (1 * modifier), 0.0013);
     }
 
@@ -69,11 +69,6 @@ public class EventListener implements Listener {
                 DrunkPlayer p = Slurp.getDrunkPlayer(player.getUniqueId());
                 Slurp.getSidebarManager().createSidebar(p);
             }
-
-            DrunkPlayer savedPlayer = Slurp.getDrunkPlayer(player.getUniqueId());
-            Gson gson = new Gson();
-            Slurp.broadcastMessage(gson.toJson(savedPlayer));
-
         } catch (Exception e) {
             e.printStackTrace();
             Slurp.getFancyLogger().severe("Could not register new player on dashboard backend!");

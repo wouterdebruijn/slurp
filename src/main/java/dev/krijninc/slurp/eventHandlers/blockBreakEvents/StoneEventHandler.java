@@ -19,7 +19,7 @@ public class StoneEventHandler extends BlockBreakEventHandler {
 
     protected void sendMessage(Player trigger, DrunkEntry entry) {
         if (entry.getPlayer().equals(trigger.getUniqueId())) {
-            if (entry.getSips() > 0 && entry.getShots() < 1)
+            if (entry.getSips() > 0 && entry.getShots() > 0)
                 Slurp.sendMessage(trigger, ChatColor.GOLD + "You found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now take " + entry.getSips() + " sips and " + entry.getShots() + " shots!");
             else if (entry.getSips() > 0)
                 Slurp.sendMessage(trigger, ChatColor.GOLD + "You found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now take " + entry.getSips() + " sips!");
@@ -29,7 +29,7 @@ public class StoneEventHandler extends BlockBreakEventHandler {
         } else {
             Player drinker = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
             if (drinker == null) return;
-            if (entry.getSips() > 0 && entry.getShots() < 1)
+            if (entry.getSips() > 0 && entry.getShots() > 0)
                 Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now you take " + entry.getSips() + " sips and " + entry.getShots() + " shots!");
             else if (entry.getSips() > 0)
                 Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now you take " + entry.getSips() + " sips!");

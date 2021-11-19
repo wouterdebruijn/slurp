@@ -63,4 +63,8 @@ public class DrunkEntry {
     public int getShots() {
         return shots;
     }
+
+    public UUID getPlayer() {
+        return player;
+    }
 }

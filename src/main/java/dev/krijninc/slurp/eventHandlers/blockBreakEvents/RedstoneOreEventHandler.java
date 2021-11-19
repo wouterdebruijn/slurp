@@ -14,11 +14,11 @@ public class RedstoneOreEventHandler extends BlockBreakRandomEventHandler {
 
     protected void sendMessage(Player trigger, DrunkEntry entry) {
         if (entry.getPlayer().equals(trigger.getUniqueId())) {
-            Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined redstone, now take " + entry.getSips() + " sips!");
+            Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined redstone, now take " + sipString(entry.getSips()));
         } else {
             Player drinker = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
             if (drinker == null) return;
-            Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined redstone, now you take " + entry.getSips() + " sips!");
+            Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined redstone, now you take " + sipString(entry.getSips()));
         }
     }
 }

@@ -1,22 +1,26 @@
 package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 
+import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
 import dev.krijninc.slurp.eventHandlers.BlockBreakEventHandler;
+import dev.krijninc.slurp.eventHandlers.BlockBreakRandomEventHandler;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
-public class NetherGoldOreEventHandler extends BlockBreakEventHandler {
-    public NetherGoldOreEventHandler(double amount, double chance) {
-        super(amount, chance, new Material[]{Material.NETHER_GOLD_ORE});
+public class NetherGoldOreEventHandler extends BlockBreakRandomEventHandler {
+    public NetherGoldOreEventHandler(double amount, double chance, int eventType) {
+        super(amount, chance, new Material[]{Material.NETHER_GOLD_ORE}, eventType);
     }
 
-    @Override
     protected void sendMessage(Player trigger, DrunkEntry entry) {
-
-    }
-
-    @Override
-    protected void handleEvent(BlockBreakEvent event) {
+        if (entry.getPlayer().equals(trigger.getUniqueId())) {
+            Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined nether gold, now take " + sipString(entry.getSips()));
+        } else {
+            Player drinker = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
+            if (drinker == null) return;
+            Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined nether gold, now you take " + sipString(entry.getSips()));
+        }
     }
 }

@@ -20,21 +20,21 @@ public class StoneEventHandler extends BlockBreakEventHandler {
     protected void sendMessage(Player trigger, DrunkEntry entry) {
         if (entry.getPlayer().equals(trigger.getUniqueId())) {
             if (entry.getSips() > 0 && entry.getShots() > 0)
-                Slurp.sendMessage(trigger, ChatColor.GOLD + "You found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now take " + entry.getSips() + " sips and " + entry.getShots() + " shots!");
+                Slurp.sendMessage(trigger, ChatColor.GOLD + "You found a " + ChatColor.AQUA + "lucky" + ChatColor.GOLD + " stone now take " + sipString(entry.getSips(), " and ") + shotString(entry.getShots()));
             else if (entry.getSips() > 0)
-                Slurp.sendMessage(trigger, ChatColor.GOLD + "You found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now take " + entry.getSips() + " sips!");
+                Slurp.sendMessage(trigger, ChatColor.GOLD + "You found a " + ChatColor.AQUA + "lucky" + ChatColor.GOLD + " stone now take " + sipString(entry.getSips()));
             else
-                Slurp.sendMessage(trigger, ChatColor.GOLD + "You found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now take " + entry.getShots() + " shots!");
+                Slurp.sendMessage(trigger, ChatColor.GOLD + "You found a " + ChatColor.AQUA + "lucky" + ChatColor.GOLD + " stone now take " + shotString(entry.getShots()));
 
         } else {
             Player drinker = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
             if (drinker == null) return;
             if (entry.getSips() > 0 && entry.getShots() > 0)
-                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now you take " + entry.getSips() + " sips and " + entry.getShots() + " shots!");
+                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " found a " + ChatColor.AQUA + "lucky" + ChatColor.GOLD + " stone now you take " + sipString(entry.getSips(), " and ") + shotString(entry.getShots()));
             else if (entry.getSips() > 0)
-                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now you take " + entry.getSips() + " sips!");
+                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " found a " + ChatColor.AQUA + "lucky" + ChatColor.GOLD + " stone now you take " + sipString(entry.getSips()));
             else
-                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " found a " + ChatColor.GREEN + "lucky" + ChatColor.GOLD + " stone now you take " + entry.getShots() + " shots!");
+                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " found a " + ChatColor.AQUA + "lucky" + ChatColor.GOLD + " stone now you take " + shotString(entry.getShots()));
         }
     }
 

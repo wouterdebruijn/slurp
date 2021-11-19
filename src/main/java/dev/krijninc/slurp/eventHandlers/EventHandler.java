@@ -1,7 +1,6 @@
 package dev.krijninc.slurp.eventHandlers;
 
 import dev.krijninc.slurp.entities.DrunkEntry;
-import dev.krijninc.slurp.helpers.ConfigLoader;
 import org.bukkit.entity.Player;
 
 abstract public class EventHandler<Event> {
@@ -21,6 +20,22 @@ abstract public class EventHandler<Event> {
 
     protected int getRemainingSips() {
         return (int) ((amount % 1) * 20);
+    }
+
+    protected String shotString(int amount, String suffix) {
+        return amount > 1 ? amount + "shots!" : "a shot!" + suffix;
+    }
+
+    protected String sipString(int amount, String suffix) {
+        return amount > 1 ? amount + "sips!" : "a sip" + suffix;
+    }
+
+    protected String shotString(int amount) {
+        return shotString(amount, "!");
+    }
+
+    protected String sipString(int amount) {
+        return sipString(amount, "!");
     }
 
     protected abstract void sendMessage(Player trigger, DrunkEntry entry);

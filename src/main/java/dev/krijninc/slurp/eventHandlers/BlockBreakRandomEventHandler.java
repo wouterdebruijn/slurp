@@ -19,6 +19,7 @@ public class BlockBreakRandomEventHandler extends BlockBreakEventHandler {
         this.eventType = eventType;
     }
 
+    @Override
     public void execute(BlockBreakEvent event, Material material) {
         if (matchesMaterial(material) && Math.random() <= chance) {
             handleEvent(event);
@@ -46,9 +47,5 @@ public class BlockBreakRandomEventHandler extends BlockBreakEventHandler {
         } catch (FetchException e) {
             Slurp.broadcastMessage(ChatColor.DARK_RED + "Internal Server error, check console for details.");
         }
-    }
-
-    private boolean matchesMaterial(Material material) {
-        return Arrays.asList(this.materials).contains(material);
     }
 }

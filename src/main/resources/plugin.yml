@@ -24,3 +24,6 @@ commands:
   drinkingmode:
     description: Get or set the drinking difficulty
     usage: /drinkingmode <mode?>
+  newdrinkingbuddies:
+    description: Force a new set of drinking buddies
+    usage: /newdrinkingbuddies

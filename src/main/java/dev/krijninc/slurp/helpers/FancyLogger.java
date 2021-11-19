@@ -18,6 +18,7 @@ public class FancyLogger {
     }
 
     public void info(String msg) {
+        if (enableInfo)
         logger.info(msg);
     }
 

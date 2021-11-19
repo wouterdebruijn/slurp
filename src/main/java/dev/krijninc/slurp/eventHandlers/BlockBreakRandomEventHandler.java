@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+
 import java.util.ArrayList;
 
 public abstract class BlockBreakRandomEventHandler extends BlockBreakEventHandler {

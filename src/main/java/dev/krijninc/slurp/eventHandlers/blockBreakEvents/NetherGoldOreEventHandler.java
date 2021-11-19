@@ -2,12 +2,10 @@ package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
-import dev.krijninc.slurp.eventHandlers.BlockBreakEventHandler;
 import dev.krijninc.slurp.eventHandlers.BlockBreakRandomEventHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
 
 public class NetherGoldOreEventHandler extends BlockBreakRandomEventHandler {
     public NetherGoldOreEventHandler(double amount, double chance, int eventType) {

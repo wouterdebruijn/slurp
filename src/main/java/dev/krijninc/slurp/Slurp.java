@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.entities.DrunkPlayerCollection;
 import dev.krijninc.slurp.entities.DrunkServer;
-import dev.krijninc.slurp.helpers.EventListener;
 import dev.krijninc.slurp.exceptions.FetchException;
 import dev.krijninc.slurp.helpers.*;
 import dev.krijninc.slurp.runnables.ChooseDrinkingBuddies;

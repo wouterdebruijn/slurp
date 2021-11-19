@@ -2,7 +2,6 @@ package dev.krijninc.slurp.helpers;
 
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
-import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.exceptions.FetchException;
 import dev.krijninc.slurp.types.Consumables;
 import org.bukkit.entity.Player;

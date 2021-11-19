@@ -7,7 +7,6 @@ import dev.krijninc.slurp.eventHandlers.PlayerDeathEventHandler;
 import dev.krijninc.slurp.eventHandlers.blockBreakEvents.*;
 import dev.krijninc.slurp.eventHandlers.blockPlaceEvents.LanternPlaceEventHandler;
 import dev.krijninc.slurp.eventHandlers.blockPlaceEvents.TorchPlaceEventHandler;
-import dev.krijninc.slurp.helpers.DashboardServerConnector;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

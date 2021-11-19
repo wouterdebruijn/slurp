@@ -58,5 +58,6 @@ abstract public class EventHandler<Event> {
     }
 
     protected abstract void sendMessage(Player trigger, DrunkEntry entry);
+
     protected abstract void handleEvent(Event event);
 }

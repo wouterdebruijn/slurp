@@ -5,12 +5,15 @@ import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkPlayer;
 import dev.krijninc.slurp.eventHandlers.PlayerDeathEventHandler;
 import dev.krijninc.slurp.eventHandlers.blockBreakEvents.*;
+import dev.krijninc.slurp.eventHandlers.blockPlaceEvents.LanternPlaceEventHandler;
+import dev.krijninc.slurp.eventHandlers.blockPlaceEvents.TorchPlaceEventHandler;
 import dev.krijninc.slurp.helpers.DashboardServerConnector;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -31,7 +34,10 @@ public class EventListener implements Listener {
     private final QuartzOreEventHandler quartzOreEventHandler;
     private final RedstoneOreEventHandler redstoneOreEventHandler;
     private final StoneEventHandler stoneEventHandler;
+
     private final PlayerDeathEventHandler playerDeathEventHandler;
+    private final LanternPlaceEventHandler lanternPlaceEventHandler;
+    private final TorchPlaceEventHandler torchPlaceEventHandler;
 
     Random random = new Random(Slurp.getDrunkServer().getSeed());
     double modifier = Slurp.getDrunkServer().getModifier();
@@ -45,12 +51,15 @@ public class EventListener implements Listener {
         ironOreEventHandler = new IronOreEventHandler(generateAmount(3), generateChance(0.4, 0.6), generateInt(0, 3));
         lapisOreEventHandler = new LapisOreEventHandler(generateAmount(5), generateChance(0.6, 0.8));
         logsEventHandler = new LogsEventHandler(generateAmount(3), generateChance(0.0, 0.1));
-        netherGoldOreEventHandler = new NetherGoldOreEventHandler(generateAmount(4), generateChance(0.0, 0.2));
-        quartzOreEventHandler = new QuartzOreEventHandler(generateAmount(5), generateChance(0.1, 0.3));
+        netherGoldOreEventHandler = new NetherGoldOreEventHandler(generateAmount(4), generateChance(0.0, 0.2), generateInt(0, 3));
+        quartzOreEventHandler = new QuartzOreEventHandler(generateAmount(5), generateChance(0.1, 0.3), generateInt(0, 3));
         redstoneOreEventHandler = new RedstoneOreEventHandler(generateAmount(4), generateChance(0.3, 0.5), generateInt(0, 3));
         stoneEventHandler = new StoneEventHandler(1 * modifier, 0.0013);
 
-        playerDeathEventHandler = new PlayerDeathEventHandler(1 * modifier, 1);
+        playerDeathEventHandler = new PlayerDeathEventHandler(1 * modifier, 1.0);
+
+        lanternPlaceEventHandler = new LanternPlaceEventHandler(4 * modifier, generateChance(0.6, 0.8));
+        torchPlaceEventHandler = new TorchPlaceEventHandler(1 * modifier, 1);
     }
 
     @EventHandler
@@ -101,8 +110,15 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void playerDeathEvent(PlayerDeathEvent event) {
-        Slurp.broadcastMessage("Death event!");
         playerDeathEventHandler.execute(event);
+    }
+
+    @EventHandler
+    public void blockPlaceEvent(BlockPlaceEvent event) {
+        Material blockType = event.getBlockPlaced().getType();
+
+        lanternPlaceEventHandler.execute(event, blockType);
+        torchPlaceEventHandler.execute(event, blockType);
     }
 
     // TODO: REFACTOR THESE FUNCTIONS

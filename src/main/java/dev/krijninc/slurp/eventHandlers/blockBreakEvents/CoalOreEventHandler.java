@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 
 public class CoalOreEventHandler extends BlockBreakRandomEventHandler {
     public CoalOreEventHandler(double amount, double chance, int eventType) {
@@ -14,12 +16,6 @@ public class CoalOreEventHandler extends BlockBreakRandomEventHandler {
     }
 
     protected void sendMessage(Player trigger, DrunkEntry entry) {
-        if (entry.getPlayer().equals(trigger.getUniqueId())) {
-            Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined coal, now take " + sipString(entry.getSips()));
-        } else {
-            Player drinker = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
-            if (drinker == null) return;
-            Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined coal, now you take " + sipString(entry.getSips()));
-        }
+        Slurp.broadcastMessage(trigger.getDisplayName() + " mined coal, now " + Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(entry.getPlayer())).getDisplayName() + " takes " + sipString(entry.getSips()));
     }
 }

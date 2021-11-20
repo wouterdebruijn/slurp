@@ -3,7 +3,6 @@ package dev.krijninc.slurp.eventHandlers.blockBreakEvents;
 import dev.krijninc.slurp.Slurp;
 import dev.krijninc.slurp.entities.DrunkEntry;
 import dev.krijninc.slurp.eventHandlers.BlockBreakRandomEventHandler;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -16,6 +15,6 @@ public class CopperOreEventHandler extends BlockBreakRandomEventHandler {
     }
 
     protected void sendMessage(Player trigger, DrunkEntry entry) {
-        Slurp.broadcastMessage(ChatColor.GOLD + trigger.getDisplayName() + " mined copper, now " + Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(entry.getPlayer())).getDisplayName() + " takes " + sipString(entry.getSips()));
+        Slurp.broadcastMessage(trigger.getDisplayName() + " mined copper, now " + Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(entry.getPlayer())).getDisplayName() + " takes " + sipString(entry.getSips()));
     }
 }

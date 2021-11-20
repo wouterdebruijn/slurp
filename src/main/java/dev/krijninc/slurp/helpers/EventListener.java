@@ -63,18 +63,18 @@ public class EventListener implements Listener {
     private double modifier = Slurp.getDrunkServer().getModifier();
 
     public EventListener() {
-        coalOreEventHandler = new CoalOreEventHandler(2 * modifier, generateChance(0.1, 0.2), generateInt(0, 3));
-        copperOreEventHandler = new CopperOreEventHandler(generateAmount(3), generateChance(0.4, 0.6), generateInt(0, 3));
-        diamondOreEventHandler = new DiamondOreEventHandler(1 * modifier, generateChance(0.8, 1));
-        emeraldOreEventHandler = new EmeraldOreEventHandler(generateAmount(5, 14), generateChance(0.8, 1));
-        goldOreEventHandler = new GoldOreEventHandler(generateAmount(6), generateChance(0.4, 0.6), generateInt(0, 3));
-        ironOreEventHandler = new IronOreEventHandler(generateAmount(3), generateChance(0.4, 0.6), generateInt(0, 3));
-        lapisOreEventHandler = new LapisOreEventHandler(generateAmount(5), generateChance(0.6, 0.8));
-        logsEventHandler = new LogsEventHandler(generateChance(0,1) * modifier, generateChance(0, 0.05));
+        coalOreEventHandler = new CoalOreEventHandler(2 * modifier, generateChance(0.01, 0.08), generateInt(0, 3));
+        copperOreEventHandler = new CopperOreEventHandler(generateAmount(3), generateChance(0.1, 0.2), generateInt(0, 3));
+        diamondOreEventHandler = new DiamondOreEventHandler(1 * modifier, generateChance(0.6, 0.8));
+        emeraldOreEventHandler = new EmeraldOreEventHandler(generateAmount(5, 14), generateChance(0.4, 0.6));
+        goldOreEventHandler = new GoldOreEventHandler(generateAmount(6), generateChance(0.1, 0.2), generateInt(0, 3));
+        ironOreEventHandler = new IronOreEventHandler(generateAmount(3), generateChance(0.0, 0.15), generateInt(0, 3));
+        lapisOreEventHandler = new LapisOreEventHandler(generateAmount(5), generateChance(0.2, 0.4));
+        logsEventHandler = new LogsEventHandler(generateChance(0,1) * modifier, generateChance(0, 0.08));
         netherGoldOreEventHandler = new NetherGoldOreEventHandler(generateAmount(4), generateChance(0.0, 0.2), generateInt(0, 3));
         quartzOreEventHandler = new QuartzOreEventHandler(generateAmount(5), generateChance(0.1, 0.3), generateInt(0, 3));
-        redstoneOreEventHandler = new RedstoneOreEventHandler(generateAmount(4), generateChance(0.3, 0.5), generateInt(0, 3));
-        stoneEventHandler = new StoneEventHandler(1 * modifier, 0.0013);
+        redstoneOreEventHandler = new RedstoneOreEventHandler(generateAmount(4), generateChance(0.1, 0.2), generateInt(0, 3));
+        stoneEventHandler = new StoneEventHandler(1 * modifier, 0.0010);
 
         playerDeathEventHandler = new PlayerDeathEventHandler(1 * modifier, 1.0);
 

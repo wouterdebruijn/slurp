@@ -9,10 +9,7 @@ import dev.krijninc.slurp.helpers.*;
 import dev.krijninc.slurp.runnables.ChooseDrinkingBuddies;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -88,7 +85,7 @@ public final class Slurp extends JavaPlugin {
 
     public static void broadcastMessage(String message) {
         for (Player player : getPlugin().getServer().getOnlinePlayers()) {
-            player.sendMessage(ChatColor.YELLOW + ConfigLoader.getString("slurp-prefix") + message);
+            player.sendMessage(ChatColor.YELLOW + ConfigLoader.getString("slurp-prefix") + ChatColor.GREEN + message);
         }
     }
 

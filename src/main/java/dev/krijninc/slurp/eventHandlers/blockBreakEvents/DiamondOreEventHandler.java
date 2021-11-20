@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DiamondOreEventHandler extends BlockBreakEventHandler {
     public DiamondOreEventHandler(double amount, double chance) {
@@ -19,24 +20,12 @@ public class DiamondOreEventHandler extends BlockBreakEventHandler {
     }
 
     protected void sendMessage(Player trigger, DrunkEntry entry) {
-        if (entry.getPlayer().equals(trigger.getUniqueId())) {
-            if (entry.getSips() > 0 && entry.getShots() >= 1)
-                Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined diamonds, now take " + sipString(entry.getSips(), " and ") + shotString(entry.getShots()));
-            else if (entry.getSips() > 0)
-                Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined diamonds, now take " + entry.getSips() + " sips!");
-            else
-                Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined diamonds, now take " + shotString(entry.getShots()));
-
-        } else {
-            Player drinker = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
-            if (drinker == null) return;
-            if (entry.getSips() > 0 && entry.getShots() >= 1)
-                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined diamonds, now you take " + sipString(entry.getSips(), " and ") + shotString(entry.getShots()));
-            else if (entry.getSips() > 0)
-                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined diamonds, now you take " + entry.getSips() + " sips!");
-            else
-                Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined diamonds, now you take " + shotString(entry.getShots()));
-        }
+        if (entry.getSips() >= 1 && entry.getShots() >= 1)
+            Slurp.broadcastMessage(trigger.getDisplayName() + " mined diamonds, now " + Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(entry.getPlayer())).getDisplayName() + " takes " + sipString(entry.getSips(), " and ") + shotString(entry.getShots()));
+        else if (entry.getSips() > 0)
+            Slurp.broadcastMessage(trigger.getDisplayName() + " mined diamonds, now " + Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(entry.getPlayer())).getDisplayName() + " takes " + sipString(entry.getSips()));
+        else
+            Slurp.broadcastMessage(trigger.getDisplayName() + " mined diamonds, now " + Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(entry.getPlayer())).getDisplayName() + " takes " + shotString(entry.getShots()));
     }
 
     @Override

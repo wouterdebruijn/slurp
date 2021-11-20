@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LapisOreEventHandler extends BlockBreakEventHandler {
     public LapisOreEventHandler(double amount, double chance) {
@@ -36,12 +37,6 @@ public class LapisOreEventHandler extends BlockBreakEventHandler {
     }
 
     protected void sendMessage(Player trigger, DrunkEntry entry) {
-        if (entry.getPlayer().equals(trigger.getUniqueId())) {
-            Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined lapis, now take " + sipString(entry.getSips()));
-        } else {
-            Player drinker = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
-            if (drinker == null) return;
-            Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined lapis, now you take " + sipString(entry.getSips()));
-        }
+        Slurp.broadcastMessage(trigger.getDisplayName() + " mined lapis, now " + Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(entry.getPlayer())).getDisplayName() + " takes " + sipString(entry.getSips()));
     }
 }

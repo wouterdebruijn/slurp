@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmeraldOreEventHandler extends BlockBreakEventHandler {
     public EmeraldOreEventHandler(double amount, double chance) {
@@ -19,13 +20,7 @@ public class EmeraldOreEventHandler extends BlockBreakEventHandler {
     }
 
     protected void sendMessage(Player trigger, DrunkEntry entry) {
-        if (entry.getPlayer().equals(trigger.getUniqueId())) {
-            Slurp.sendMessage(trigger, ChatColor.GOLD + "You mined emeralds, now take " + sipString(entry.getSips()));
-        } else {
-            Player drinker = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
-            if (drinker == null) return;
-            Slurp.sendMessage(drinker, ChatColor.GOLD + trigger.getDisplayName() + " mined emeralds, now you take " + sipString(entry.getSips()));
-        }
+        Slurp.broadcastMessage(trigger.getDisplayName() + " mined emeralds, now " + Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(entry.getPlayer())).getDisplayName() + " takes " + sipString(entry.getSips()));
     }
 
     @Override

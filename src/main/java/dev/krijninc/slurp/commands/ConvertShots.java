@@ -21,31 +21,34 @@ public class ConvertShots implements TabExecutor {
             return false;
         }
 
-        try {
-            int shotCount;
-            if (args.length == 0 || Integer.parseInt(args[0]) < 0 ) {
-                return false;
-            } else {
-                shotCount = Integer.parseInt(args[0]) * -1;
-            }
+        Slurp.sendMessage(player, ChatColor.RED + "Disabled!");
+        return true;
 
-            int sips = (shotCount * -1) * ConfigLoader.getInt("shots-to-sips-multiplier");
-
-            if (sips < -128 || sips > 127 || shotCount < -128 || shotCount > 127) {
-                Slurp.sendMessage(player, ChatColor.RED + "Sowwy, we *notices buldge* couwdn't pwocess these big nyumbews, pwease pwovide smaww *starts twerking* nyumbews");
-                return true;
-            }
-
-            DrunkEntry entry = new DrunkEntry(true, player.getUniqueId(), sips, shotCount);
-            DrunkEntry savedEntry = entry.save();
-            Slurp.sendMessage(player, ChatColor.GREEN + String.format("You have converted %d %s to %d sips!", savedEntry.getShots() * -1, savedEntry.getSips() * -1 > 1 ? "shots" : "shot", savedEntry.getSips()));
-            return true;
-        } catch (NumberFormatException e) {
-            Slurp.sendMessage(player, ChatColor.RED + "Provided arguments must be a number!");
-        } catch (FetchException e) {
-            Slurp.sendMessage(player, ChatColor.DARK_RED + "Internal Server error, check console for details.");
-        }
-        return false;
+//        try {
+//            int shotCount;
+//            if (args.length == 0 || Integer.parseInt(args[0]) < 0 ) {
+//                return false;
+//            } else {
+//                shotCount = Integer.parseInt(args[0]) * -1;
+//            }
+//
+//            int sips = (shotCount * -1) * ConfigLoader.getInt("shots-to-sips-multiplier");
+//
+//            if (sips < -128 || sips > 127 || shotCount < -128 || shotCount > 127) {
+//                Slurp.sendMessage(player, ChatColor.RED + "Sowwy, we *notices buldge* couwdn't pwocess these big nyumbews, pwease pwovide smaww *starts twerking* nyumbews");
+//                return true;
+//            }
+//
+//            DrunkEntry entry = new DrunkEntry(true, player.getUniqueId(), sips, shotCount);
+//            DrunkEntry savedEntry = entry.save();
+//            Slurp.sendMessage(player, ChatColor.GREEN + String.format("You have converted %d %s to %d sips!", savedEntry.getShots() * -1, savedEntry.getSips() * -1 > 1 ? "shots" : "shot", savedEntry.getSips()));
+//            return true;
+//        } catch (NumberFormatException e) {
+//            Slurp.sendMessage(player, ChatColor.RED + "Provided arguments must be a number!");
+//        } catch (FetchException e) {
+//            Slurp.sendMessage(player, ChatColor.DARK_RED + "Internal Server error, check console for details.");
+//        }
+//        return false;
     }
 
     @Override

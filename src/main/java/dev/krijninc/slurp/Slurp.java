@@ -9,8 +9,13 @@ import dev.krijninc.slurp.helpers.*;
 import dev.krijninc.slurp.runnables.ChooseDrinkingBuddies;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +28,18 @@ public final class Slurp extends JavaPlugin {
     private static FancyLogger fancyLogger;
     private static SidebarManager sidebarManager;
     private static ChooseDrinkingBuddies chooseDrinkingBuddies;
+
+    public static void setModifier(double modifier) {
+        HandlerList.unregisterAll(getPlugin());
+        getDrunkServer().setModifier(modifier);
+        try {
+            getDrunkServer().save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        eventListener = new EventListener();
+        getPlugin().getServer().getPluginManager().registerEvents(eventListener, getPlugin());
+    }
 
     public static EventListener getEventListener() {
         return eventListener;

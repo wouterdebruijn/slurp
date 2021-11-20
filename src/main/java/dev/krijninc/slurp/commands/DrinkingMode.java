@@ -26,7 +26,7 @@ public class DrinkingMode implements TabExecutor {
                 modifier = Double.parseDouble(args[0]);
             }
 
-            Slurp.getEventListener().setModifier(modifier);
+            Slurp.setModifier(modifier);
             Slurp.sendMessage(player, String.format("Drinking modifier is now: %.2f", modifier));
 
             return true;

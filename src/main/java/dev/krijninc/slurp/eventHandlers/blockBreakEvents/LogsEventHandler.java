@@ -19,7 +19,7 @@ public class LogsEventHandler extends BlockBreakEventHandler {
 
     @Override
     protected void sendMessage(Player trigger, DrunkEntry entry) {
-        if (entry.getSips() > 0 && entry.getShots() > 0)
+        if (entry.getSips() > 0 && entry.getShots() >= 1)
             Slurp.broadcastMessage(trigger.getDisplayName() + " was attacked by termites, they recover their cool by taking " + shotString(entry.getShots(), "") + " and " + sipString(entry.getSips()));
         else if (entry.getSips() > 0)
             Slurp.broadcastMessage(trigger.getDisplayName() + " was attacked by termites, they recover their cool by taking " + sipString(entry.getSips()));
@@ -31,7 +31,7 @@ public class LogsEventHandler extends BlockBreakEventHandler {
     protected void handleEvent(BlockBreakEvent event) {
         try {
             Player player = event.getPlayer();
-            ArrayList<DrunkEntry> entries = ConsumeHandler.serverNoSplit(new ArrayList<>(), (int) amount, 0);
+            ArrayList<DrunkEntry> entries = ConsumeHandler.serverNoSplit(new ArrayList<>(), (int) amount, getRemainingSips());
             sendMessage(player, entries.get(entries.size() - 1));
 
             buddyNotifier(entries);

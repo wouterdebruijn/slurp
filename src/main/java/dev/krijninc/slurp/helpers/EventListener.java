@@ -70,7 +70,7 @@ public class EventListener implements Listener {
         goldOreEventHandler = new GoldOreEventHandler(generateAmount(6), generateChance(0.1, 0.2), generateInt(0, 3));
         ironOreEventHandler = new IronOreEventHandler(generateAmount(3), generateChance(0.0, 0.15), generateInt(0, 3));
         lapisOreEventHandler = new LapisOreEventHandler(generateAmount(5), generateChance(0.2, 0.4));
-        logsEventHandler = new LogsEventHandler(generateChance(0,1) * modifier, generateChance(0, 0.08));
+        logsEventHandler = new LogsEventHandler(generateChance(0,1) * modifier, generateChance(0, 0.008));
         netherGoldOreEventHandler = new NetherGoldOreEventHandler(generateAmount(4), generateChance(0.0, 0.2), generateInt(0, 3));
         quartzOreEventHandler = new QuartzOreEventHandler(generateAmount(5), generateChance(0.1, 0.3), generateInt(0, 3));
         redstoneOreEventHandler = new RedstoneOreEventHandler(generateAmount(4), generateChance(0.1, 0.2), generateInt(0, 3));

@@ -134,7 +134,7 @@ public final class Slurp extends JavaPlugin {
 
         // Fill the player storage with existing players;
         try {
-            HttpResponse<String> response = DashboardServerConnector.get("/player?server=" + server.getUuid());
+            HttpResponse<String> response = DashboardServerConnector.get("/player?limit=99&server=" + server.getUuid());
             Gson gson = new Gson();
 
             DrunkPlayerCollection drunkPlayerCollection = gson.fromJson(response.body(), DrunkPlayerCollection.class);
@@ -153,7 +153,10 @@ public final class Slurp extends JavaPlugin {
         eventListener = new EventListener();
         getServer().getPluginManager().registerEvents(eventListener, this);
 
-        drunkPlayers.forEach((uuid, _drunkPlayer) -> getLogger().info(String.format("Player in list: %s", uuid)));
+        drunkPlayers.forEach((uuid, _drunkPlayer) -> getLogger().info(String.format("Player in list: %s, stats: %d and %d",
+                uuid,
+                _drunkPlayer.remaining.shots,
+                _drunkPlayer.remaining.sips)));
 
         if (ConfigLoader.getBoolean("drinking-buddy-enabled")) {
             chooseDrinkingBuddies = new ChooseDrinkingBuddies(ConfigLoader.getInt("drinking-buddy-group-size"));

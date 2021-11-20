@@ -14,9 +14,23 @@ public class DrunkEntry {
     private final int sips;
     private final int shots;
     private final boolean buddyEntry;
+    private boolean giveable = false;
 
     public DrunkEntry(UUID uuid, double sips, double shots) {
         this.player = uuid;
+        buddyEntry = false;
+
+        if (shots % 1.0 > 0) {
+            this.sips = (int) (shots * ConfigLoader.getInt("shots-to-sips-multiplier") + sips);
+        } else {
+            this.sips = (int) sips;
+        }
+        this.shots = (int) shots;
+    }
+
+    public DrunkEntry(boolean giveable, UUID uuid, double sips, double shots) {
+        this.player = uuid;
+        this.giveable = giveable;
         buddyEntry = false;
 
         if (shots % 1.0 > 0) {
@@ -45,6 +59,9 @@ public class DrunkEntry {
         HttpResponse<String> response = DashboardServerConnector.post("/entry", gson.toJson(this));
 
         // We only update the local storage if the request was successful.
+        if (response.statusCode() != 200) {
+            throw new FetchException();
+        }
         DrunkEntry returnEntry = gson.fromJson(response.body(), DrunkEntry.class);
 
         DrunkPlayer storedPlayer = Slurp.getDrunkPlayer(returnEntry.player);
@@ -59,10 +76,10 @@ public class DrunkEntry {
         storedPlayer.remaining.shots += returnEntry.shots;
 
         // Update the total taken sips. (We add when we have subtracted from the remaining
-        if (returnEntry.shots < 0) {
+        if (returnEntry.shots < 0 && !returnEntry.giveable) {
             storedPlayer.taken.shots -= returnEntry.shots;
         }
-        if (returnEntry.sips < 0) {
+        if (returnEntry.sips < 0 && !returnEntry.giveable) {
             storedPlayer.taken.sips -= returnEntry.sips;
         }
 

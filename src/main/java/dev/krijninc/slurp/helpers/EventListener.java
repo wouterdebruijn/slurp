@@ -7,13 +7,17 @@ import dev.krijninc.slurp.eventHandlers.PlayerDeathEventHandler;
 import dev.krijninc.slurp.eventHandlers.blockBreakEvents.*;
 import dev.krijninc.slurp.eventHandlers.blockPlaceEvents.LanternPlaceEventHandler;
 import dev.krijninc.slurp.eventHandlers.blockPlaceEvents.TorchPlaceEventHandler;
+import dev.krijninc.slurp.exceptions.FetchException;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.io.IOException;
@@ -40,6 +44,7 @@ public class EventListener implements Listener {
     private final TorchPlaceEventHandler torchPlaceEventHandler;
 
     private final Random random = new Random(Slurp.getDrunkServer().getSeed());
+    private int hasFired = 0;
 
     public void setModifier(double modifier) {
         this.modifier = modifier;
@@ -126,6 +131,32 @@ public class EventListener implements Listener {
     @EventHandler
     public void playerDeathEvent(PlayerDeathEvent event) {
         playerDeathEventHandler.execute(event);
+    }
+
+    @EventHandler
+    public void endOpenEvent(PlayerAdvancementDoneEvent event) {
+        Advancement atPortal = Slurp.getPlugin().getServer().getAdvancement(NamespacedKey.minecraft("story/follow_ender_eye"));
+        Advancement inEnd = Slurp.getPlugin().getServer().getAdvancement(NamespacedKey.minecraft("story/enter_the_end"));
+        Advancement freeEnd = Slurp.getPlugin().getServer().getAdvancement(NamespacedKey.minecraft("end/kill_dragon"));
+
+        try {
+            if (event.getAdvancement() == atPortal && hasFired < 1) {
+                hasFired = 1;
+                DashboardServerConnector.postMusic("startup.mp3");
+            }
+
+            if (event.getAdvancement() == inEnd && hasFired < 2) {
+                hasFired = 2;
+                DashboardServerConnector.postMusic("halfway.mp3");
+            }
+
+            if (event.getAdvancement() == freeEnd && hasFired < 3) {
+                hasFired = 3;
+                DashboardServerConnector.postMusic("windows.mp3");
+            }
+        } catch (FetchException e) {
+            e.printStackTrace();
+        }
     }
 
     @EventHandler

@@ -88,6 +88,29 @@ public class DashboardServerConnector {
         }
     }
 
+    public static HttpResponse<String> postMusic(String filename) throws FetchException {
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create("http://192.168.2.192:9173/sonos/192.168.2.196"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString("{\"filename\": \""+ filename +"\"}"))
+                .build();
+
+        try {
+            var client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200 && response.statusCode() != 409) {
+                reportError(response, filename);
+            }
+            return response;
+        } catch (IOException e) {
+            Slurp.getFancyLogger().severe("Could not connect to music.");
+            throw new FetchException();
+        } catch (InterruptedException e) {
+            Slurp.getFancyLogger().severe("Connection to dashboard was interrupted! (" + endpoint + ")");
+            throw new FetchException();
+        }
+    }
+
     private static void reportError(HttpResponse<String> response) {
         FancyLogger logger = Slurp.getFancyLogger();
 

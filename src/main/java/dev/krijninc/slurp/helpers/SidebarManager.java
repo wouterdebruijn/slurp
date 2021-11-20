@@ -28,7 +28,7 @@ public class SidebarManager {
 
         Objective objective = playerBoard.registerNewObjective("slurpStats", "dummy", ChatColor.GOLD + "Slurp");
 
-        objective.getScore(ChatColor.GRAY + "===============").setScore(15);
+        objective.getScore(ChatColor.GRAY + "==========").setScore(15);
         objective.getScore(ChatColor.GREEN + "Taken:").setScore(14);
         objective.getScore(ChatColor.GOLD + " Shots: " + p.taken.shots).setScore(13);
         objective.getScore(ChatColor.YELLOW + " Sips: " + p.taken.sips).setScore(12);

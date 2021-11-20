@@ -18,5 +18,7 @@ public class CommandLoader {
         Objects.requireNonNull(plugin.getCommand("takesip")).setExecutor(new TakeSip());
         Objects.requireNonNull(plugin.getCommand("drinkingmode")).setExecutor(new DrinkingMode());
         Objects.requireNonNull(plugin.getCommand("newdrinkingbuddies")).setExecutor(new NewDrinkingBuddies());
+        Objects.requireNonNull(plugin.getCommand("convertsips")).setExecutor(new ConvertSips());
+        Objects.requireNonNull(plugin.getCommand("convertshots")).setExecutor(new ConvertShots());
     }
 }

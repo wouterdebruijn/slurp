@@ -27,3 +27,9 @@ commands:
   newdrinkingbuddies:
     description: Force a new set of drinking buddies
     usage: /newdrinkingbuddies
+  convertsips:
+    description: Convert sips to shots!
+    usage: /convertsips <amount>
+  convertshots:
+    description: Convert shots to sips!
+    usage: /convertshots <amount>

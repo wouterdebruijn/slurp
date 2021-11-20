@@ -23,6 +23,7 @@ public class ChooseDrinkingBuddies extends BukkitRunnable {
 
     @Override
     public void run() {
+        Slurp.getFancyLogger().success("Running drinking buddies logic");
         HashMap<UUID, DrunkPlayer> registeredPlayers = Slurp.getDrunkPlayers();
 
         // Clear all old drinking buddies

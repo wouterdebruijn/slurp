@@ -46,7 +46,7 @@ abstract public class EventHandler<Event> {
             if (entry.isBuddyEntry()) {
                 Player player = Slurp.getPlugin().getServer().getPlayer(entry.getPlayer());
                 if (player != null) {
-                    if (entry.getSips() > 0 && entry.getShots() > 0)
+                    if (entry.getSips() > 0 && entry.getShots() >= 1)
                         Slurp.sendMessage(player, "Your drinking buddy gave you " + sipString(entry.getSips(), " and ") + shotString(entry.getShots()));
                     else if (entry.getSips() > 0)
                         Slurp.sendMessage(player, "Your drinking buddy gave you " + sipString(entry.getSips()));

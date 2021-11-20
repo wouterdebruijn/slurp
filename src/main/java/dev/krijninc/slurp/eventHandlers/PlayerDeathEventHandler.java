@@ -17,7 +17,7 @@ public class PlayerDeathEventHandler extends EventHandler<PlayerDeathEvent> {
 
     @Override
     protected void sendMessage(Player trigger, DrunkEntry entry) {
-        if (entry.getSips() > 0 && entry.getShots() > 0)
+        if (entry.getSips() > 0 && entry.getShots() >= 1)
             Slurp.broadcastMessage(ChatColor.GOLD + trigger.getDisplayName() + " died, now they take " + entry.getSips() + " sips and " + entry.getShots() + " shots!");
         else if (entry.getSips() > 0)
             Slurp.broadcastMessage(ChatColor.GOLD + trigger.getDisplayName() + " died, now they take " + entry.getSips() + " sips!");

@@ -9,11 +9,10 @@ import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 
 import java.io.*;
 import java.net.http.HttpResponse;
-import java.util.UUID;
 
 public class SlurpServerRepository {
     private static SlurpServer server;
-    
+
     public static void saveToJSON() {
         try {
             Gson gson = new Gson();
@@ -36,7 +35,7 @@ public class SlurpServerRepository {
         File file = new File(Slurp.getPlugin().getDataFolder().getAbsolutePath() + "/server.json");
         if (file.exists()) {
             Reader reader = new FileReader(file);
-            server =  gson.fromJson(reader, SlurpServer.class);
+            server = gson.fromJson(reader, SlurpServer.class);
             return server;
         }
         return null;

@@ -2,6 +2,7 @@ package nl.wouterdebruijn.slurp;
 
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.IronOreExecutor;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,6 +36,7 @@ public final class Slurp extends JavaPlugin {
             }
         }
 
-        new BlockBreakEventHandler();
+        BlockBreakEventHandler eventHandler = new BlockBreakEventHandler();
+        eventHandler.registerExecutor(new IronOreExecutor(100));
     }
 }

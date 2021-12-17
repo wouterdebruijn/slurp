@@ -4,7 +4,6 @@ import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -16,11 +15,11 @@ public class SlurpAPI {
         String postEndpoint = getEndpoint();
 
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(postEndpoint))
-            .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer " + SlurpServerRepository.get().bearerToken)
-            .POST(HttpRequest.BodyPublishers.ofString(body))
-            .build();
+                .uri(URI.create(postEndpoint))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + SlurpServerRepository.get().bearerToken)
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
 
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

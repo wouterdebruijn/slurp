@@ -1,5 +1,7 @@
 package nl.wouterdebruijn.slurp;
 
+import nl.wouterdebruijn.slurp.controller.LogController;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,9 +19,11 @@ public final class Slurp extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        LogController.info("Slurp on enable event running.");
 
         try {
             SlurpServerRepository.loadFromJSON();
+            LogController.info("Loaded server config");
         } catch (FileNotFoundException e) {
             // If the saved server config couldn't be loaded, register as a new server.
             try {
@@ -30,5 +34,7 @@ public final class Slurp extends JavaPlugin {
                 ex.printStackTrace();
             }
         }
+
+        new BlockBreakEventHandler();
     }
 }

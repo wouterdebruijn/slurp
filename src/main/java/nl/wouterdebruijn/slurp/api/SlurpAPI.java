@@ -30,6 +30,24 @@ public class SlurpAPI {
         return response;
     }
 
+    public static HttpResponse<String> get(String path) throws IOException, InterruptedException {
+        String postEndpoint = getEndpoint();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(postEndpoint))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + SlurpServerRepository.get().bearerToken)
+                .GET()
+                .build();
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200 && response.statusCode() != 409) {
+            reportError(response);
+        }
+        return response;
+    }
+
     private static String getEndpoint() {
         String configUrl = ConfigController.getString("self-hosted-dashboard-url");
         return configUrl.equals("") ? "https://slurp.deno.dev/v1" : configUrl + "/v1";

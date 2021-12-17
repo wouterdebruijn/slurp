@@ -1,7 +1,9 @@
 package nl.wouterdebruijn.slurp.api;
 
+import com.google.gson.Gson;
 import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.controller.LogController;
+import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
 
 import java.io.IOException;
@@ -11,20 +13,22 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class SlurpAPI {
-    public static HttpResponse<String> post(String path, String body) throws IOException, InterruptedException {
+    public static HttpResponse<String> post(String path, Object body) throws IOException, InterruptedException, APIPostException {
         String postEndpoint = getEndpoint();
+        Gson gson = new Gson();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + SlurpServerRepository.get().bearerToken)
-                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(body)))
                 .build();
 
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200 && response.statusCode() != 409) {
-            reportError(response, body);
+            reportError(response, gson.toJson(body));
+            throw new APIPostException();
         }
         return response;
     }

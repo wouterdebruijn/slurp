@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp;
 
+import nl.wouterdebruijn.slurp.commands.GiveShot;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.CoalOreExecutor;
@@ -49,5 +50,7 @@ public final class Slurp extends JavaPlugin {
         eventHandler.registerExecutor(new CoalOreExecutor());
 
         PlayerJoinEventHandler playerJoinEventHandler = new PlayerJoinEventHandler();
+
+        new GiveShot();
     }
 }

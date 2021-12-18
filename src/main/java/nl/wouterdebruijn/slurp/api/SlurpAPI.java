@@ -14,13 +14,20 @@ import java.net.http.HttpResponse;
 
 public class SlurpAPI {
     public static HttpResponse<String> post(String path, Object body) throws IOException, InterruptedException, APIPostException {
-        String postEndpoint = getEndpoint();
+        String postEndpoint = getEndpoint() + path;
         Gson gson = new Gson();
+
+        String bearerToken = "";
+
+        // If the server is registered, send our API key.
+        if (SlurpServerRepository.get() != null) {
+            bearerToken = SlurpServerRepository.get().token;
+        }
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + SlurpServerRepository.get().bearerToken)
+                .header("Authorization", "Bearer " + bearerToken)
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(body)))
                 .build();
 
@@ -34,12 +41,12 @@ public class SlurpAPI {
     }
 
     public static HttpResponse<String> get(String path) throws IOException, InterruptedException {
-        String postEndpoint = getEndpoint();
+        String postEndpoint = getEndpoint() + path;
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + SlurpServerRepository.get().bearerToken)
+                .header("Authorization", "Bearer " + SlurpServerRepository.get().token)
                 .GET()
                 .build();
 

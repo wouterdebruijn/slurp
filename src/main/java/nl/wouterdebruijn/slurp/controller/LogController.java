@@ -6,7 +6,7 @@ import java.util.logging.Level;
 
 public class LogController {
     public static void debug(String message) {
-        Slurp.getPlugin().getLogger().log(Level.FINE, message);
+        Slurp.getPlugin().getLogger().log(Level.INFO, "[DEBUG] " + message);
     }
 
     public static void info(String message) {

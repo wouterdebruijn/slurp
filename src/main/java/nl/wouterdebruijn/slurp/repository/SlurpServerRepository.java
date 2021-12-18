@@ -30,25 +30,25 @@ public class SlurpServerRepository {
         }
     }
 
-    public static SlurpServer loadFromJSON() throws FileNotFoundException {
+    public static void loadFromJSON() throws FileNotFoundException {
         Gson gson = new Gson();
         File file = new File(Slurp.getPlugin().getDataFolder().getAbsolutePath() + "/server.json");
         if (file.exists()) {
             Reader reader = new FileReader(file);
             server = gson.fromJson(reader, SlurpServer.class);
-            return server;
+            LogController.info("Server: " + server.token);
         }
-        return null;
     }
 
     public static SlurpServer registerServer() throws APIPostException {
         try {
             Gson gson = new Gson();
-            HttpResponse<String> response = SlurpAPI.post("server", "{}");
+            HttpResponse<String> response = SlurpAPI.post("/server", new Object());
 
             server = gson.fromJson(response.body(), SlurpServer.class);
             return server;
         } catch (Exception e) {
+            e.printStackTrace();
             LogController.error("Could not register server on dashboard.");
             throw new APIPostException();
         }

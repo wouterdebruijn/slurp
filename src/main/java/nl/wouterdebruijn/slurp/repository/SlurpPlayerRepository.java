@@ -1,20 +1,25 @@
 package nl.wouterdebruijn.slurp.repository;
 
+import com.google.gson.Gson;
+import nl.wouterdebruijn.slurp.api.SlurpAPI;
+import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class SlurpPlayerRepository {
-    private static final HashMap<UUID, SlurpPlayer> players = new HashMap<UUID, SlurpPlayer>();
+    private static final HashMap<UUID, SlurpPlayer> players = new HashMap<>();
 
     public static void put(SlurpPlayer player) {
-        players.put(player.uuid, player);
+        players.put(player.getUuid(), player);
     }
 
-    public static void get(UUID uuid) {
-        players.get(uuid);
+    public static SlurpPlayer get(UUID uuid) {
+        return players.get(uuid);
     }
 
     public static void remove(UUID uuid) {
@@ -28,10 +33,23 @@ public class SlurpPlayerRepository {
         ArrayList<SlurpPlayer> drinkingBuddies = new ArrayList<>();
 
         players.forEach((uuid, player) -> {
-            if (player.isDrinkingBuddy())
+            if (player.isDrinkingBuddy)
                 drinkingBuddies.add(player);
         });
 
         return drinkingBuddies;
+    }
+
+    public static SlurpPlayer register(SlurpPlayer player) throws APIPostException {
+        try {
+            HttpResponse<String> response = SlurpAPI.post("/player", player);
+            Gson gson = new Gson();
+            LogController.info("Register new player! " + response.body());
+            return gson.fromJson(response.body(), SlurpPlayer.class);
+        } catch (Exception e) {
+            LogController.error("Could not register new player");
+            e.printStackTrace();
+            throw new APIPostException();
+        }
     }
 }

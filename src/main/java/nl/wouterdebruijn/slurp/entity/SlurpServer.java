@@ -1,5 +1,8 @@
 package nl.wouterdebruijn.slurp.entity;
 
-public class SlurpServer extends BaseEntry {
-    public String bearerToken = "";
+import java.util.UUID;
+
+public class SlurpServer {
+    public UUID uuid;
+    public String token;
 }

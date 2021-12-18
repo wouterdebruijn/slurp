@@ -1,39 +1,30 @@
 package nl.wouterdebruijn.slurp.entity;
 
-import org.bukkit.entity.Player;
+import nl.wouterdebruijn.slurp.controller.ConfigController;
 
-public class SlurpEntry extends BaseEntry {
-    final private int sips;
-    final private int shots;
-    final private boolean transfer;
-    final private boolean giveable;
-    final private Player player;
+import java.util.UUID;
 
-    public SlurpEntry(Player player, int sips, int shots, boolean transfer, boolean giveable) {
+public class SlurpEntry {
+    private final UUID player;
+    public int sips;
+    public int shots;
+    public boolean transfer;
+    public boolean giveable;
+
+    public SlurpEntry(UUID player, double shots, double sips, boolean transfer, boolean giveable) {
         this.player = player;
-        this.sips = sips;
-        this.shots = shots;
         this.transfer = transfer;
         this.giveable = giveable;
+
+        if (shots % 1.0 > 0) {
+            this.sips = (int) (shots * ConfigController.getInt("shots-to-sips-multiplier") + sips);
+        } else {
+            this.sips = (int) sips;
+        }
+        this.shots = (int) shots;
     }
 
-    public int getSips() {
-        return sips;
-    }
-
-    public int getShots() {
-        return shots;
-    }
-
-    public boolean isTransfer() {
-        return transfer;
-    }
-
-    public boolean isGiveable() {
-        return giveable;
-    }
-
-    public Player getPlayer() {
+    public UUID getPlayer() {
         return player;
     }
 }

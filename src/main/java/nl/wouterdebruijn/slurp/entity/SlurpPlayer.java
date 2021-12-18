@@ -1,22 +1,27 @@
 package nl.wouterdebruijn.slurp.entity;
 
+import nl.wouterdebruijn.slurp.Slurp;
 import org.bukkit.entity.Player;
 
-public class SlurpPlayer extends BaseEntry {
-    private final Player minecraftPlayer;
-    private final boolean isDrinkingBuddy;
+import java.util.UUID;
 
-    public SlurpPlayer(Player minecraftPlayer) {
-        this.uuid = minecraftPlayer.getUniqueId();
-        this.minecraftPlayer = minecraftPlayer;
-        this.isDrinkingBuddy = false;
+public class SlurpPlayer {
+    private final UUID uuid;
+    public SlurpConsumable remaining = new SlurpConsumable();
+    public SlurpConsumable taken = new SlurpConsumable();
+    public SlurpConsumable giveable = new SlurpConsumable();
+
+    public boolean isDrinkingBuddy = false;
+
+    public SlurpPlayer(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public Player getMinecraftPlayer() {
-        return minecraftPlayer;
-    }
-
-    public boolean isDrinkingBuddy() {
-        return isDrinkingBuddy;
+        return Slurp.getPlugin().getServer().getPlayer(uuid);
     }
 }

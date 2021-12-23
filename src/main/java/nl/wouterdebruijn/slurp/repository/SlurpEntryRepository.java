@@ -33,7 +33,6 @@ public class SlurpEntryRepository {
     public static void save(SlurpEntry entry) throws APIPostException {
         try {
             SlurpAPI.post("/entry", entry);
-            LogController.info("Done!");
         } catch (Exception e) {
             LogController.error("Could not save Slurp Entry!");
             e.printStackTrace();

@@ -49,6 +49,5 @@ public class SidebarController {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         minecraftPlayer.setScoreboard(playerBoard);
-        LogController.info("New scoreboard created for player" + minecraftPlayer);
     }
 }

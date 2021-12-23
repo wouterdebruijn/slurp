@@ -30,11 +30,15 @@ public class PlayerJoinEventHandler extends SlurpEventHandler<PlayerJoinEvent> {
                         throw new APIPostException();
                     }
                     SlurpPlayerRepository.put(remotePlayer);
+
+                    Bukkit.getScheduler().runTask(Slurp.getPlugin(), () -> SidebarController.createSidebar(remotePlayer));
                 } catch (APIPostException e) {
                     e.printStackTrace();
                 }
             });
-            SidebarController.createSidebar(finalPlayer);
+        } else {
+            SidebarController.createSidebar(player);
         }
+
     }
 }

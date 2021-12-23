@@ -43,10 +43,17 @@ public class SlurpAPI {
     public static HttpResponse<String> get(String path) throws IOException, InterruptedException {
         String postEndpoint = getEndpoint() + path;
 
+        String bearerToken = "";
+
+        // If the server is registered, send our API key.
+        if (SlurpServerRepository.get() != null) {
+            bearerToken = SlurpServerRepository.get().token;
+        }
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + SlurpServerRepository.get().token)
+                .header("Authorization", "Bearer " + bearerToken)
                 .GET()
                 .build();
 

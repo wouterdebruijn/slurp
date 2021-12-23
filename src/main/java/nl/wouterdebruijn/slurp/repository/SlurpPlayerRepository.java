@@ -40,12 +40,25 @@ public class SlurpPlayerRepository {
         return drinkingBuddies;
     }
 
-    public static SlurpPlayer register(SlurpPlayer player) throws APIPostException {
+    /**
+     * Return the amount of active drinking buddies.
+     */
+    public static int drinkingBuddiesCount() {
+        ArrayList<SlurpPlayer> drinkingBuddies = new ArrayList<>();
+
+        players.forEach((uuid, player) -> {
+            if (player.isDrinkingBuddy)
+                drinkingBuddies.add(player);
+        });
+
+        return drinkingBuddies.size();
+    }
+
+    public static void register(SlurpPlayer player) throws APIPostException {
         try {
             HttpResponse<String> response = SlurpAPI.post("/player", player);
             Gson gson = new Gson();
             LogController.info("Register new player! " + response.body());
-            return gson.fromJson(response.body(), SlurpPlayer.class);
         } catch (Exception e) {
             LogController.error("Could not register new player");
             e.printStackTrace();

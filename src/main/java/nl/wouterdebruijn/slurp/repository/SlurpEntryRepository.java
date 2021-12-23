@@ -1,7 +1,6 @@
 package nl.wouterdebruijn.slurp.repository;
 
 import nl.wouterdebruijn.slurp.api.SlurpAPI;
-import nl.wouterdebruijn.slurp.api.TestAPI;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.controller.SidebarController;
 import nl.wouterdebruijn.slurp.entity.SlurpEntry;
@@ -34,7 +33,6 @@ public class SlurpEntryRepository {
     public static void save(SlurpEntry entry) throws APIPostException {
         try {
             SlurpAPI.post("/entry", entry);
-            TestAPI.get();
             LogController.info("Done!");
         } catch (Exception e) {
             LogController.error("Could not save Slurp Entry!");

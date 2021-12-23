@@ -36,7 +36,7 @@ public class TakeSip implements TabExecutor {
         try {
             int sipCount;
             if (args.length == 0 || Integer.parseInt(args[0]) < 1) {
-                MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
+                MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be a positive number!");
                 return true;
             } else {
                 sipCount = Integer.parseInt(args[0]) * -1;
@@ -75,21 +75,11 @@ public class TakeSip implements TabExecutor {
             return null;
         }
 
-        if (args.length == 1) {
+        if (args.length <= 1) {
             ArrayList<String> options = new ArrayList<>();
 
             SlurpPlayer slurpPlayer = SlurpPlayerRepository.get(player.getUniqueId());
-            for (int i = 1; i <= slurpPlayer.giveable.sips; i++) {
-                options.add("" + i);
-            }
-            return options;
-        }
-
-        if (args.length == 2) {
-            ArrayList<String> options = new ArrayList<>();
-
-            SlurpPlayer slurpPlayer = SlurpPlayerRepository.get(player.getUniqueId());
-            for (int i = 1; i <= slurpPlayer.giveable.sips; i++) {
+            for (int i = 1; i <= slurpPlayer.remaining.sips; i++) {
                 options.add("" + i);
             }
             return options;

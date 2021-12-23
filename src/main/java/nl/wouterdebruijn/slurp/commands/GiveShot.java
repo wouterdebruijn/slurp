@@ -36,19 +36,26 @@ public class GiveShot implements TabExecutor {
         try {
             int shotCount;
             if (args.length == 0 || Integer.parseInt(args[1]) < 1) {
-                MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
+                MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be a positive number!");
                 return true;
             } else {
                 shotCount = Integer.parseInt(args[1]) * -1;
             }
 
-            if (shotCount > slurpPlayer.giveable.shots) {
+            if (shotCount * -1 > slurpPlayer.giveable.shots) {
                 MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, you don't have that many shots to give away!");
                 return true;
             }
 
+            Player receiver = Slurp.getPlugin().getServer().getPlayer(args[0]);
+
+            if (receiver == null) {
+                MessageController.sendMessage(player, true, ChatColor.RED + "That player isn't online right now!");
+                return true;
+            }
+
             SlurpEntry removeGivableEntry = new SlurpEntry(player.getUniqueId(), shotCount, 0, false, true);
-            SlurpEntry addConsumables = new SlurpEntry(Objects.requireNonNull(Slurp.getPlugin().getServer().getPlayer(args[0])).getUniqueId(), shotCount * -1, 0, false, false);
+            SlurpEntry addConsumables = new SlurpEntry(receiver.getUniqueId(), shotCount * -1, 0, false, false);
             SlurpEntryRepository.cache(removeGivableEntry);
             SlurpEntryRepository.cache(addConsumables);
 
@@ -60,7 +67,7 @@ public class GiveShot implements TabExecutor {
                     e.printStackTrace();
                 }
             });
-            MessageController.sendMessage(player, true, ChatColor.GREEN + "You have taken " + addConsumables.shots * -1 + " shot(s)!");
+            MessageController.broadcast(true, ChatColor.GREEN + player.getName() + " gave " + receiver.getName() + " " + addConsumables.shots + " shot(s)!");
             return true;
         } catch (NumberFormatException e) {
             MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");

@@ -19,9 +19,9 @@ public class SlurpEntryRepository {
             player.remaining.sips += entry.sips;
 
             if (!entry.transfer) {
-                if (player.taken.shots < 0)
+                if (entry.shots < 0)
                     player.taken.shots -= entry.shots;
-                if (player.taken.sips < 0)
+                if (entry.sips < 0)
                     player.taken.sips -= entry.sips;
             }
         }

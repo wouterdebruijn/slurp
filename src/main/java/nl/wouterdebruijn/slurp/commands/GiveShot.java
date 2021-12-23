@@ -36,7 +36,7 @@ public class GiveShot implements TabExecutor {
         try {
             int shotCount;
             if (args.length == 0 || Integer.parseInt(args[1]) < 1) {
-                MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");
+                MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
                 return true;
             } else {
                 shotCount = Integer.parseInt(args[1]) * -1;
@@ -63,7 +63,7 @@ public class GiveShot implements TabExecutor {
             MessageController.sendMessage(player, true, ChatColor.GREEN + "You have taken " + addConsumables.shots * -1 + " shot(s)!");
             return true;
         } catch (NumberFormatException e) {
-            MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");
+            MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
             return true;
         } catch (Exception e) {
             e.printStackTrace();

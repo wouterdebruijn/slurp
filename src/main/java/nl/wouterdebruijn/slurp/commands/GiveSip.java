@@ -36,7 +36,7 @@ public class GiveSip implements TabExecutor {
         try {
             int sipCount;
             if (args.length == 0 || Integer.parseInt(args[1]) < 1) {
-                MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");
+                MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
                 return true;
             } else {
                 sipCount = Integer.parseInt(args[1]) * -1;
@@ -64,7 +64,7 @@ public class GiveSip implements TabExecutor {
             MessageController.sendMessage(player, true, ChatColor.GREEN + "You have taken " + addConsumables.sips * -1 + " sips(s)!");
             return true;
         } catch (NumberFormatException e) {
-            MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");
+            MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
             return true;
         } catch (Exception e) {
             e.printStackTrace();

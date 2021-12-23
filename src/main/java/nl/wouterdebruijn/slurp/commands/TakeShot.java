@@ -35,15 +35,15 @@ public class TakeShot implements TabExecutor {
 
         try {
             int shotCount;
-            if (args.length == 0 || Integer.parseInt(args[1]) < 1) {
-                MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");
+            if (args.length == 0 || Integer.parseInt(args[0]) < 1) {
+                MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
                 return true;
             } else {
-                shotCount = Integer.parseInt(args[1]) * -1;
+                shotCount = Integer.parseInt(args[0]) * -1;
             }
 
-            if (shotCount > slurpPlayer.giveable.sips && !(args.length >= 3 && args[2].equals("-f"))) {
-                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, you don't have that many shots to give away!");
+            if (shotCount * -1 > slurpPlayer.remaining.shots && !(args.length >= 2 && args[1].equals("-f"))) {
+                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, you don't have to take that many shots!", ChatColor.RED + "\n(If you really want to, add " + ChatColor.YELLOW + "-f" + ChatColor.RED + " at the end)");
                 return true;
             }
 
@@ -57,10 +57,10 @@ public class TakeShot implements TabExecutor {
                     e.printStackTrace();
                 }
             });
-            MessageController.sendMessage(player, true, ChatColor.GREEN + "You have taken " + takenEntry.sips * -1 + " shot(s)!");
+            MessageController.sendMessage(player, true, ChatColor.GREEN + "You have taken " + takenEntry.shots * -1 + " shot(s)!");
             return true;
         } catch (NumberFormatException e) {
-            MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");
+            MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
             return true;
         } catch (Exception e) {
             e.printStackTrace();

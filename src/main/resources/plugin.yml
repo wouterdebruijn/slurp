@@ -3,33 +3,33 @@ version: '${project.version}'
 main: nl.wouterdebruijn.slurp.Slurp
 api-version: 1.18
 prefix: Slurp
-authors: [ Wouter ]
-description: This plugin will make you and your friends slurp some drinks.
+authors: [ Wouter de Bruijn, Sjors van Holst ]
+description: A Minecraft plugin that will make you and your friends slurp the good stuff.
 website: slurp.krijninc.dev
 commands:
   giveshot:
     description: Give shots to an other player
-    usage: /giveshot <playername> <amound>
+    usage: /giveshot <playername> <amount>
   givesip:
     description: Give sips to an other player
-    usage: /givesip <playername> <amound>
+    usage: /givesip <playername> <amount>
   stats:
     description: Show your current drinking stats
   takeshot:
     description: Register a taken shot to the server
-    usage: /takeshot <amound>
+    usage: /takeshot <amount>
   takesip:
     description: Register a taken sip to the server
-    usage: /takesip <amound>
+    usage: /takesip <amount>
   drinkingmode:
     description: Get or set the drinking difficulty
     usage: /drinkingmode <mode?>
   newdrinkingbuddies:
     description: Force a new set of drinking buddies
     usage: /newdrinkingbuddies
-  convertsips:
+  convertsip:
     description: Convert sips to shots!
-    usage: /convertsips <amount>
-  convertshots:
+    usage: /convertsip <amount>
+  convertshot:
     description: Convert shots to sips!
-    usage: /convertshots <amount>
+    usage: /convertshot <amount>

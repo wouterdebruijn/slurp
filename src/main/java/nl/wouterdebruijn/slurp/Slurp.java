@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp;
 
 import nl.wouterdebruijn.slurp.commands.GiveShot;
+import nl.wouterdebruijn.slurp.commands.Stats;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.CoalOreExecutor;
@@ -25,6 +26,8 @@ public final class Slurp extends JavaPlugin {
         plugin = this;
         LogController.info("Slurp on enable event running.");
 
+        // Save default config if we don't have one yet.
+        Slurp.getPlugin().saveDefaultConfig();
 
         try {
             SlurpServerRepository.loadFromJSON();
@@ -49,8 +52,10 @@ public final class Slurp extends JavaPlugin {
         eventHandler.registerExecutor(new IronOreExecutor());
         eventHandler.registerExecutor(new CoalOreExecutor());
 
-        PlayerJoinEventHandler playerJoinEventHandler = new PlayerJoinEventHandler();
+        new PlayerJoinEventHandler();
+
 
         new GiveShot();
+        new Stats();
     }
 }

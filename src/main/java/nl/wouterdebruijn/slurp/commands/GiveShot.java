@@ -8,6 +8,7 @@ import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpEntryRepository;
 import nl.wouterdebruijn.slurp.repository.SlurpPlayerRepository;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -32,12 +33,23 @@ public class GiveShot implements TabExecutor {
 
         SlurpPlayer slurpPlayer = SlurpPlayerRepository.get(player.getUniqueId());
 
+        if (slurpPlayer.giveable.sips <= 0) {
+            MessageController.sendMessage(player, true, ChatColor.RED + "You do not have any givable sips!");
+            return true;
+        }
+
         try {
             int shotCount;
             if (args.length == 0 || Integer.parseInt(args[1]) < 1) {
-                shotCount = -1;
+                MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");
+                return true;
             } else {
                 shotCount = Integer.parseInt(args[1]) * -1;
+            }
+
+            if (shotCount > slurpPlayer.giveable.sips) {
+                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, you don't have that many shots to give away!");
+                return true;
             }
 
             SlurpEntry removeGivableEntry = new SlurpEntry(player.getUniqueId(), shotCount, 0, false, true);
@@ -55,13 +67,13 @@ public class GiveShot implements TabExecutor {
             });
             return true;
         } catch (NumberFormatException e) {
-            MessageController.sendMessage(player, "Provided arguments must be a number!");
+            MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            MessageController.sendMessage(player, "Internal Server error, check console for details.");
+            MessageController.sendMessage(player, true, ChatColor.RED + "Internal Server error, check console for details.");
+            return true;
         }
-
-        return false;
     }
 
     @Override

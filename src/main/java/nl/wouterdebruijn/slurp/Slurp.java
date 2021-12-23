@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp;
 
 import nl.wouterdebruijn.slurp.commands.GiveShot;
+import nl.wouterdebruijn.slurp.commands.GiveSip;
 import nl.wouterdebruijn.slurp.commands.Stats;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
@@ -56,6 +57,7 @@ public final class Slurp extends JavaPlugin {
 
 
         new GiveShot();
+        new GiveSip();
         new Stats();
     }
 }

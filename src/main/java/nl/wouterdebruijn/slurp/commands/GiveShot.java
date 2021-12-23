@@ -33,11 +33,6 @@ public class GiveShot implements TabExecutor {
 
         SlurpPlayer slurpPlayer = SlurpPlayerRepository.get(player.getUniqueId());
 
-        if (slurpPlayer.giveable.shots <= 0) {
-            MessageController.sendMessage(player, true, ChatColor.RED + "You do not have any givable shots!");
-            return true;
-        }
-
         try {
             int shotCount;
             if (args.length == 0 || Integer.parseInt(args[1]) < 1) {
@@ -65,6 +60,7 @@ public class GiveShot implements TabExecutor {
                     e.printStackTrace();
                 }
             });
+            MessageController.sendMessage(player, true, ChatColor.GREEN + "You have taken " + addConsumables.shots * -1 + " shot(s)!");
             return true;
         } catch (NumberFormatException e) {
             MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");

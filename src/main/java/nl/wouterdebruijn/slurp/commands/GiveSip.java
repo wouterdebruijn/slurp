@@ -33,11 +33,6 @@ public class GiveSip implements TabExecutor {
 
         SlurpPlayer slurpPlayer = SlurpPlayerRepository.get(player.getUniqueId());
 
-        if (slurpPlayer.giveable.sips <= 0) {
-            MessageController.sendMessage(player, true, ChatColor.RED + "You do not have any givable sips!");
-            return true;
-        }
-
         try {
             int sipCount;
             if (args.length == 0 || Integer.parseInt(args[1]) < 1) {
@@ -65,6 +60,8 @@ public class GiveSip implements TabExecutor {
                     e.printStackTrace();
                 }
             });
+
+            MessageController.sendMessage(player, true, ChatColor.GREEN + "You have taken " + addConsumables.sips * -1 + " sips(s)!");
             return true;
         } catch (NumberFormatException e) {
             MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be an positive number!");

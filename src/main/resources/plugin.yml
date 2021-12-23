@@ -1,7 +1,7 @@
 name: Slurp
 version: '${project.version}'
 main: nl.wouterdebruijn.slurp.Slurp
-api-version: 1.17
+api-version: 1.18.1
 prefix: Slurp
 authors: [ Wouter ]
 description: This plugin will make you and your friends slurp some drinks.

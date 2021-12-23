@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp.eventHandlers.utilityEvents;
 
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.controller.SidebarController;
 import nl.wouterdebruijn.slurp.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.eventHandlers.SlurpEventHandler;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
@@ -28,6 +29,7 @@ public class PlayerJoinEventHandler extends SlurpEventHandler<PlayerJoinEvent> {
                     e.printStackTrace();
                 }
             });
+            SidebarController.createSidebar(finalPlayer);
         }
     }
 }

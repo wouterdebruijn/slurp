@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp.eventHandlers.utilityEvents;
 
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.controller.SidebarController;
 import nl.wouterdebruijn.slurp.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.eventHandlers.SlurpEventHandler;
@@ -23,8 +24,12 @@ public class PlayerJoinEventHandler extends SlurpEventHandler<PlayerJoinEvent> {
             SlurpPlayer finalPlayer = player;
             Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
                 try {
-                    SlurpPlayerRepository.register(finalPlayer);
-                    SlurpPlayerRepository.put(finalPlayer);
+                    SlurpPlayer remotePlayer = SlurpPlayerRepository.register(finalPlayer);
+                    if (remotePlayer == null) {
+                        LogController.error("Could not get player existing from dashboard.");
+                        throw new APIPostException();
+                    }
+                    SlurpPlayerRepository.put(remotePlayer);
                 } catch (APIPostException e) {
                     e.printStackTrace();
                 }

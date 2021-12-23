@@ -59,5 +59,7 @@ public final class Slurp extends JavaPlugin {
         new TakeShot();
         new TakeSip();
         new Stats();
+        new ConvertShot();
+        new ConvertSip();
     }
 }

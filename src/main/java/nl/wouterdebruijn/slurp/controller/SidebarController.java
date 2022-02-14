@@ -41,6 +41,9 @@ public class SidebarController {
             int scoreboardCount = 7;
 
             for (SlurpPlayer drinkingBuddy : SlurpPlayerRepository.getDrinkingBuddies()) {
+                // Don't add the player if they are offline.
+                if (drinkingBuddy.getMinecraftPlayer() == null)
+                    continue;
                 objective.getScore(ChatColor.AQUA + "- " + drinkingBuddy.getMinecraftPlayer().getName()).setScore(scoreboardCount--);
                 if (scoreboardCount == 0) break;
             }

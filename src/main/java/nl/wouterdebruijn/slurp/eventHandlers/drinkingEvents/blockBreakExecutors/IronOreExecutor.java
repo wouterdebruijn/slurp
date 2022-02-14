@@ -21,7 +21,7 @@ public class IronOreExecutor extends BlockBreakEventExecutor {
         player.sendMessage("Block break event Iron!");
 
         SlurpEntry entry = new SlurpEntry(player.getUniqueId(), 5, 1, false, true);
-        SlurpEntryRepository.cache(entry);
+        SlurpEntryRepository.cache(entry, false);
 
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
             try {

@@ -52,8 +52,8 @@ public class ConvertShot implements TabExecutor {
 
             SlurpEntry removeConsumables = new SlurpEntry(player.getUniqueId(), shotCount, 0, true, false);
             SlurpEntry addConsumables = new SlurpEntry(player.getUniqueId(), 0, sipCount, false, false);
-            SlurpEntryRepository.cache(removeConsumables);
-            SlurpEntryRepository.cache(addConsumables);
+            SlurpEntryRepository.cache(removeConsumables, false);
+            SlurpEntryRepository.cache(addConsumables, false);
 
             Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
                 try {

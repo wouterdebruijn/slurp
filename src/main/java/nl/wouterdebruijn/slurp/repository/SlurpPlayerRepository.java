@@ -22,6 +22,10 @@ public class SlurpPlayerRepository {
         return players.get(uuid);
     }
 
+    public static ArrayList<SlurpPlayer> get() {
+        return new ArrayList<>(players.values());
+    }
+
     public static void remove(UUID uuid) {
         players.remove(uuid);
     }

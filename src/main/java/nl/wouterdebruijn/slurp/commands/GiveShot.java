@@ -56,8 +56,11 @@ public class GiveShot implements TabExecutor {
 
             SlurpEntry removeGivableEntry = new SlurpEntry(player.getUniqueId(), shotCount, 0, false, true);
             SlurpEntry addConsumables = new SlurpEntry(receiver.getUniqueId(), shotCount * -1, 0, false, false);
-            SlurpEntryRepository.cache(removeGivableEntry);
-            SlurpEntryRepository.cache(addConsumables);
+
+            MessageController.broadcast(true, ChatColor.GREEN + player.getName() + " gave " + receiver.getName() + " " + addConsumables.shots + " shot(s)!");
+
+            SlurpEntryRepository.cache(removeGivableEntry, false);
+            SlurpEntryRepository.cache(addConsumables, true);
 
             Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
                 try {
@@ -67,7 +70,6 @@ public class GiveShot implements TabExecutor {
                     e.printStackTrace();
                 }
             });
-            MessageController.broadcast(true, ChatColor.GREEN + player.getName() + " gave " + receiver.getName() + " " + addConsumables.shots + " shot(s)!");
             return true;
         } catch (NumberFormatException e) {
             MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
@@ -91,6 +93,7 @@ public class GiveShot implements TabExecutor {
             for (Player onlinePlayer : Slurp.getPlugin().getServer().getOnlinePlayers()) {
                 options.add(onlinePlayer.getName());
             }
+            return options;
         }
 
         if (args.length == 2) {

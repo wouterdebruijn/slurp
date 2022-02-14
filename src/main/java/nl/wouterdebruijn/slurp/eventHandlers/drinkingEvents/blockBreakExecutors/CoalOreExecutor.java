@@ -21,7 +21,7 @@ public class CoalOreExecutor extends BlockBreakEventExecutor {
         player.sendMessage("Block break event Coal!");
 
         SlurpEntry entry = new SlurpEntry(player.getUniqueId(), 5, 1, false, false);
-        SlurpEntryRepository.cache(entry);
+        SlurpEntryRepository.cache(entry, true);
 
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
             try {

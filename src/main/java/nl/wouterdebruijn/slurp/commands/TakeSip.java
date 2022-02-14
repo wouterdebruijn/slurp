@@ -48,7 +48,7 @@ public class TakeSip implements TabExecutor {
             }
 
             SlurpEntry takenEntry = new SlurpEntry(player.getUniqueId(), 0, sipCount, false, false);
-            SlurpEntryRepository.cache(takenEntry);
+            SlurpEntryRepository.cache(takenEntry, false);
 
             Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
                 try {

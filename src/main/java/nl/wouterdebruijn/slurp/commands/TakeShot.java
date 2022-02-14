@@ -48,7 +48,7 @@ public class TakeShot implements TabExecutor {
             }
 
             SlurpEntry takenEntry = new SlurpEntry(player.getUniqueId(), shotCount, 0, false, false);
-            SlurpEntryRepository.cache(takenEntry);
+            SlurpEntryRepository.cache(takenEntry, false);
 
             Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
                 try {

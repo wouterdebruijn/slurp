@@ -8,6 +8,7 @@ import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.
 import nl.wouterdebruijn.slurp.eventHandlers.utilityEvents.PlayerJoinEventHandler;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
+import nl.wouterdebruijn.slurp.serverRunnables.DrinkingBuddiesRunnable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.FileNotFoundException;
@@ -61,5 +62,8 @@ public final class Slurp extends JavaPlugin {
         new Stats();
         new ConvertShot();
         new ConvertSip();
+        new NewDrinkingBuddies();
+
+        DrinkingBuddiesRunnable.registerRunner();
     }
 }

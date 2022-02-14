@@ -47,6 +47,11 @@ public class GiveShot implements TabExecutor {
                 return true;
             }
 
+            if (shotCount * -1 > 32766) {
+                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, our systems can't process these large numbers :(");
+                return true;
+            }
+
             Player receiver = Slurp.getPlugin().getServer().getPlayer(args[0]);
 
             if (receiver == null) {
@@ -54,17 +59,17 @@ public class GiveShot implements TabExecutor {
                 return true;
             }
 
-            SlurpEntry removeGivableEntry = new SlurpEntry(player.getUniqueId(), shotCount, 0, false, true);
+            SlurpEntry removeGiveableEntry = new SlurpEntry(player.getUniqueId(), shotCount, 0, false, true);
             SlurpEntry addConsumables = new SlurpEntry(receiver.getUniqueId(), shotCount * -1, 0, false, false);
 
             MessageController.broadcast(true, ChatColor.GREEN + player.getName() + " gave " + receiver.getName() + " " + addConsumables.shots + " shot(s)!");
 
-            SlurpEntryRepository.cache(removeGivableEntry, false);
+            SlurpEntryRepository.cache(removeGiveableEntry, false);
             SlurpEntryRepository.cache(addConsumables, true);
 
             Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
                 try {
-                    SlurpEntryRepository.save(removeGivableEntry);
+                    SlurpEntryRepository.save(removeGiveableEntry);
                     SlurpEntryRepository.save(addConsumables);
                 } catch (APIPostException e) {
                     e.printStackTrace();
@@ -72,7 +77,7 @@ public class GiveShot implements TabExecutor {
             });
             return true;
         } catch (NumberFormatException e) {
-            MessageController.sendMessage(player, true, ChatColor.RED + "amount should be a positive number!");
+            MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be a positive number!");
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -49,7 +49,12 @@ public class ConvertSip implements TabExecutor {
             }
 
             if ((sipCount * -1) % ConfigController.getInt("shots-to-sips-multiplier") > 0) {
-                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, that cant be converted to whole shots!");
+                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, that can't be converted to whole shots!");
+                return true;
+            }
+
+            if (sipCount * -1 > 32766) {
+                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, our systems can't process these large numbers :(");
                 return true;
             }
 

@@ -50,6 +50,11 @@ public class ConvertShot implements TabExecutor {
 
             int sipCount = (shotCount * -1) * ConfigController.getInt("shots-to-sips-multiplier");
 
+            if (sipCount * -1 > 32766) {
+                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, our systems can't process these large numbers :(");
+                return true;
+            }
+
             SlurpEntry removeConsumables = new SlurpEntry(player.getUniqueId(), shotCount, 0, true, false);
             SlurpEntry addConsumables = new SlurpEntry(player.getUniqueId(), 0, sipCount, false, false);
             SlurpEntryRepository.cache(removeConsumables, false);

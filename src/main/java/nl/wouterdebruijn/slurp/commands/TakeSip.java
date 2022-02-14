@@ -42,6 +42,11 @@ public class TakeSip implements TabExecutor {
                 sipCount = Integer.parseInt(args[0]) * -1;
             }
 
+            if (sipCount * -1 > 32766) {
+                MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, our systems can't process these large numbers :(");
+                return true;
+            }
+
             if (sipCount * -1 > slurpPlayer.remaining.sips && !(args.length >= 2 && args[1].equals("-f"))) {
                 MessageController.sendMessage(player, true, ChatColor.RED + "Hold up, you don't have to take that many sips!", ChatColor.RED + "\n(If you really want to, add " + ChatColor.YELLOW + "-f" + ChatColor.RED + " at the end)");
                 return true;

@@ -27,40 +27,6 @@ public final class Slurp extends JavaPlugin {
         return plugin;
     }
 
-    @Override
-    public void onEnable() {
-        plugin = this;
-        LogController.info("Slurp on enable event running.");
-
-        // Save default config if we don't have one yet.
-        Slurp.getPlugin().saveDefaultConfig();
-
-        try {
-            SlurpServerRepository.loadFromJSON();
-
-            if (SlurpServerRepository.get() == null) {
-                throw new FileNotFoundException();
-            }
-            LogController.info("Loaded server config");
-        } catch (FileNotFoundException e) {
-            // If the saved server config couldn't be loaded, register as a new server.
-            try {
-                SlurpServerRepository.set(SlurpServerRepository.registerServer());
-                SlurpServerRepository.saveToJSON();
-                LogController.info("Registered Server to SlurpAPI");
-            } catch (APIPostException ex) {
-                // Display stack trace if we couldn't register the server.
-                ex.printStackTrace();
-            }
-        }
-
-        registerEvents();
-        registerCommands();
-
-        // Register the drinking buddies runnable
-        DrinkingBuddiesRunnable.registerRunner();
-    }
-
     private static void registerEvents() {
         // Create and register new event handler
         BlockBreakEventHandler eventHandler = new BlockBreakEventHandler();
@@ -119,5 +85,39 @@ public final class Slurp extends JavaPlugin {
         registerEvents();
 
         LogController.info("Plugin config reloaded");
+    }
+
+    @Override
+    public void onEnable() {
+        plugin = this;
+        LogController.info("Slurp on enable event running.");
+
+        // Save default config if we don't have one yet.
+        Slurp.getPlugin().saveDefaultConfig();
+
+        try {
+            SlurpServerRepository.loadFromJSON();
+
+            if (SlurpServerRepository.get() == null) {
+                throw new FileNotFoundException();
+            }
+            LogController.info("Loaded server config");
+        } catch (FileNotFoundException e) {
+            // If the saved server config couldn't be loaded, register as a new server.
+            try {
+                SlurpServerRepository.set(SlurpServerRepository.registerServer());
+                SlurpServerRepository.saveToJSON();
+                LogController.info("Registered Server to SlurpAPI");
+            } catch (APIPostException ex) {
+                // Display stack trace if we couldn't register the server.
+                ex.printStackTrace();
+            }
+        }
+
+        registerEvents();
+        registerCommands();
+
+        // Register the drinking buddies runnable
+        DrinkingBuddiesRunnable.registerRunner();
     }
 }

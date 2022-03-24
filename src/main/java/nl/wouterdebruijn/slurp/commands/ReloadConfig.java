@@ -2,10 +2,6 @@ package nl.wouterdebruijn.slurp.commands;
 
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.controller.MessageController;
-import nl.wouterdebruijn.slurp.controller.SidebarController;
-import nl.wouterdebruijn.slurp.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.repository.SlurpPlayerRepository;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;

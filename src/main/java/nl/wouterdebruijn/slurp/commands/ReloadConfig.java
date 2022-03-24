@@ -24,12 +24,12 @@ public class ReloadConfig implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Slurp.reload();
-        if (!(sender instanceof Player player)) {
-            return false;
+
+        if ((sender instanceof Player player)) {
+            MessageController.sendMessage(player, "Slurp has been reloaded");
         }
 
-        MessageController.sendMessage(player, "Slurp has been reloaded");
-        return false;
+        return true;
     }
 
     @Override

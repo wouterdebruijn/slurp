@@ -4,7 +4,7 @@
 self-hosted-dashboard-url: ''
 
 # Prefix for all slurp responses, example: "\u00A76[Slurp] "
-slurp-prefix: "\u00A76[Slurp] "
+slurp-prefix: "\u00A74[Slurp] \u00A7f"
 
 # The multiplication ratio of shots to sips. Fractional shots will be converted to sips. Default: 20 (20 sips will be one shot)
 shots-to-sips-multiplier: 20

@@ -73,7 +73,7 @@ public class ConvertSip implements TabExecutor {
                     e.printStackTrace();
                 }
             });
-            MessageController.sendMessage(player,true, ChatColor.GREEN + "Converted " + sipCount * -1 + " sip(s) to " + shotCount + " shot(s)!");
+            MessageController.sendMessage(player, true, ChatColor.GREEN + "Converted " + sipCount * -1 + " sip(s) to " + shotCount + " shot(s)!");
             return true;
         } catch (NumberFormatException e) {
             MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be a positive number!");
@@ -97,8 +97,8 @@ public class ConvertSip implements TabExecutor {
             int sipShotModifier = ConfigController.getInt("shots-to-sips-multiplier");
 
             SlurpPlayer slurpPlayer = SlurpPlayerRepository.get(player.getUniqueId());
-            for (int i = sipShotModifier; i <= slurpPlayer.remaining.sips; i+=sipShotModifier) {
-                options.add("" + i );
+            for (int i = sipShotModifier; i <= slurpPlayer.remaining.sips; i += sipShotModifier) {
+                options.add("" + i);
             }
             return options;
         }

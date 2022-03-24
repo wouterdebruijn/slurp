@@ -29,6 +29,7 @@ public class PlayerJoinEventHandler extends SlurpEventHandler<PlayerJoinEvent> {
                         LogController.error("Could not get player existing from dashboard.");
                         throw new APIPostException();
                     }
+
                     SlurpPlayerRepository.put(remotePlayer);
 
                     Bukkit.getScheduler().runTask(Slurp.getPlugin(), () -> SidebarController.createSidebar(remotePlayer));

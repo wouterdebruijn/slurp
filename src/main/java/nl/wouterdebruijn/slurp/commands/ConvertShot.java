@@ -68,7 +68,7 @@ public class ConvertShot implements TabExecutor {
                     e.printStackTrace();
                 }
             });
-            MessageController.sendMessage(player,true, ChatColor.GREEN + "Converted " + shotCount * -1 + " shot(s) to " + sipCount + " sip(s)!");
+            MessageController.sendMessage(player, true, ChatColor.GREEN + "Converted " + shotCount * -1 + " shot(s) to " + sipCount + " sip(s)!");
             return true;
         } catch (NumberFormatException e) {
             MessageController.sendMessage(player, true, ChatColor.RED + "Amount should be a positive number!");

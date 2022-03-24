@@ -47,7 +47,7 @@ abstract public class Executor<BukkitEvent extends Event> {
     }
 
     protected SlurpEntry playerDrinkEvent(UUID playerUUID, int shots, int sips, boolean giveable) {
-        SlurpEntry entry = new SlurpEntry(playerUUID, shots , sips, false, giveable);
+        SlurpEntry entry = new SlurpEntry(playerUUID, shots, sips, false, giveable);
         SlurpEntryRepository.cache(entry, !giveable);
 
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {

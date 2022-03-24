@@ -37,6 +37,10 @@ public class SlurpAPI {
             reportError(response, gson.toJson(body));
             throw new APIPostException();
         }
+
+        LogController.debug("API POST Request (" + postEndpoint + ")" + gson.toJson(body));
+        LogController.debug("API POST Response: " + response.body());
+
         return response;
     }
 
@@ -62,6 +66,10 @@ public class SlurpAPI {
         if (response.statusCode() != 200 && response.statusCode() != 409) {
             reportError(response);
         }
+
+        LogController.debug("API GET Request (" + postEndpoint + ")");
+        LogController.debug("API GET Response: " + response.body());
+
         return response;
     }
 
@@ -73,12 +81,9 @@ public class SlurpAPI {
     private static void reportError(HttpResponse<String> response) {
         LogController.error("Request to endpoint failed!");
         LogController.error("Server responded with status code: " + response.statusCode());
-
-        LogController.debug(String.format("URI: %s\nServer responded with body: '%s'", response.uri(), response.body()));
     }
 
     private static void reportError(HttpResponse<String> response, String requestBody) {
         reportError(response);
-        LogController.debug(String.format("Requested Body: '%s'", requestBody));
     }
 }

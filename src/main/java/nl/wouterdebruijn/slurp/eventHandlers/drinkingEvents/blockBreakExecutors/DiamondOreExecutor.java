@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors;
 
+import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventExecutor;
 import org.bukkit.Material;
@@ -8,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class DiamondOreExecutor extends BlockBreakEventExecutor {
     public DiamondOreExecutor() {
-        super(generateChange(1), new Material[]{Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE});
+        super(generateChange(ConfigController.getDouble("drinking-events.block-break-events.diamond-chance")), new Material[]{Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE});
     }
 
     @Override

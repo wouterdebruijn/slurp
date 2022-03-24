@@ -33,3 +33,6 @@ commands:
   convertshot:
     description: Convert shots to sips!
     usage: /convertshot <amount>
+  slurpreload:
+    description: Reload plugin from config
+    usage: /slurpreload

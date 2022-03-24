@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors;
 
+import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventExecutor;
 import org.bukkit.Material;
@@ -8,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class EnchientDebrisExecutor extends BlockBreakEventExecutor {
     public EnchientDebrisExecutor() {
-        super(generateChange(1), new Material[]{Material.ANCIENT_DEBRIS});
+        super(generateChange(ConfigController.getDouble("drinking-events.block-break-events.enchientdebris-chance")), new Material[]{Material.ANCIENT_DEBRIS});
     }
 
     @Override

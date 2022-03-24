@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors;
 
+import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventExecutor;
 import org.bukkit.Material;
@@ -8,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class RedstoneOreExecutor extends BlockBreakEventExecutor {
     public RedstoneOreExecutor() {
-        super(generateChange(0.07), new Material[]{Material.REDSTONE_ORE, Material.DEEPSLATE_REDSTONE_ORE});
+        super(generateChange(ConfigController.getDouble("drinking-events.block-break-events.redstone-chance")), new Material[]{Material.REDSTONE_ORE, Material.DEEPSLATE_REDSTONE_ORE});
     }
 
     @Override

@@ -14,6 +14,7 @@ import nl.wouterdebruijn.slurp.eventHandlers.utilityEvents.PlayerJoinEventHandle
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
 import nl.wouterdebruijn.slurp.serverRunnables.DrinkingBuddiesRunnable;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.FileNotFoundException;
@@ -53,6 +54,14 @@ public final class Slurp extends JavaPlugin {
             }
         }
 
+        registerEvents();
+        registerCommands();
+
+        // Register the drinking buddies runnable
+        DrinkingBuddiesRunnable.registerRunner();
+    }
+
+    private static void registerEvents() {
         // Create and register new event handler
         BlockBreakEventHandler eventHandler = new BlockBreakEventHandler();
 
@@ -86,7 +95,9 @@ public final class Slurp extends JavaPlugin {
 
         // Create and register player join utility event.
         new PlayerJoinEventHandler();
+    }
 
+    private static void registerCommands() {
         // Create and register player commands.
         new GiveShot();
         new GiveSip();
@@ -96,8 +107,17 @@ public final class Slurp extends JavaPlugin {
         new ConvertShot();
         new ConvertSip();
         new NewDrinkingBuddies();
+        new ReloadConfig();
+    }
 
-        // Register the drinking buddies runnable
-        DrinkingBuddiesRunnable.registerRunner();
+    public static void reload() {
+        LogController.info("Reloading config file");
+        Slurp.getPlugin().reloadConfig();
+
+        LogController.info("Reloading events");
+        HandlerList.unregisterAll();
+        registerEvents();
+
+        LogController.info("Plugin config reloaded");
     }
 }

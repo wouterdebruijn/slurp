@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors;
 
+import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventExecutor;
 import org.bukkit.Material;
@@ -8,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class CopperOreExecutor extends BlockBreakEventExecutor {
     public CopperOreExecutor() {
-        super(generateChange(0.3), new Material[]{Material.COPPER_ORE, Material.DEEPSLATE_COPPER_ORE});
+        super(generateChange(ConfigController.getDouble("drinking-events.block-break-events.copper-chance")), new Material[]{Material.COPPER_ORE, Material.DEEPSLATE_COPPER_ORE});
     }
 
     @Override

@@ -16,4 +16,19 @@ drinking-buddy-group-size: 2
 # Change the interval of choosing new drinking buddies in seconds. (Default: 900 (900 seconds = 15 minutes))
 drinking-buddy-interval: 900
 
+drinking-events:
+  block-break-events:
+    coalore-chance: 0.07
+    copperore-chance: 0.3
+    diamond-chance: 1
+    emerald-chance: 1
+    enchientdebris-chance: 1
+    gold-chance: 0.17
+    iron-chance: 0.1
+    lapis-chance: 0.17
+    nethergold-chance: 0.15
+    netherquartz-chance: 0.08
+    redstone-chance: 0.07
+
+
 slurp-console-debug-info: false

@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors;
 
+import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.controller.MessageController;
 import nl.wouterdebruijn.slurp.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockPlaceEventExecutor;
@@ -9,7 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PlanksExecutor extends BlockPlaceEventExecutor {
     public PlanksExecutor() {
-        super(generateChange(0.001), new Material[]{Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.CRIMSON_PLANKS, Material.OAK_PLANKS, Material.JUNGLE_PLANKS, Material.DARK_OAK_PLANKS, Material.SPRUCE_PLANKS, Material.WARPED_PLANKS});
+        super(generateChange(ConfigController.getDouble("drinking-events.block-place-events.planks-chance")), new Material[]{Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.CRIMSON_PLANKS, Material.OAK_PLANKS, Material.JUNGLE_PLANKS, Material.DARK_OAK_PLANKS, Material.SPRUCE_PLANKS, Material.WARPED_PLANKS});
     }
 
     @Override

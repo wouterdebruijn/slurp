@@ -29,6 +29,11 @@ drinking-events:
     nethergold-chance: 0.15
     netherquartz-chance: 0.08
     redstone-chance: 0.07
+    stone-chance: 0.002
+  block-place-events:
+    craftingtable-chance: 1
+    planks-chance: 0.005
+    torch-chance: 0.25
 
 
 slurp-console-debug-info: false

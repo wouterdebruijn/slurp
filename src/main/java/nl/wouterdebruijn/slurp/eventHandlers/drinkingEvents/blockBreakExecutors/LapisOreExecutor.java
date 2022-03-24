@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class LapisOreExecutor extends BlockBreakEventExecutor {
     public LapisOreExecutor() {
-        super(generateChange(17), new Material[]{Material.LAPIS_ORE, Material.DEEPSLATE_LAPIS_ORE});
+        super(generateChange(0.17), new Material[]{Material.LAPIS_ORE, Material.DEEPSLATE_LAPIS_ORE});
     }
 
     @Override

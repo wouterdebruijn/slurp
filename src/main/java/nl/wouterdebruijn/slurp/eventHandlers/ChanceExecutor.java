@@ -7,20 +7,20 @@ import java.util.Random;
 abstract public class ChanceExecutor<BukkitEvent extends Event> extends Executor<BukkitEvent> {
 
     static protected Random random = new Random();
-    int executionChance;
+    double executionChance;
 
-    public ChanceExecutor(int chance) {
+    public ChanceExecutor(double chance) {
         this.executionChance = chance;
     }
 
-    static protected int generateChange(int chance) {
+    static protected double generateChange(double chance) {
         return chance;
     }
 
     @Override
     public void execute(BukkitEvent event) {
         try {
-            if (beforeExecution(event) && executionChance >= random.nextInt(101)) {
+            if (beforeExecution(event) && executionChance >= random.nextDouble()) {
                 onExecution(event);
             }
         } catch (Exception e) {

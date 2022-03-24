@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class NetherQuartzOreExecutor extends BlockBreakEventExecutor {
     public NetherQuartzOreExecutor() {
-        super(generateChange(8), new Material[]{Material.NETHER_QUARTZ_ORE});
+        super(generateChange(0.08), new Material[]{Material.NETHER_QUARTZ_ORE});
     }
 
     @Override

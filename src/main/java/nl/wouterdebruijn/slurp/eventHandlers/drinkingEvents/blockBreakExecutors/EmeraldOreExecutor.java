@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class EmeraldOreExecutor extends BlockBreakEventExecutor {
     public EmeraldOreExecutor() {
-        super(generateChange(100), new Material[]{Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE});
+        super(generateChange(1), new Material[]{Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE});
     }
 
     @Override

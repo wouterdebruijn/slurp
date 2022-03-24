@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class DiamondOreExecutor extends BlockBreakEventExecutor {
     public DiamondOreExecutor() {
-        super(generateChange(100), new Material[]{Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE});
+        super(generateChange(1), new Material[]{Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE});
     }
 
     @Override

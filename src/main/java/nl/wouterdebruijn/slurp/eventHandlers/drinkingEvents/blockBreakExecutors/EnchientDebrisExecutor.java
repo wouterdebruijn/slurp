@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class EnchientDebrisExecutor extends BlockBreakEventExecutor {
     public EnchientDebrisExecutor() {
-        super(generateChange(8), new Material[]{Material.ANCIENT_DEBRIS});
+        super(generateChange(1), new Material[]{Material.ANCIENT_DEBRIS});
     }
 
     @Override

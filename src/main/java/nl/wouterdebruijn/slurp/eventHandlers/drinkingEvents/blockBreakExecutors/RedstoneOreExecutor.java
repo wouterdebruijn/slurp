@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class RedstoneOreExecutor extends BlockBreakEventExecutor {
     public RedstoneOreExecutor() {
-        super(generateChange(7), new Material[]{Material.REDSTONE_ORE, Material.DEEPSLATE_REDSTONE_ORE});
+        super(generateChange(0.07), new Material[]{Material.REDSTONE_ORE, Material.DEEPSLATE_REDSTONE_ORE});
     }
 
     @Override

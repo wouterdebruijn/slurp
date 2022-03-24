@@ -3,8 +3,12 @@ package nl.wouterdebruijn.slurp;
 import nl.wouterdebruijn.slurp.commands.*;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockPlaceEventHandler;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.PlayerDeathEventHandler;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.*;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.CraftingTableExecutor;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.PlanksExecutor;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.TorchExecutor;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.playerDeathExecutors.*;
 import nl.wouterdebruijn.slurp.eventHandlers.utilityEvents.PlayerJoinEventHandler;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
@@ -64,6 +68,12 @@ public final class Slurp extends JavaPlugin {
         eventHandler.registerExecutor(new NetherGoldOreExecutor());
         eventHandler.registerExecutor(new NetherQuartzOreExecutor());
         eventHandler.registerExecutor(new RedstoneOreExecutor());
+
+        BlockPlaceEventHandler blockPlaceEventHandler = new BlockPlaceEventHandler();
+
+        blockPlaceEventHandler.registerExecutor(new TorchExecutor());
+        blockPlaceEventHandler.registerExecutor(new CraftingTableExecutor());
+        blockPlaceEventHandler.registerExecutor(new PlanksExecutor());
 
         // Other drinking events
         PlayerDeathEventHandler playerDeathEventHandler = new PlayerDeathEventHandler();

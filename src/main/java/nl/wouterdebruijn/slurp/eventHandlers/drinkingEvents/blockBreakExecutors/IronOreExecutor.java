@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class IronOreExecutor extends BlockBreakEventExecutor {
     public IronOreExecutor() {
-        super(generateChange(10), new Material[]{Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE});
+        super(generateChange(0.1), new Material[]{Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE});
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class CoalOreExecutor extends BlockBreakEventExecutor {
     public CoalOreExecutor() {
-        super(generateChange(7), new Material[]{Material.COAL_ORE, Material.DEEPSLATE_COAL_ORE});
+        super(generateChange(0.07), new Material[]{Material.COAL_ORE, Material.DEEPSLATE_COAL_ORE});
     }
 
     @Override

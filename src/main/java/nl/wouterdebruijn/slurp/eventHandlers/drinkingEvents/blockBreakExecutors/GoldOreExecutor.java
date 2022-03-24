@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class GoldOreExecutor extends BlockBreakEventExecutor {
     public GoldOreExecutor() {
-        super(generateChange(17), new Material[]{Material.GOLD_ORE, Material.DEEPSLATE_GOLD_ORE});
+        super(generateChange(0.17), new Material[]{Material.GOLD_ORE, Material.DEEPSLATE_GOLD_ORE});
     }
 
     @Override

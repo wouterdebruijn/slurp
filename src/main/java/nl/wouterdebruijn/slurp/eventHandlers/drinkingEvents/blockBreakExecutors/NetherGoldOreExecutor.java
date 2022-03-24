@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class NetherGoldOreExecutor extends BlockBreakEventExecutor {
     public NetherGoldOreExecutor() {
-        super(generateChange(5), new Material[]{Material.NETHER_GOLD_ORE});
+        super(generateChange(0.05), new Material[]{Material.NETHER_GOLD_ORE});
     }
 
     @Override

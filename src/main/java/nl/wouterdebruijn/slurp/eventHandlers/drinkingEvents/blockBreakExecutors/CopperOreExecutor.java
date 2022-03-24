@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class CopperOreExecutor extends BlockBreakEventExecutor {
     public CopperOreExecutor() {
-        super(generateChange(30), new Material[]{Material.COPPER_ORE, Material.DEEPSLATE_COPPER_ORE});
+        super(generateChange(0.3), new Material[]{Material.COPPER_ORE, Material.DEEPSLATE_COPPER_ORE});
     }
 
     @Override

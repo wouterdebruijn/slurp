@@ -8,6 +8,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerDeathPlayerExecutor extends Executor<PlayerDeathEvent> {
     @Override
     protected void onExecution(PlayerDeathEvent event) {
+        event.deathMessage(null);
+
         Player killer = event.getPlayer().getKiller();
         Player deadman = event.getPlayer();
 

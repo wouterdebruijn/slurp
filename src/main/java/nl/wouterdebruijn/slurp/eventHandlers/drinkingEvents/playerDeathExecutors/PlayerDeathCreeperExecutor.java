@@ -12,6 +12,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerDeathCreeperExecutor extends Executor<PlayerDeathEvent> {
     @Override
     protected void onExecution(PlayerDeathEvent event) {
+        event.deathMessage(null);
+
         Player deadman = event.getPlayer();
         playerDrinkEvent(deadman.getUniqueId(), 1, 0, false);
         MessageController.broadcast(true, String.format("%s was killed by a Creeper, now they take a shot!", deadman.getName()));

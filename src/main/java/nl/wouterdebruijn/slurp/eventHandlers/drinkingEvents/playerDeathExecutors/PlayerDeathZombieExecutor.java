@@ -12,6 +12,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerDeathZombieExecutor extends Executor<PlayerDeathEvent> {
     @Override
     protected void onExecution(PlayerDeathEvent event) {
+        event.deathMessage(null);
+
         Player deadman = event.getPlayer();
         playerDrinkEvent(deadman.getUniqueId(), 0, 5, false);
         MessageController.broadcast(true, String.format("%s was killed by a Zombie, now they take 5 sips!", deadman.getName()));

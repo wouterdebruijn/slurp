@@ -2,6 +2,7 @@ package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.playerDeathExecutor
 
 import nl.wouterdebruijn.slurp.controller.MessageController;
 import nl.wouterdebruijn.slurp.eventHandlers.Executor;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
@@ -12,6 +13,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerDeathSkeletonExecutor extends Executor<PlayerDeathEvent> {
     @Override
     protected void onExecution(PlayerDeathEvent event) {
+        event.deathMessage(null);
+
         Player deadman = event.getPlayer();
         playerDrinkEvent(deadman.getUniqueId(), 0, 8, false);
         MessageController.broadcast(true, String.format("%s was killed by a Skeleton, now they take 8 sips!", deadman.getName()));
@@ -23,7 +26,9 @@ public class PlayerDeathSkeletonExecutor extends Executor<PlayerDeathEvent> {
 
         if (entityDamageEvent instanceof EntityDamageByEntityEvent) {
             Entity damager = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
-            return damager instanceof Skeleton;
+            if (damager instanceof Arrow) {
+                return (((Arrow) damager).getShooter() instanceof Skeleton);
+            }
         }
         return false;
     }

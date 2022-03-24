@@ -12,6 +12,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerDeathSpiderExecutor extends Executor<PlayerDeathEvent> {
     @Override
     protected void onExecution(PlayerDeathEvent event) {
+        event.deathMessage(null);
+
         Player deadman = event.getPlayer();
         playerDrinkEvent(deadman.getUniqueId(), 0, 8, false);
         MessageController.broadcast(true, String.format("%s was killed by a Spider, now they take 8 sips!", deadman.getName()));

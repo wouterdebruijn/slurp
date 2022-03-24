@@ -3,7 +3,9 @@ package nl.wouterdebruijn.slurp;
 import nl.wouterdebruijn.slurp.commands.*;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.PlayerDeathEventHandler;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.*;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.playerDeathExecutors.*;
 import nl.wouterdebruijn.slurp.eventHandlers.utilityEvents.PlayerJoinEventHandler;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
@@ -62,6 +64,15 @@ public final class Slurp extends JavaPlugin {
         eventHandler.registerExecutor(new NetherGoldOreExecutor());
         eventHandler.registerExecutor(new NetherQuartzOreExecutor());
         eventHandler.registerExecutor(new RedstoneOreExecutor());
+
+        // Other drinking events
+        PlayerDeathEventHandler playerDeathEventHandler = new PlayerDeathEventHandler();
+        playerDeathEventHandler.registerExecutor(new PlayerDeathBlazeExecutor());
+        playerDeathEventHandler.registerExecutor(new PlayerDeathCreeperExecutor());
+        playerDeathEventHandler.registerExecutor(new PlayerDeathPlayerExecutor());
+        playerDeathEventHandler.registerExecutor(new PlayerDeathSkeletonExecutor());
+        playerDeathEventHandler.registerExecutor(new PlayerDeathSpiderExecutor());
+        playerDeathEventHandler.registerExecutor(new PlayerDeathZombieExecutor());
 
         // Create and register player join utility event.
         new PlayerJoinEventHandler();

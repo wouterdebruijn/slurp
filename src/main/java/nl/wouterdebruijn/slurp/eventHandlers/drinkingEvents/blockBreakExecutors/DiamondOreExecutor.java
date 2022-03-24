@@ -1,11 +1,7 @@
 package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors;
 
-import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventExecutor;
-import nl.wouterdebruijn.slurp.exceptions.APIPostException;
-import nl.wouterdebruijn.slurp.repository.SlurpEntryRepository;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;

@@ -30,18 +30,18 @@ abstract public class BlockBreakEventExecutor extends ChanceExecutor<BlockBreakE
     }
 
     protected void broadcastPlayerDrinking(String playername, int shots, int sips, boolean giveable, String orename) {
-        if (giveable) {
-            if (shots > 1 && sips > 1) {
+        if (!giveable) {
+            if (shots >= 1 && sips >= 1) {
                 MessageController.broadcast(true, String.format("%s mined %s, now they take %d %s and %d %s!", playername, orename, shots, shotName(shots), sips, sipName(sips)));
-            } else if (shots > 1) {
+            } else if (shots >= 1) {
                 MessageController.broadcast(true, String.format("%s mined %s, now they take %d %s!", playername, orename, shots, shotName(shots)));
             } else {
                 MessageController.broadcast(true, String.format("%s mined %s, now they take %d %s!", playername, orename, sips, sipName(sips)));
             }
         } else {
-            if (shots > 1 && sips > 1) {
+            if (shots >= 1 && sips >= 1) {
                 MessageController.broadcast(true, String.format("%s mined %s, they received %d %s and %d %s to give away!", playername, orename, shots, shotName(shots), sips, sipName(sips)));
-            } else if (shots > 1) {
+            } else if (shots >= 1) {
                 MessageController.broadcast(true, String.format("%s mined %s, they received %d %s to give away!", playername, orename, shots, shotName(shots)));
             } else {
                 MessageController.broadcast(true, String.format("%s mined %s, they received %d %s to give away!", playername, orename, sips, sipName(sips)));
@@ -50,18 +50,18 @@ abstract public class BlockBreakEventExecutor extends ChanceExecutor<BlockBreakE
     }
 
     protected void broadcastServerDrinking(String playername, int shots, int sips, boolean giveable, String orename) {
-        if (giveable) {
-            if (shots > 1 && sips > 1) {
+        if (!giveable) {
+            if (shots >= 1 && sips >= 1) {
                 MessageController.broadcast(true, String.format("%s mined %s, now everybody takes %d %s and %d %s!", playername, orename, shots, shotName(shots), sips, sipName(sips)));
-            } else if (shots > 1) {
+            } else if (shots >= 1) {
                 MessageController.broadcast(true, String.format("%s mined %s, now everybody takes %d %s!", playername, orename, shots, shotName(shots)));
             } else {
                 MessageController.broadcast(true, String.format("%s mined %s, now everybody takes %d %s!", playername, orename, sips, sipName(sips)));
             }
         } else {
-            if (shots > 1 && sips > 1) {
+            if (shots >= 1 && sips >= 1) {
                 MessageController.broadcast(true, String.format("%s mined %s, now everybody receives %d %s and %d %s to give away!", playername, orename, shots, shotName(shots), sips, sipName(sips)));
-            } else if (shots > 1) {
+            } else if (shots >= 1) {
                 MessageController.broadcast(true, String.format("%s mined %s, now everybody receives %d %s to give away!", playername, orename, shots, shotName(shots)));
             } else {
                 MessageController.broadcast(true, String.format("%s mined %s, now everybody receives %d %s to give away!", playername, orename, sips, sipName(sips)));

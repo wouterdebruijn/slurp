@@ -43,6 +43,7 @@ public final class Slurp extends JavaPlugin {
         eventHandler.registerExecutor(new NetherGoldOreExecutor());
         eventHandler.registerExecutor(new NetherQuartzOreExecutor());
         eventHandler.registerExecutor(new RedstoneOreExecutor());
+        eventHandler.registerExecutor(new StoneExecutor());
 
         BlockPlaceEventHandler blockPlaceEventHandler = new BlockPlaceEventHandler();
 

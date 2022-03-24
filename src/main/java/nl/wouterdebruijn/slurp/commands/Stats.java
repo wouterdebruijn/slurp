@@ -35,7 +35,7 @@ public class Stats implements TabExecutor {
                         ChatColor.GOLD + "  Sips: " + slurpPlayer.taken.sips + " and Shots: " + slurpPlayer.taken.shots +
                         ChatColor.RED + "\n Remaining:\n" +
                         ChatColor.GOLD + "  Sips: " + slurpPlayer.remaining.sips + " and Shots: " + slurpPlayer.remaining.shots +
-                        ChatColor.GREEN + "\n Taken:\n" +
+                        ChatColor.GREEN + "\n Giveable:\n" +
                         ChatColor.GOLD + "  Sips: " + slurpPlayer.giveable.sips + " and Shots: " + slurpPlayer.giveable.shots
         );
 

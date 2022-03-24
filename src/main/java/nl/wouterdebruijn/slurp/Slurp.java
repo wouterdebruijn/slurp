@@ -3,8 +3,7 @@ package nl.wouterdebruijn.slurp;
 import nl.wouterdebruijn.slurp.commands.*;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.CoalOreExecutor;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.IronOreExecutor;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.*;
 import nl.wouterdebruijn.slurp.eventHandlers.utilityEvents.PlayerJoinEventHandler;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
@@ -48,13 +47,26 @@ public final class Slurp extends JavaPlugin {
             }
         }
 
+        // Create and register new event handler
         BlockBreakEventHandler eventHandler = new BlockBreakEventHandler();
-        eventHandler.registerExecutor(new IronOreExecutor());
-        eventHandler.registerExecutor(new CoalOreExecutor());
 
+        // Register specific block executors
+        eventHandler.registerExecutor(new CoalOreExecutor());
+        eventHandler.registerExecutor(new CopperOreExecutor());
+        eventHandler.registerExecutor(new DiamondOreExecutor());
+        eventHandler.registerExecutor(new EmeraldOreExecutor());
+        eventHandler.registerExecutor(new EnchientDebrisExecutor());
+        eventHandler.registerExecutor(new GoldOreExecutor());
+        eventHandler.registerExecutor(new IronOreExecutor());
+        eventHandler.registerExecutor(new LapisOreExecutor());
+        eventHandler.registerExecutor(new NetherGoldOreExecutor());
+        eventHandler.registerExecutor(new NetherQuartzOreExecutor());
+        eventHandler.registerExecutor(new RedstoneOreExecutor());
+
+        // Create and register player join utility event.
         new PlayerJoinEventHandler();
 
-
+        // Create and register player commands.
         new GiveShot();
         new GiveSip();
         new TakeShot();
@@ -64,6 +76,7 @@ public final class Slurp extends JavaPlugin {
         new ConvertSip();
         new NewDrinkingBuddies();
 
+        // Register the drinking buddies runnable
         DrinkingBuddiesRunnable.registerRunner();
     }
 }

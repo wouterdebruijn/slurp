@@ -7,7 +7,7 @@ import java.util.Random;
 abstract public class ChanceExecutor<BukkitEvent extends Event> extends Executor<BukkitEvent> {
 
     int executionChance;
-    Random random = new Random();
+    static protected Random random = new Random();
 
     public ChanceExecutor(int chance) {
         this.executionChance = chance;
@@ -22,5 +22,9 @@ abstract public class ChanceExecutor<BukkitEvent extends Event> extends Executor
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    static protected int generateChange(int chance) {
+        return chance;
     }
 }

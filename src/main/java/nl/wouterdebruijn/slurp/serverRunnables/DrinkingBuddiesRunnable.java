@@ -56,9 +56,7 @@ public class DrinkingBuddiesRunnable {
         chooseDrinkingBuddies();
 
         ArrayList<SlurpPlayer> buddies = SlurpPlayerRepository.getDrinkingBuddies();
-
         List<String> names = buddies.stream().map((slurpPlayer -> slurpPlayer.getMinecraftPlayer().getName())).toList();
-
         MessageController.broadcast(ChatColor.AQUA + "New drinking buddies are: " + String.join(" and ", names));
     }
 }

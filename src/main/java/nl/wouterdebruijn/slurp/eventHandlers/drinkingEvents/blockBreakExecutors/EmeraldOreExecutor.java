@@ -6,15 +6,15 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
-public class IronOreExecutor extends BlockBreakEventExecutor {
-    public IronOreExecutor() {
-        super(generateChange(10), new Material[]{Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE});
+public class EmeraldOreExecutor extends BlockBreakEventExecutor {
+    public EmeraldOreExecutor() {
+        super(generateChange(100), new Material[]{Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE});
     }
 
     @Override
     protected void onExecution(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 1, true);
-        broadcastPlayerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "iron");
+        SlurpEntry entry = serverDrinkingEvent(1, 0, false);
+        broadcastServerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "emeralds");
     }
 }

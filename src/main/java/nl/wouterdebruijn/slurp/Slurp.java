@@ -2,6 +2,8 @@ package nl.wouterdebruijn.slurp;
 
 import nl.wouterdebruijn.slurp.commands.*;
 import nl.wouterdebruijn.slurp.controller.LogController;
+import nl.wouterdebruijn.slurp.controller.SidebarController;
+import nl.wouterdebruijn.slurp.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockPlaceEventHandler;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.PlayerDeathEventHandler;
@@ -12,8 +14,11 @@ import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.playerDeathExecutors.*;
 import nl.wouterdebruijn.slurp.eventHandlers.utilityEvents.PlayerJoinEventHandler;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
+import nl.wouterdebruijn.slurp.repository.SlurpPlayerRepository;
 import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
 import nl.wouterdebruijn.slurp.serverRunnables.DrinkingBuddiesRunnable;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,12 +58,12 @@ public final class Slurp extends JavaPlugin {
 
         // Other drinking events
         PlayerDeathEventHandler playerDeathEventHandler = new PlayerDeathEventHandler();
-        playerDeathEventHandler.registerExecutor(new PlayerDeathBlazeExecutor());
-        playerDeathEventHandler.registerExecutor(new PlayerDeathCreeperExecutor());
+//        playerDeathEventHandler.registerExecutor(new PlayerDeathBlazeExecutor());
+//        playerDeathEventHandler.registerExecutor(new PlayerDeathCreeperExecutor());
         playerDeathEventHandler.registerExecutor(new PlayerDeathPlayerExecutor());
-        playerDeathEventHandler.registerExecutor(new PlayerDeathSkeletonExecutor());
-        playerDeathEventHandler.registerExecutor(new PlayerDeathSpiderExecutor());
-        playerDeathEventHandler.registerExecutor(new PlayerDeathZombieExecutor());
+//        playerDeathEventHandler.registerExecutor(new PlayerDeathSkeletonExecutor());
+//        playerDeathEventHandler.registerExecutor(new PlayerDeathSpiderExecutor());
+//        playerDeathEventHandler.registerExecutor(new PlayerDeathZombieExecutor());
 
         // Create and register player join utility event.
         new PlayerJoinEventHandler();
@@ -75,6 +80,7 @@ public final class Slurp extends JavaPlugin {
         new ConvertSip();
         new NewDrinkingBuddies();
         new ReloadConfig();
+        new ReloadPlayers();
     }
 
     public static void reload() {
@@ -86,6 +92,31 @@ public final class Slurp extends JavaPlugin {
         registerEvents();
 
         LogController.info("Plugin config reloaded");
+    }
+
+    public static void playerReload() {
+        SlurpPlayerRepository.clear();
+
+        for (Player mcPlayer : getPlugin().getServer().getOnlinePlayers()) {
+            SlurpPlayer player = new SlurpPlayer(mcPlayer.getUniqueId());
+
+            SlurpPlayer finalPlayer = player;
+            Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
+                try {
+                    SlurpPlayer remotePlayer = SlurpPlayerRepository.register(finalPlayer);
+                    if (remotePlayer == null) {
+                        LogController.error("Could not get player existing from dashboard.");
+                        throw new APIPostException();
+                    }
+
+                    SlurpPlayerRepository.put(remotePlayer);
+
+                    Bukkit.getScheduler().runTask(Slurp.getPlugin(), () -> SidebarController.createSidebar(remotePlayer));
+                } catch (APIPostException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     @Override

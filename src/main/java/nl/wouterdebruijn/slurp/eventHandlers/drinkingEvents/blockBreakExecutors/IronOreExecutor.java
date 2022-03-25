@@ -15,7 +15,7 @@ public class IronOreExecutor extends BlockBreakEventExecutor {
     @Override
     protected void onExecution(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 1, true);
+        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 3, true);
         broadcastPlayerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "iron");
     }
 }

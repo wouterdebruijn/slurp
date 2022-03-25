@@ -33,6 +33,9 @@ commands:
   convertshot:
     description: Convert shots to sips!
     usage: /convertshot <amount>
-  slurpreload:
+  slurp-reload:
     description: Reload plugin from config
-    usage: /slurpreload
+    usage: /slurp-reload
+  slurp-player-reload:
+    description: Reload slurp players from api
+    usage: /slurp-player-reload

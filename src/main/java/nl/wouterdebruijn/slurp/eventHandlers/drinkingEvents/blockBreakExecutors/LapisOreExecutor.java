@@ -15,7 +15,7 @@ public class LapisOreExecutor extends BlockBreakEventExecutor {
     @Override
     protected void onExecution(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 4, random.nextBoolean());
+        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 9, true);
         broadcastPlayerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "lapis");
 
     }

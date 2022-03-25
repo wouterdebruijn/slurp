@@ -8,22 +8,31 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerDeathPlayerExecutor extends Executor<PlayerDeathEvent> {
     @Override
     protected void onExecution(PlayerDeathEvent event) {
-        event.deathMessage(null);
 
-        Player killer = event.getPlayer().getKiller();
-        Player deadman = event.getPlayer();
+        if (event.getPlayer().getKiller() != null) {
+            event.deathMessage(null);
 
-        if (killer == null)
-            return;
+            Player killer = event.getPlayer().getKiller();
+            Player deadman = event.getPlayer();
 
-        playerDrinkEvent(killer.getUniqueId(), 1, 0, false);
-        playerDrinkEvent(deadman.getUniqueId(), 1, 0, false);
+            if (killer == null)
+                return;
 
-        MessageController.broadcast(true, String.format("%s killed %s, now they both take a shot!", killer.getName(), deadman.getName()));
+            playerDrinkEvent(killer.getUniqueId(), 1, 0, false);
+            playerDrinkEvent(deadman.getUniqueId(), 1, 0, false);
+
+            MessageController.broadcast(true, String.format("%s killed %s, now they both take a shot!", killer.getName(), deadman.getName()));
+        } else {
+            Player deadman = event.getPlayer();
+            playerDrinkEvent(deadman.getUniqueId(), 1, 0, false);
+            MessageController.broadcast(true, String.format("%s died, now they take a shot!", deadman.getName()));
+        }
+
     }
 
     @Override
     protected boolean beforeExecution(PlayerDeathEvent event) {
-        return event.getPlayer().getKiller() != null;
+
+        return true;
     }
 }

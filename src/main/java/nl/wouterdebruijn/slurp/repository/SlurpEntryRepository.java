@@ -15,6 +15,9 @@ public class SlurpEntryRepository {
     public static void cache(SlurpEntry entry, boolean recursiveDrinkingBuddies) {
         SlurpPlayer player = SlurpPlayerRepository.get(entry.getPlayer());
 
+        int firstTakenShots = player.taken.shots;
+        int firstTakenSips = player.taken.sips;
+
         if (entry.giveable) {
             player.giveable.shots += entry.shots;
             player.giveable.sips += entry.sips;
@@ -44,36 +47,31 @@ public class SlurpEntryRepository {
         Player mcPlayer = Slurp.getPlugin().getServer().getPlayer(player.getUuid());
 
         if (mcPlayer != null) {
-            LogController.debug("MCPlayer Found");
-
-            LogController.debug(String.format("Player Taken: %d and %d, calc: %d", player.taken.shots, player.remaining.shots, (totalshots / 100) * savezoneShotsMin));
-            LogController.debug("Test: " + savezoneShotsMin);
-
-            if (player.taken.shots < (totalshots / 100f) * savezoneShotsMin) {
-                LogController.debug("ShotsSlacker" + totalshots);
+            if (player.taken.shots < (totalshots / 100f) * savezoneShotsMin && totalshots > 3 && player.taken.shots <= firstTakenShots) {
                 SmartTitleController.playTitle(mcPlayer, "\u00A7cYou are a slacker!", "\u00A7eTake some more shots!");
-                mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 9999999, 1));
+                MessageController.broadcast(true, String.format("%s is slacking on their shots!", mcPlayer.getName()));
+                mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 9999999, 0));
             } else
                 mcPlayer.removePotionEffect(PotionEffectType.SLOW);
 
-            if (player.taken.sips < (totalsips / 100f) * savezoneSipsMin) {
-                LogController.debug("SipsSlacker" + totalsips);
+            if (player.taken.sips < (totalsips / 100f) * savezoneSipsMin && totalsips > 60 && player.taken.sips <= firstTakenSips) {
                 SmartTitleController.playTitle(mcPlayer, "\u00A74This man is slacking!", "\u00A7eCatch up on those sips mydude!");
-                mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 9999999, 1));
+                MessageController.broadcast(true, String.format("%s is slacking on their sips!", mcPlayer.getName()));
+                mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 20, 0));
             } else
                 mcPlayer.removePotionEffect(PotionEffectType.CONFUSION);
 
             if (player.taken.shots > (totalshots / 100f) * savezoneShotsMax) {
-                LogController.debug("ShotsWinner" + totalshots);
                 SmartTitleController.playTitle(mcPlayer, "\u00A72Total gamer!", "\u00A7eYou are drinking like a bender!");
-                mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 9999999, 2));
+                MessageController.broadcast(true, String.format("%s is tanking down those shots!", mcPlayer.getName()));
+                mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 9999999, 1));
             } else
                 mcPlayer.removePotionEffect(PotionEffectType.SPEED);
 
             if (player.taken.sips > (totalsips / 100f) * savezoneSipsMax) {
-                LogController.debug("SipsWinner" + totalsips);
                 SmartTitleController.playTitle(mcPlayer, "\u00A7aNo lill' bitch!", "\u00A7eNo going back now!");
-                mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 9999999, 2));
+                MessageController.broadcast(true, String.format("%s is tanking down those sips!", mcPlayer.getName()));
+                mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 9999999, 0));
             } else
                 mcPlayer.removePotionEffect(PotionEffectType.REGENERATION);
 

@@ -15,7 +15,7 @@ public class CopperOreExecutor extends BlockBreakEventExecutor {
     @Override
     protected void onExecution(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 2, false);
+        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 4, true);
         broadcastPlayerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "copper");
     }
 }

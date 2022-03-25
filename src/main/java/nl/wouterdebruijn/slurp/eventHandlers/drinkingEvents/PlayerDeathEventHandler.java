@@ -20,5 +20,6 @@ public class PlayerDeathEventHandler extends SlurpEventHandler<PlayerDeathEvent>
     @EventHandler
     protected void onEvent(PlayerDeathEvent event) {
         executors.forEach((executor -> executor.execute(event)));
+
     }
 }

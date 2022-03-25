@@ -15,7 +15,7 @@ public class GoldOreExecutor extends BlockBreakEventExecutor {
     @Override
     protected void onExecution(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 4, random.nextBoolean());
+        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 8, true);
         broadcastPlayerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "gold");
 
     }

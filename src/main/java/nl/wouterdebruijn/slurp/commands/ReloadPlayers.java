@@ -12,17 +12,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class ReloadConfig implements TabExecutor {
-    public ReloadConfig() {
-        Objects.requireNonNull(Slurp.getPlugin().getCommand("slurp-reload")).setExecutor(this);
+public class ReloadPlayers implements TabExecutor {
+    public ReloadPlayers() {
+        Objects.requireNonNull(Slurp.getPlugin().getCommand("slurp-player-reload")).setExecutor(this);
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Slurp.reload();
+        Slurp.playerReload();
 
         if ((sender instanceof Player player)) {
-            MessageController.sendMessage(player, "Slurp has been reloaded");
+            MessageController.sendMessage(player, "Slurp players have been reloaded!");
         }
 
         return true;

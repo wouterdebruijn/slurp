@@ -15,7 +15,7 @@ public class EnchientDebrisExecutor extends BlockBreakEventExecutor {
     @Override
     protected void onExecution(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        SlurpEntry entry = serverDrinkingEvent(1, 0, false);
+        SlurpEntry entry = serverDrinkingEvent(1, 0, true);
         broadcastServerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "anchient debris");
 
     }

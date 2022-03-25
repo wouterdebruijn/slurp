@@ -15,7 +15,7 @@ public class CoalOreExecutor extends BlockBreakEventExecutor {
     @Override
     protected void onExecution(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 2, false);
+        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 0, 2, true);
         broadcastPlayerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "coal");
     }
 }

@@ -30,6 +30,10 @@ public class SlurpPlayerRepository {
         players.remove(uuid);
     }
 
+    public static void clear() {
+        players.clear();
+    }
+
     /**
      * Return an ArrayList of SlurpPlayers that are drinking buddies.
      */

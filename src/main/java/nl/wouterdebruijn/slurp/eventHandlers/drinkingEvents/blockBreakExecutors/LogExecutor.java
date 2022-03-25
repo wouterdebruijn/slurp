@@ -1,23 +1,23 @@
-package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors;
+package nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors;
 
 import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.controller.MessageController;
 import nl.wouterdebruijn.slurp.entity.SlurpEntry;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockPlaceEventExecutor;
+import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventExecutor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 
-public class PlanksExecutor extends BlockPlaceEventExecutor {
-    public PlanksExecutor() {
-        super(generateChange(ConfigController.getDouble("drinking-events.block-place-events.planks-chance")), new Material[]{Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.CRIMSON_PLANKS, Material.OAK_PLANKS, Material.JUNGLE_PLANKS, Material.DARK_OAK_PLANKS, Material.SPRUCE_PLANKS, Material.WARPED_PLANKS});
+public class LogExecutor extends BlockBreakEventExecutor {
+    public LogExecutor() {
+        super(generateChange(ConfigController.getDouble("drinking-events.block-break-events.stone-chance")), new Material[]{Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE});
     }
 
     @Override
-    protected void onExecution(BlockPlaceEvent event) {
+    protected void onExecution(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 1, 0, false);
-        broadcastPlayerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "planks");
+        SlurpEntry entry = playerDrinkEvent(player.getUniqueId(), 1, 0, true);
+        broadcastPlayerDrinking(player.getName(), entry.shots, entry.sips, entry.giveable, "iron");
     }
 
     private String shotName(int shots) {

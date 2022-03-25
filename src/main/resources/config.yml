@@ -16,6 +16,14 @@ drinking-buddy-group-size: 2
 # Change the interval of choosing new drinking buddies in seconds. (Default: 900 (900 seconds = 15 minutes))
 drinking-buddy-interval: 900
 
+drinking-savezone:
+  shots:
+    min: 75
+    max: 125
+  sips:
+    min: 75
+    max: 125
+
 drinking-events:
   block-break-events:
     coalore-chance: 0.07

@@ -40,4 +40,11 @@ public class SmartTitleController {
             runnable.run();
         }, 20L * time);
     }
+
+    public static void playTitle(Player player, String title, String subtitle) {
+        Bukkit.getScheduler().runTaskLater(Slurp.getPlugin(), () -> {
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+            player.showTitle(Title.title(Component.text(title), Component.text(subtitle)));
+        }, 0);
+    }
 }

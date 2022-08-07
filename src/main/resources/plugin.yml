@@ -39,3 +39,6 @@ commands:
   slurp-player-reload:
     description: Reload slurp players from api
     usage: /slurp-player-reload
+  session:
+    description: Create or join a session
+    usage: /session <action>

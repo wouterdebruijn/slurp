@@ -12,17 +12,13 @@ import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.PlanksExecutor;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.TorchExecutor;
 import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.playerDeathExecutors.*;
-import nl.wouterdebruijn.slurp.eventHandlers.utilityEvents.PlayerJoinEventHandler;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
 import nl.wouterdebruijn.slurp.repository.SlurpPlayerRepository;
-import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
 import nl.wouterdebruijn.slurp.serverRunnables.DrinkingBuddiesRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.FileNotFoundException;
 
 public final class Slurp extends JavaPlugin {
 
@@ -64,9 +60,6 @@ public final class Slurp extends JavaPlugin {
 //        playerDeathEventHandler.registerExecutor(new PlayerDeathSkeletonExecutor());
 //        playerDeathEventHandler.registerExecutor(new PlayerDeathSpiderExecutor());
 //        playerDeathEventHandler.registerExecutor(new PlayerDeathZombieExecutor());
-
-        // Create and register player join utility event.
-        new PlayerJoinEventHandler();
     }
 
     private static void registerCommands() {
@@ -81,6 +74,7 @@ public final class Slurp extends JavaPlugin {
         new NewDrinkingBuddies();
         new ReloadConfig();
         new ReloadPlayers();
+        new Session();
     }
 
     public static void reload() {
@@ -127,29 +121,16 @@ public final class Slurp extends JavaPlugin {
         // Save default config if we don't have one yet.
         Slurp.getPlugin().saveDefaultConfig();
 
-        try {
-            SlurpServerRepository.loadFromJSON();
-
-            if (SlurpServerRepository.get() == null) {
-                throw new FileNotFoundException();
-            }
-            LogController.info("Loaded server config");
-        } catch (FileNotFoundException e) {
-            // If the saved server config couldn't be loaded, register as a new server.
-            try {
-                SlurpServerRepository.set(SlurpServerRepository.registerServer());
-                SlurpServerRepository.saveToJSON();
-                LogController.info("Registered Server to SlurpAPI");
-            } catch (APIPostException ex) {
-                // Display stack trace if we couldn't register the server.
-                ex.printStackTrace();
-            }
-        }
-
-        registerEvents();
+//        registerEvents();
         registerCommands();
 
         // Register the drinking buddies runnable
         DrinkingBuddiesRunnable.registerRunner();
+    }
+
+    @Override
+    public void onDisable() {
+        // Close any running tasks
+        Bukkit.getScheduler().cancelTasks(this);
     }
 }

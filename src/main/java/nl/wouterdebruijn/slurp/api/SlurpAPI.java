@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import nl.wouterdebruijn.slurp.controller.ConfigController;
 import nl.wouterdebruijn.slurp.controller.LogController;
 import nl.wouterdebruijn.slurp.exceptions.APIPostException;
-import nl.wouterdebruijn.slurp.repository.SlurpServerRepository;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,17 +16,9 @@ public class SlurpAPI {
         String postEndpoint = getEndpoint() + path;
         Gson gson = new Gson();
 
-        String bearerToken = "";
-
-        // If the server is registered, send our API key.
-        if (SlurpServerRepository.get() != null) {
-            bearerToken = SlurpServerRepository.get().token;
-        }
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + bearerToken)
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(body)))
                 .build();
 
@@ -47,17 +38,9 @@ public class SlurpAPI {
     public static HttpResponse<String> get(String path) throws IOException, InterruptedException {
         String postEndpoint = getEndpoint() + path;
 
-        String bearerToken = "";
-
-        // If the server is registered, send our API key.
-        if (SlurpServerRepository.get() != null) {
-            bearerToken = SlurpServerRepository.get().token;
-        }
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + bearerToken)
                 .GET()
                 .build();
 

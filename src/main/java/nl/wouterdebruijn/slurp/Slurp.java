@@ -1,136 +1,51 @@
 package nl.wouterdebruijn.slurp;
 
-import nl.wouterdebruijn.slurp.commands.*;
-import nl.wouterdebruijn.slurp.controller.LogController;
-import nl.wouterdebruijn.slurp.controller.SidebarController;
-import nl.wouterdebruijn.slurp.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockBreakEventHandler;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.BlockPlaceEventHandler;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.PlayerDeathEventHandler;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockBreakExecutors.*;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.CraftingTableExecutor;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.PlanksExecutor;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.blockPlaceExecutors.TorchExecutor;
-import nl.wouterdebruijn.slurp.eventHandlers.drinkingEvents.playerDeathExecutors.*;
-import nl.wouterdebruijn.slurp.exceptions.APIPostException;
-import nl.wouterdebruijn.slurp.repository.SlurpPlayerRepository;
-import nl.wouterdebruijn.slurp.serverRunnables.DrinkingBuddiesRunnable;
-import org.bukkit.Bukkit;
+import nl.wouterdebruijn.slurp.commands.sessions.Create;
+import nl.wouterdebruijn.slurp.commands.sessions.Join;
+import nl.wouterdebruijn.slurp.helpers.SlurpConfig;
+import nl.wouterdebruijn.slurp.helpers.slurp.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helpers.slurp.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helpers.slurp.SlurpSession;
+import nl.wouterdebruijn.slurp.helpers.slurp.exceptions.ApiException;
+import nl.wouterdebruijn.slurp.helpers.slurp.exceptions.MissingSessionException;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
+import javax.security.auth.kerberos.KerberosTicket;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class Slurp extends JavaPlugin {
+    public static Plugin plugin = null;
+    public static Logger logger = null;
 
-    private static Slurp plugin = null;
 
-    public static Slurp getPlugin() {
-        return plugin;
-    }
-
-    private static void registerEvents() {
-        // Create and register new event handler
-        BlockBreakEventHandler eventHandler = new BlockBreakEventHandler();
-
-        // Register specific block executors
-        eventHandler.registerExecutor(new CoalOreExecutor());
-        eventHandler.registerExecutor(new CopperOreExecutor());
-        eventHandler.registerExecutor(new DiamondOreExecutor());
-        eventHandler.registerExecutor(new EmeraldOreExecutor());
-        eventHandler.registerExecutor(new EnchientDebrisExecutor());
-        eventHandler.registerExecutor(new GoldOreExecutor());
-        eventHandler.registerExecutor(new IronOreExecutor());
-        eventHandler.registerExecutor(new LapisOreExecutor());
-        eventHandler.registerExecutor(new NetherGoldOreExecutor());
-        eventHandler.registerExecutor(new NetherQuartzOreExecutor());
-        eventHandler.registerExecutor(new RedstoneOreExecutor());
-        eventHandler.registerExecutor(new StoneExecutor());
-
-        BlockPlaceEventHandler blockPlaceEventHandler = new BlockPlaceEventHandler();
-
-        blockPlaceEventHandler.registerExecutor(new TorchExecutor());
-        blockPlaceEventHandler.registerExecutor(new CraftingTableExecutor());
-        blockPlaceEventHandler.registerExecutor(new PlanksExecutor());
-
-        // Other drinking events
-        PlayerDeathEventHandler playerDeathEventHandler = new PlayerDeathEventHandler();
-//        playerDeathEventHandler.registerExecutor(new PlayerDeathBlazeExecutor());
-//        playerDeathEventHandler.registerExecutor(new PlayerDeathCreeperExecutor());
-        playerDeathEventHandler.registerExecutor(new PlayerDeathPlayerExecutor());
-//        playerDeathEventHandler.registerExecutor(new PlayerDeathSkeletonExecutor());
-//        playerDeathEventHandler.registerExecutor(new PlayerDeathSpiderExecutor());
-//        playerDeathEventHandler.registerExecutor(new PlayerDeathZombieExecutor());
-    }
-
-    private static void registerCommands() {
-        // Create and register player commands.
-        new GiveShot();
-        new GiveSip();
-        new TakeShot();
-        new TakeSip();
-        new Stats();
-        new ConvertShot();
-        new ConvertSip();
-        new NewDrinkingBuddies();
-        new ReloadConfig();
-        new ReloadPlayers();
-        new Session();
-    }
-
-    public static void reload() {
-        LogController.info("Reloading config file");
-        Slurp.getPlugin().reloadConfig();
-
-        LogController.info("Reloading events");
-        HandlerList.unregisterAll();
-        registerEvents();
-
-        LogController.info("Plugin config reloaded");
-    }
-
-    public static void playerReload() {
-        SlurpPlayerRepository.clear();
-
-        for (Player mcPlayer : getPlugin().getServer().getOnlinePlayers()) {
-            SlurpPlayer player = new SlurpPlayer(mcPlayer.getUniqueId());
-
-            SlurpPlayer finalPlayer = player;
-            Bukkit.getScheduler().runTaskAsynchronously(Slurp.getPlugin(), () -> {
-                try {
-                    SlurpPlayer remotePlayer = SlurpPlayerRepository.register(finalPlayer);
-                    if (remotePlayer == null) {
-                        LogController.error("Could not get player existing from dashboard.");
-                        throw new APIPostException();
-                    }
-
-                    SlurpPlayerRepository.put(remotePlayer);
-
-                    Bukkit.getScheduler().runTask(Slurp.getPlugin(), () -> SidebarController.createSidebar(remotePlayer));
-                } catch (APIPostException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+    @Override
+    public void onDisable() {
+        SlurpPlayerManager.saveToDisk();
     }
 
     @Override
     public void onEnable() {
         plugin = this;
-        LogController.info("Slurp on enable event running.");
+        logger = getLogger();
 
-        // Save default config if we don't have one yet.
-        Slurp.getPlugin().saveDefaultConfig();
+        logger.setLevel(Level.ALL);
 
-//        registerEvents();
-        registerCommands();
+        SlurpPlayerManager.loadFromDisk();
 
-        // Register the drinking buddies runnable
-        DrinkingBuddiesRunnable.registerRunner();
-    }
+        SlurpConfig.initialize();
 
-    @Override
-    public void onDisable() {
-        // Close any running tasks
-        Bukkit.getScheduler().cancelTasks(this);
+//      Register commands
+        Objects.requireNonNull(getCommand("join")).setExecutor(new Join());
+        Objects.requireNonNull(getCommand("create")).setExecutor(new Create());
+        Objects.requireNonNull(getCommand("debug")).setExecutor(new nl.wouterdebruijn.slurp.commands.sessions.Debug());
+
     }
 }

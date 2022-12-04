@@ -7,38 +7,15 @@ authors: [ Wouter de Bruijn, Sjors van Holst ]
 description: A Minecraft plugin that will make you and your friends slurp the good stuff.
 website: slurp.krijninc.dev
 commands:
-  giveshot:
-    description: Give shots to an other player
-    usage: /giveshot <playername> <amount>
-  givesip:
-    description: Give sips to an other player
-    usage: /givesip <playername> <amount>
-  stats:
-    description: Show your current drinking stats
-  takeshot:
-    description: Register a taken shot to the server
-    usage: /takeshot <amount>
-  takesip:
-    description: Register a taken sip to the server
-    usage: /takesip <amount>
-  drinkingmode:
-    description: Get or set the drinking difficulty
-    usage: /drinkingmode <mode?>
-  newdrinkingbuddies:
-    description: Force a new set of drinking buddies
-    usage: /newdrinkingbuddies
-  convertsip:
-    description: Convert sips to shots!
-    usage: /convertsip <amount>
-  convertshot:
-    description: Convert shots to sips!
-    usage: /convertshot <amount>
-  slurp-reload:
-    description: Reload plugin from config
-    usage: /slurp-reload
-  slurp-player-reload:
-    description: Reload slurp players from api
-    usage: /slurp-player-reload
-  session:
-    description: Create or join a session
-    usage: /session <action>
+  join:
+    description: Join a slurp game
+    usage: /join
+    permission: slurp.join
+  create:
+    description: Create a slurp game
+    usage: /create
+    permission: slurp.create
+  debug:
+    description: Debug a slurp game
+    usage: /debug
+    permission: slurp.debug

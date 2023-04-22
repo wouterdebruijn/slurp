@@ -22,7 +22,9 @@ public class Join implements TabExecutor {
             Player player = (Player) sender;
 
             try {
-                SlurpPlayer slurpPlayer = SlurpPlayer.create(player, args[0]);
+//                Combine all args into one string
+                String shortcode = String.join(" ", args);
+                SlurpPlayer slurpPlayer = SlurpPlayer.create(player, shortcode);
                 player.sendMessage("Joined session with short code: " + args[0]);
                 Slurp.logger.log(Level.INFO, String.format("Player %s joined session %s", player.getName(), slurpPlayer.getSession().getUuid()));
             } catch (ApiResponseException e) {

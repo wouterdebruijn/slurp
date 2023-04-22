@@ -1,12 +1,14 @@
 package nl.wouterdebruijn.slurp.helpers.slurp;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import nl.wouterdebruijn.slurp.Slurp;
 import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class SlurpPlayerManager {
@@ -33,11 +35,18 @@ public class SlurpPlayerManager {
                 Reader reader = new FileReader(file);
 
                 // Restore the player list
+                ArrayList<SlurpPlayerGson> playerList = gson.fromJson(reader, new TypeToken<ArrayList<SlurpPlayerGson>>() {}.getType());
 
-                // RESTORE PLAYERS FROM FILESYSTEM
-                // NEEDS RESTORE OF SESSIONS TO WORK. ADD THIS FIRST
-                // GSON IS A LIST, NOT A MAP
+                if (playerList == null) {
+                    Slurp.logger.log(Level.SEVERE, "Failed to load players from disk");
+                    return;
+                }
 
+                // Go through arraylist and add to hashmap
+                playerList.forEach(slurpPlayerGson -> {
+                    Slurp.logger.log(Level.INFO, "Loaded player: " + slurpPlayerGson.getUsername());
+                    players.put(slurpPlayerGson.getMinecraftPlayerUuid(), new SlurpPlayer(slurpPlayerGson));
+                });
 
                 Slurp.logger.log(Level.INFO, "Loaded players from disk");
             }

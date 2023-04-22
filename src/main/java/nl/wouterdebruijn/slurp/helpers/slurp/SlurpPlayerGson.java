@@ -8,4 +8,8 @@ public class SlurpPlayerGson extends SlurpPlayer {
         minecraftPlayerUuid = minecraftUuid;
     }
 
+    public String getMinecraftPlayerUuid() {
+        return minecraftPlayerUuid;
+    }
+
 }

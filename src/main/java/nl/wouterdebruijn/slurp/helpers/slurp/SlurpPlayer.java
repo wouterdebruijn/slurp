@@ -32,7 +32,9 @@ public class SlurpPlayer {
     }
 
     public SlurpPlayer(SlurpPlayerGson slurpPlayerGson) {
-
+        this.uuid = slurpPlayerGson.getUuid();
+        this.session = slurpPlayerGson.getSession();
+        this.username = slurpPlayerGson.getUsername();
     }
 
     public static SlurpPlayer create(Player player, String sessionShort) throws ApiUrlException, CreateSessionException, MissingSessionException, ApiResponseException {

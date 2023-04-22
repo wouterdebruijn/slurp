@@ -6,6 +6,7 @@ import nl.wouterdebruijn.slurp.helpers.SlurpConfig;
 import nl.wouterdebruijn.slurp.helpers.slurp.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helpers.slurp.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helpers.slurp.SlurpSession;
+import nl.wouterdebruijn.slurp.helpers.slurp.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.helpers.slurp.exceptions.ApiException;
 import nl.wouterdebruijn.slurp.helpers.slurp.exceptions.MissingSessionException;
 import org.bukkit.command.Command;
@@ -24,13 +25,11 @@ import java.util.logging.Logger;
 public final class Slurp extends JavaPlugin {
     public static Plugin plugin = null;
     public static Logger logger = null;
-
-
     @Override
     public void onDisable() {
+        SlurpSessionManager.saveToDisk();
         SlurpPlayerManager.saveToDisk();
     }
-
     @Override
     public void onEnable() {
         plugin = this;
@@ -38,6 +37,7 @@ public final class Slurp extends JavaPlugin {
 
         logger.setLevel(Level.ALL);
 
+        SlurpSessionManager.loadFromDisk();
         SlurpPlayerManager.loadFromDisk();
 
         SlurpConfig.initialize();
@@ -46,6 +46,5 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("join")).setExecutor(new Join());
         Objects.requireNonNull(getCommand("create")).setExecutor(new Create());
         Objects.requireNonNull(getCommand("debug")).setExecutor(new nl.wouterdebruijn.slurp.commands.sessions.Debug());
-
     }
 }

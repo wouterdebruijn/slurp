@@ -1,8 +1,12 @@
 package nl.wouterdebruijn.slurp.commands.sessions;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helpers.slurp.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helpers.slurp.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helpers.slurp.SlurpSession;
+import nl.wouterdebruijn.slurp.helpers.slurp.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.helpers.slurp.exceptions.ApiResponseException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,10 +23,19 @@ public class Debug implements TabExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player player = (Player) sender;
 
-        player.sendMessage("Debugging...");
-        player.sendMessage("Active Players:");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+//        Print all current sessions
+        player.sendMessage("Current players:");
         for (SlurpPlayer slurpPlayer : SlurpPlayerManager.dump()) {
-            player.sendMessage(String.format("Player: %s, Session: %s", slurpPlayer.getMinecraftPlayer().getName(), slurpPlayer.getSession().getUuid()));
+            player.sendMessage(gson.toJson(slurpPlayer));
+            player.sendMessage("-------------");
+        }
+
+        player.sendMessage("Current sessions:");
+        for (SlurpSession slurpPlayer : SlurpSessionManager.dump()) {
+            player.sendMessage(gson.toJson(slurpPlayer));
+            player.sendMessage("-------------");
         }
         return true;
     }

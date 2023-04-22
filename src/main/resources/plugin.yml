@@ -23,3 +23,7 @@ commands:
     description: Create a slurp entry
     usage: /create_entry
     permission: slurp.create_entry
+  leave:
+    description: Leave a slurp game
+    usage: /leave
+    permission: slurp.leave

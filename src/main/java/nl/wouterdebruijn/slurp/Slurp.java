@@ -52,5 +52,6 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("create")).setExecutor(new Create());
         Objects.requireNonNull(getCommand("debug")).setExecutor(new nl.wouterdebruijn.slurp.commands.sessions.Debug());
         Objects.requireNonNull(getCommand("create_entry")).setExecutor(new nl.wouterdebruijn.slurp.commands.sessions.CreateEntry());
+        Objects.requireNonNull(getCommand("leave")).setExecutor(new nl.wouterdebruijn.slurp.commands.sessions.Leave());
     }
 }

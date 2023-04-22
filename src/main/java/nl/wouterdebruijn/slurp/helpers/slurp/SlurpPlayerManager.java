@@ -37,6 +37,10 @@ public class SlurpPlayerManager {
         return new ArrayList<>(players.values());
     }
 
+    public static void remove(Player player) {
+        players.remove(player.getUniqueId().toString());
+    }
+
     public static void loadFromDisk() {
         try {
             Gson gson = new Gson();

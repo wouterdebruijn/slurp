@@ -20,6 +20,10 @@ public class SlurpSessionManager {
         return null;
     }
 
+    public static void remove(SlurpSession session) {
+        sessions.remove(session);
+    }
+
     public static ArrayList<SlurpSession> dump() {
         return sessions;
     }

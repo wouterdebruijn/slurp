@@ -19,3 +19,7 @@ commands:
     description: Debug a slurp game
     usage: /debug
     permission: slurp.debug
+  create_entry:
+    description: Create a slurp entry
+    usage: /create_entry
+    permission: slurp.create_entry

@@ -42,8 +42,6 @@ public final class Slurp extends JavaPlugin {
         plugin = this;
         logger = getLogger();
 
-        logger.setLevel(Level.ALL);
-
         SlurpSessionManager.loadFromDisk();
         SlurpPlayerManager.loadFromDisk();
 
@@ -53,5 +51,6 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("join")).setExecutor(new Join());
         Objects.requireNonNull(getCommand("create")).setExecutor(new Create());
         Objects.requireNonNull(getCommand("debug")).setExecutor(new nl.wouterdebruijn.slurp.commands.sessions.Debug());
+        Objects.requireNonNull(getCommand("create_entry")).setExecutor(new nl.wouterdebruijn.slurp.commands.sessions.CreateEntry());
     }
 }

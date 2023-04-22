@@ -5,9 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import nl.wouterdebruijn.slurp.Slurp;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.logging.Level;
 
 public class SlurpSessionManager {

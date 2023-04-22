@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp.helpers.slurp.gson;
 
 import com.google.gson.Gson;
+import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helpers.SlurpConfig;
 import nl.wouterdebruijn.slurp.helpers.slurp.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helpers.slurp.SlurpSession;
@@ -30,6 +31,9 @@ public class ResponsePlayer {
     private Consumable remaining;
     private Consumable giveable;
 
+//    Authentication token for requests
+    private String token;
+
     private static final String API_URL = SlurpConfig.ApiUrl();
 
     public SlurpPlayer toSlurpPlayer() throws MissingSessionException {
@@ -44,6 +48,7 @@ public class ResponsePlayer {
                         .uri(URI.create(API_URL + "/session/entity/" + session))
                         .GET()
                         .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + token)
                         .build();
 
                 HttpClient client = HttpClient.newHttpClient();
@@ -55,12 +60,14 @@ public class ResponsePlayer {
 
                 ResponseSession responseSession = gson.fromJson(response.body(), ResponseSession.class);
                 slurpSession = responseSession.toSlurpSession();
-                SlurpSessionManager.addSession(slurpSession);
             } catch (Exception e) {
                 throw new MissingSessionException();
             }
         }
 
-        return new SlurpPlayer(uuid, slurpSession, username);
+        SlurpSession sessionCopy = new SlurpSession(slurpSession);
+
+        sessionCopy.overwriteToken(this.token);
+        return new SlurpPlayer(uuid, sessionCopy, username);
     }
 }

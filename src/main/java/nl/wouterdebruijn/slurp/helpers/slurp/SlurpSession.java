@@ -21,12 +21,23 @@ public class SlurpSession {
     private final String uuid;
     private final boolean active;
 
+//    Authentication token;
+    private String token;
+
     private static final String API_URL = SlurpConfig.ApiUrl();
 
-    public SlurpSession(String shortcode, String uuid, boolean active) {
+    public SlurpSession(SlurpSession session) {
+        this.shortcode = session.getShortcode();
+        this.uuid = session.getUuid();
+        this.active = session.isActive();
+        this.token = session.getToken();
+    }
+
+    public SlurpSession(String shortcode, String uuid, boolean active, String token) {
         this.shortcode = shortcode;
         this.uuid = uuid;
         this.active = active;
+        this.token = token;
     }
 
     public static SlurpSession create() throws ApiException, ApiResponseException {
@@ -48,8 +59,11 @@ public class SlurpSession {
             }
 
             ResponseSession responseSession = gson.fromJson(response.body(), ResponseSession.class);
+            Slurp.logger.info(gson.toJson(responseSession));
+
             SlurpSession session = responseSession.toSlurpSession();
             Slurp.logger.log(Level.INFO, String.format("Created session %s, (%s)", session.getShortcode(), session.getUuid()));
+
             SlurpSessionManager.addSession(session);
             return session;
         } catch (URISyntaxException e) {
@@ -92,5 +106,17 @@ public class SlurpSession {
 
     public String getShortcode() {
         return shortcode;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void overwriteToken(String token) {
+        this.token = token;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

@@ -23,6 +23,16 @@ public class SlurpPlayerManager {
         return players.get(player.getUniqueId().toString());
     }
 
+    public static SlurpPlayer getPlayer(String uuid) {
+//        Return the SlurpPlayer matching the given UUID (Slurp UUID)
+        for (SlurpPlayer slurpPlayer : players.values()) {
+            if (slurpPlayer.getUuid().equals(uuid)) {
+                return slurpPlayer;
+            }
+        }
+        return null;
+    }
+
     public static ArrayList<SlurpPlayer> dump() {
         return new ArrayList<>(players.values());
     }

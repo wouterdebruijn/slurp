@@ -56,6 +56,8 @@ public class SlurpPlayer {
             }
 
             ResponsePlayer responsePlayer = gson.fromJson(response.body(), ResponsePlayer.class);
+            Slurp.logger.info(gson.toJson(responsePlayer));
+
             SlurpPlayer slurpPlayer = responsePlayer.toSlurpPlayer();
             Slurp.logger.log(Level.INFO, String.format("Created player %s", slurpPlayer.getUsername()));
             SlurpPlayerManager.addPlayer(player, slurpPlayer);

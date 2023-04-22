@@ -37,6 +37,18 @@ public class Debug implements TabExecutor {
             player.sendMessage(gson.toJson(slurpPlayer));
             player.sendMessage("-------------");
         }
+
+        Slurp.logger.log(Level.INFO, "Current players:");
+        for (SlurpPlayer slurpPlayer : SlurpPlayerManager.dump()) {
+            Slurp.logger.log(Level.INFO, gson.toJson(slurpPlayer));
+            Slurp.logger.log(Level.INFO, "-------------");
+        }
+
+        Slurp.logger.log(Level.INFO, "Current sessions:");
+        for (SlurpSession slurpPlayer : SlurpSessionManager.dump()) {
+            Slurp.logger.log(Level.INFO, gson.toJson(slurpPlayer));
+            Slurp.logger.log(Level.INFO, "-------------");
+        }
         return true;
     }
 

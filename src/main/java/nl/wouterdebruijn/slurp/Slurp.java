@@ -1,5 +1,8 @@
 package nl.wouterdebruijn.slurp;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.commands.sessions.Create;
 import nl.wouterdebruijn.slurp.commands.sessions.Join;
 import nl.wouterdebruijn.slurp.helpers.SlurpConfig;
@@ -25,6 +28,10 @@ import java.util.logging.Logger;
 public final class Slurp extends JavaPlugin {
     public static Plugin plugin = null;
     public static Logger logger = null;
+
+    public static TextComponent getPrefix() {
+        return Component.text("Slurp").color(NamedTextColor.GOLD).append(Component.text(" | ").color(NamedTextColor.WHITE));
+    }
     @Override
     public void onDisable() {
         SlurpSessionManager.saveToDisk();

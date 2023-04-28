@@ -22,7 +22,7 @@ public class SlurpSession {
     private final String uuid;
     private final boolean active;
     private String token;
-    private static final String API_URL = SlurpConfig.ApiUrl();
+    private static final String API_URL = SlurpConfig.apiUrl();
 
     public SlurpSession(SlurpSession session) {
         this.shortcode = session.getShortcode();

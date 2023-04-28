@@ -33,7 +33,7 @@ public class ResponsePlayer {
 //    Authentication token for requests
     private String token;
 
-    private static final String API_URL = SlurpConfig.ApiUrl();
+    private static final String API_URL = SlurpConfig.apiUrl();
 
     public SlurpPlayer toSlurpPlayer() throws MissingSessionException {
         SlurpSession slurpSession = SlurpSessionManager.getSession(session);

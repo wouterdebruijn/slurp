@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.kyori.adventure.text.Component;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
@@ -28,7 +29,7 @@ public class CreateEntry implements TabExecutor {
 
         SlurpEntry response = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
 
-        player.sendMessage(Slurp.getPrefix().append(Component.text(gson.toJson(response))));
+        player.sendMessage(TextBuilder.success("Entry created!"));
 
         return true;
     }

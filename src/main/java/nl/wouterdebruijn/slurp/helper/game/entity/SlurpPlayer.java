@@ -25,7 +25,7 @@ public class SlurpPlayer {
     private final SlurpSession session;
     private final String username;
 
-    private static final String API_URL = SlurpConfig.ApiUrl();
+    private static final String API_URL = SlurpConfig.apiUrl();
 
     public SlurpPlayer(String uuid, SlurpSession session, String username) {
         this.uuid = uuid;

@@ -3,6 +3,7 @@ package nl.wouterdebruijn.slurp.command.session;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
@@ -33,19 +34,19 @@ public class Leave implements TabExecutor {
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
         if (slurpPlayer == null) {
-            player.sendMessage(Slurp.getPrefix().append(Component.text("You are not in a session", NamedTextColor.RED)));
+            player.sendMessage(TextBuilder.error("You are not in a session."));
             return true;
         }
 
         SlurpSession session = SlurpSessionManager.getSession(slurpPlayer.getSession().getUuid());
 
         if (session == null) {
-            player.sendMessage(Slurp.getPrefix().append(Component.text("You are not in a session?", NamedTextColor.RED)));
+            player.sendMessage(TextBuilder.error("You are not in a session."));
             return true;
         }
 
         SlurpPlayerManager.remove(player);
-        player.sendMessage(Slurp.getPrefix().append(Component.text("You have left the session.", NamedTextColor.GREEN)));
+        player.sendMessage(TextBuilder.success("You have left the session."));
 
         if (!hasRemainingPlayers(session)) {
             SlurpSessionManager.remove(session);

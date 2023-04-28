@@ -3,6 +3,7 @@ package nl.wouterdebruijn.slurp.command.session;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
@@ -20,19 +21,18 @@ public class Create implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         try {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(Slurp.getPrefix().append(Component.text("You must be a player to use this command!").color(NamedTextColor.RED)));
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage(TextBuilder.error("You must be a player to execute this command."));
                 return true;
             }
 
             if (SlurpPlayerManager.getPlayer((Player) sender) != null) {
-                sender.sendMessage(Slurp.getPrefix().append(Component.text("You are already in a session!").color(NamedTextColor.RED)));
+                sender.sendMessage(TextBuilder.error("You are already in a session!"));
                 return true;
             }
 
-            Player player = (Player) sender;
             SlurpSession session = SlurpSession.create();
-            sender.sendMessage(Slurp.getPrefix().append(Component.text("Created session with shortcode: ").color(NamedTextColor.GREEN).append(Component.text(session.getShortcode()).color(NamedTextColor.GOLD))));
+            sender.sendMessage(TextBuilder.success(String.format("Created session %s", session.getUuid())));
             SlurpPlayer.create(player, session.getShortcode());
             return true;
         } catch (Exception e) {

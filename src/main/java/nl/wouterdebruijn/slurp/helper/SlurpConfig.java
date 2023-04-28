@@ -8,7 +8,6 @@ public class SlurpConfig {
         Plugin plugin = Slurp.plugin;
         plugin.saveDefaultConfig();
     }
-
     private static String getString(String key) {
         String value = Slurp.plugin.getConfig().getString(key);
         if (value == null) {
@@ -16,8 +15,10 @@ public class SlurpConfig {
         }
         return value;
     }
-
-    public static String ApiUrl() {
+    public static String apiUrl() {
         return getString("api.url");
+    }
+    public static String prefix() {
+        return getString("chat.prefix");
     }
 }

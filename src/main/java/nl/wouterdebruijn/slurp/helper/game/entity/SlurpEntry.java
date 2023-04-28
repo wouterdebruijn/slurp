@@ -14,7 +14,7 @@ import java.net.http.HttpResponse;
 import java.util.logging.Level;
 
 public class SlurpEntry {
-    private static final String API_URL = SlurpConfig.ApiUrl();
+    private static final String API_URL = SlurpConfig.apiUrl();
     private String uuid;
     private int sips;
     private int shots;

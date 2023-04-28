@@ -6,8 +6,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.command.session.Create;
 import nl.wouterdebruijn.slurp.command.session.Join;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.manager.SlurpPlayerManager;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.manager.SlurpSessionManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,9 +18,6 @@ public final class Slurp extends JavaPlugin {
     public static Plugin plugin = null;
     public static Logger logger = null;
 
-    public static TextComponent getPrefix() {
-        return Component.text("Slurp").color(NamedTextColor.GOLD).append(Component.text(" | ").color(NamedTextColor.WHITE));
-    }
     @Override
     public void onDisable() {
         SlurpSessionManager.saveToDisk();

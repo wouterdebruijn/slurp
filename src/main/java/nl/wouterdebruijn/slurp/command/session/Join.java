@@ -3,6 +3,7 @@ package nl.wouterdebruijn.slurp.command.session;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
@@ -24,12 +25,12 @@ public class Join implements TabExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         try {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(Slurp.getPrefix().append(Component.text("You must be a player to use this command!").color(NamedTextColor.RED)));
+                sender.sendMessage(TextBuilder.error("You must be a player to execute this command!"));
                 return true;
             }
 
             if (SlurpPlayerManager.getPlayer((Player) sender) != null) {
-                sender.sendMessage(Slurp.getPrefix().append(Component.text("You are already in a session!").color(NamedTextColor.RED)));
+                sender.sendMessage(TextBuilder.error("You are already in a session!"));
                 return true;
             }
 
@@ -39,11 +40,11 @@ public class Join implements TabExecutor {
                 String shortcode = String.join(" ", args);
                 SlurpPlayer slurpPlayer = SlurpPlayer.create(player, shortcode);
 
-                player.sendMessage(Slurp.getPrefix().append(Component.text("Joined session with shortcode: ").color(NamedTextColor.GREEN).append(Component.text(slurpPlayer.getSession().getShortcode()).color(NamedTextColor.GOLD))));
+                player.sendMessage(TextBuilder.success(String.format("Joined session %s", slurpPlayer.getSession().getUuid())));
 
                 Slurp.logger.log(Level.INFO, String.format("Player %s joined session %s", player.getName(), slurpPlayer.getSession().getUuid()));
             } catch (ApiResponseException e) {
-                player.sendMessage(Slurp.getPrefix().append(Component.text("Could not join session: ").color(NamedTextColor.RED).append(Component.text(e.getMessage()).color(NamedTextColor.GOLD))));
+                player.sendMessage(TextBuilder.error(e.getMessage()));
             }
             return true;
         } catch (Exception e) {

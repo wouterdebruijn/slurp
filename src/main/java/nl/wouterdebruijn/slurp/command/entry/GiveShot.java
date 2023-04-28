@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
@@ -26,7 +27,7 @@ public class GiveShot implements TabExecutor {
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
         if (slurpPlayer == null) {
-            player.sendMessage(Slurp.getPrefix().append(Component.text("You are not in a session!").color(NamedTextColor.RED)));
+            player.sendMessage(TextBuilder.error("You are not in a session!"));
             return true;
         }
 
@@ -36,7 +37,7 @@ public class GiveShot implements TabExecutor {
 
         SlurpEntryBuilder entry = new SlurpEntryBuilder(5, 5, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
         SlurpEntry response = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
-        player.sendMessage(Slurp.getPrefix().append(Component.text(gson.toJson(response))));
+        player.sendMessage(TextBuilder.success(gson.toJson(response)));
 
         return true;
     }

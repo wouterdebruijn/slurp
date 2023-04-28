@@ -57,7 +57,8 @@ public class SlurpSessionManager {
                 Reader reader = new FileReader(file);
 
                 // Restore the player list
-                sessions = gson.fromJson(reader, new TypeToken<ArrayList<SlurpSession>>() {}.getType());
+                sessions = gson.fromJson(reader, new TypeToken<ArrayList<SlurpSession>>() {
+                }.getType());
 
                 // Dump sessions
                 sessions.forEach(slurpSession -> {

@@ -2,14 +2,14 @@ package nl.wouterdebruijn.slurp.helper.game.entity;
 
 import com.google.gson.Gson;
 import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
-import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;
 import nl.wouterdebruijn.slurp.exceptions.ApiUrlException;
 import nl.wouterdebruijn.slurp.exceptions.CreateSessionException;
 import nl.wouterdebruijn.slurp.exceptions.MissingSessionException;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
+import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -21,31 +21,21 @@ import java.net.http.HttpResponse;
 import java.util.logging.Level;
 
 public class SlurpPlayer {
+    private static final String API_URL = SlurpConfig.apiUrl();
     private final String uuid;
     private final SlurpSession session;
     private final String username;
-
-    private static final String API_URL = SlurpConfig.apiUrl();
 
     public SlurpPlayer(String uuid, SlurpSession session, String username) {
         this.uuid = uuid;
         this.session = session;
         this.username = username;
     }
+
     public SlurpPlayer(SlurpPlayerFileAdapter slurpPlayerFileAdapter) {
         this.uuid = slurpPlayerFileAdapter.getUuid();
         this.session = slurpPlayerFileAdapter.getSession();
         this.username = slurpPlayerFileAdapter.getUsername();
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-    public SlurpSession getSession() {
-        return session;
-    }
-    public String getUsername() {
-        return username;
     }
 
     public static SlurpPlayer create(Player player, String sessionShort) throws ApiUrlException, CreateSessionException, MissingSessionException, ApiResponseException {
@@ -78,5 +68,17 @@ public class SlurpPlayer {
         } catch (IOException | InterruptedException e) {
             throw new CreateSessionException(request);
         }
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public SlurpSession getSession() {
+        return session;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

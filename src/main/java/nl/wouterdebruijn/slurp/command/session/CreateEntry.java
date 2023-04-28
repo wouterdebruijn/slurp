@@ -2,13 +2,11 @@ package nl.wouterdebruijn.slurp.command.session;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.kyori.adventure.text.Component;
-import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
-import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;

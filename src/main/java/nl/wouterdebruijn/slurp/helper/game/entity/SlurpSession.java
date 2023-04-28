@@ -2,11 +2,11 @@ package nl.wouterdebruijn.slurp.helper.game.entity;
 
 import com.google.gson.Gson;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.exceptions.*;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.api.ResponseSession;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
-import nl.wouterdebruijn.slurp.exceptions.*;
 import nl.wouterdebruijn.slurp.helper.game.api.ResponseSessionPlayers;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class SlurpSession {
+    private static final String API_URL = SlurpConfig.apiUrl();
     private final String shortcode;
     private final String uuid;
     private final boolean active;
     private String token;
-    private static final String API_URL = SlurpConfig.apiUrl();
 
     public SlurpSession(SlurpSession session) {
         this.shortcode = session.getShortcode();
@@ -70,6 +70,7 @@ public class SlurpSession {
             throw new CreateSessionException(request);
         }
     }
+
     public ArrayList<SlurpPlayer> getPlayers() throws ApiUrlException, CreateSessionException, MissingSessionException, ApiResponseException {
         Gson gson = new Gson();
         HttpRequest request = null;

@@ -1,8 +1,5 @@
 package nl.wouterdebruijn.slurp;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.command.session.Create;
 import nl.wouterdebruijn.slurp.command.session.Join;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
@@ -23,6 +20,7 @@ public final class Slurp extends JavaPlugin {
         SlurpSessionManager.saveToDisk();
         SlurpPlayerManager.saveToDisk();
     }
+
     @Override
     public void onEnable() {
         plugin = this;

@@ -1,12 +1,12 @@
 package nl.wouterdebruijn.slurp.helper.game.api;
 
 import com.google.gson.Gson;
-import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;
 import nl.wouterdebruijn.slurp.exceptions.MissingSessionException;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,11 +15,7 @@ import java.net.http.HttpResponse;
 import java.util.Date;
 
 public class ResponsePlayer {
-    public static class Consumable {
-        private int sips;
-        private int shots;
-    }
-
+    private static final String API_URL = SlurpConfig.apiUrl();
     private String uuid;
     private String username;
     private String session;
@@ -30,10 +26,8 @@ public class ResponsePlayer {
     private Consumable remaining;
     private Consumable giveable;
 
-//    Authentication token for requests
+    //    Authentication token for requests
     private String token;
-
-    private static final String API_URL = SlurpConfig.apiUrl();
 
     public SlurpPlayer toSlurpPlayer() throws MissingSessionException {
         SlurpSession slurpSession = SlurpSessionManager.getSession(session);
@@ -68,5 +62,10 @@ public class ResponsePlayer {
 
         sessionCopy.overwriteToken(this.token);
         return new SlurpPlayer(uuid, sessionCopy, username);
+    }
+
+    public static class Consumable {
+        private int sips;
+        private int shots;
     }
 }

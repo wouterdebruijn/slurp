@@ -3,8 +3,8 @@ package nl.wouterdebruijn.slurp.helper.game.manager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
 import org.bukkit.entity.Player;
 
 import java.io.*;
@@ -22,6 +22,7 @@ public class SlurpPlayerManager {
     public static SlurpPlayer getPlayer(Player player) {
         return players.get(player.getUniqueId().toString());
     }
+
     public static SlurpPlayer getPlayer(String uuid) {
 //        Return the SlurpPlayer matching the given UUID (Slurp UUID)
         for (SlurpPlayer slurpPlayer : players.values()) {
@@ -31,12 +32,15 @@ public class SlurpPlayerManager {
         }
         return null;
     }
+
     public static ArrayList<SlurpPlayer> dump() {
         return new ArrayList<>(players.values());
     }
+
     public static void remove(Player player) {
         players.remove(player.getUniqueId().toString());
     }
+
     public static void loadFromDisk() {
         try {
             Gson gson = new Gson();
@@ -45,7 +49,8 @@ public class SlurpPlayerManager {
                 Reader reader = new FileReader(file);
 
                 // Restore the player list
-                ArrayList<SlurpPlayerFileAdapter> playerList = gson.fromJson(reader, new TypeToken<ArrayList<SlurpPlayerFileAdapter>>() {}.getType());
+                ArrayList<SlurpPlayerFileAdapter> playerList = gson.fromJson(reader, new TypeToken<ArrayList<SlurpPlayerFileAdapter>>() {
+                }.getType());
 
                 if (playerList == null) {
                     Slurp.logger.log(Level.SEVERE, "Failed to load players from disk");
@@ -65,6 +70,7 @@ public class SlurpPlayerManager {
             throw new RuntimeException(e);
         }
     }
+
     public static void saveToDisk() {
         try {
             Gson gson = new Gson();

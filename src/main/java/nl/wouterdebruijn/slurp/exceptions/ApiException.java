@@ -4,6 +4,7 @@ import java.net.http.HttpRequest;
 
 public class ApiException extends Exception {
     HttpRequest request;
+
     public ApiException(HttpRequest request) {
         super("An Slurp API error occurred.");
     }

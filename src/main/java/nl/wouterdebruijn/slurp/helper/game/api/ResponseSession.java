@@ -11,6 +11,7 @@ public class ResponseSession {
     private Date created;
     private Date updated;
     private String token;
+
     public SlurpSession toSlurpSession() {
         return new SlurpSession(shortcode, uuid, active, token);
     }

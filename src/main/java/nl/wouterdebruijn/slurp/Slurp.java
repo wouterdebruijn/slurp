@@ -1,10 +1,10 @@
 package nl.wouterdebruijn.slurp;
 
-import nl.wouterdebruijn.slurp.command.session.Create;
-import nl.wouterdebruijn.slurp.command.session.Join;
+import nl.wouterdebruijn.slurp.command.session.*;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,8 +34,11 @@ public final class Slurp extends JavaPlugin {
 //      Register commands
         Objects.requireNonNull(getCommand("join")).setExecutor(new Join());
         Objects.requireNonNull(getCommand("create")).setExecutor(new Create());
-        Objects.requireNonNull(getCommand("debug")).setExecutor(new nl.wouterdebruijn.slurp.command.session.Debug());
-        Objects.requireNonNull(getCommand("create_entry")).setExecutor(new nl.wouterdebruijn.slurp.command.session.CreateEntry());
-        Objects.requireNonNull(getCommand("leave")).setExecutor(new nl.wouterdebruijn.slurp.command.session.Leave());
+        Objects.requireNonNull(getCommand("debug")).setExecutor(new Debug());
+        Objects.requireNonNull(getCommand("create_entry")).setExecutor(new CreateEntry());
+        Objects.requireNonNull(getCommand("leave")).setExecutor(new Leave());
+
+//      Register listeners
+        getServer().getPluginManager().registerEvents(new SlurpSessionSubscriptionListener(), this);
     }
 }

@@ -3,14 +3,54 @@ package nl.wouterdebruijn.slurp.helper.game.manager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 
 import java.io.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.WebSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 
 public class SlurpSessionManager {
+
+    private static final String API_URL = SlurpConfig.apiUrl();
     public static ArrayList<SlurpSession> sessions = new ArrayList<>();
+    public static HashMap<SlurpSession, WebSocket> websockets = new HashMap<>();
+
+    public static void subscribeToSession(SlurpSession session) {
+        if (websockets.containsKey(session)) {
+            // Don't subscribe if we're already subscribed
+            return;
+        }
+
+        URI websocketURI = URI.create((API_URL + "/socket/session/" + session.getUuid()).replace("http", "ws"));
+
+        HttpClient client = HttpClient.newHttpClient();
+        WebSocket socket = client.newWebSocketBuilder()
+                .buildAsync(websocketURI, new SlurpSessionManager.WebSocketListener())
+                .join();
+
+        websockets.put(session, socket);
+    }
+
+    public static void unsubscribeFromSession(SlurpSession session) {
+        WebSocket socket = websockets.get(session);
+        socket.sendClose(WebSocket.NORMAL_CLOSURE, "Bye")
+                .whenComplete((webSocket, throwable) -> {
+                    if (throwable != null) {
+                        Slurp.logger.log(Level.SEVERE, "Failed to close websocket connection");
+                        throw new RuntimeException(throwable);
+                    }
+                });
+
+        websockets.remove(session);
+    }
 
     public static SlurpSession getSession(String session) {
         for (SlurpSession slurpSession : sessions) {
@@ -77,5 +117,39 @@ public class SlurpSessionManager {
 
     public static void addSession(SlurpSession session) {
         sessions.add(session);
+    }
+
+    private static class WebSocketListener implements WebSocket.Listener {
+        Gson gson = new Gson();
+        @Override
+        public void onOpen(WebSocket webSocket) {
+            Slurp.logger.info("Websocket opened");
+            WebSocket.Listener.super.onOpen(webSocket);
+        }
+
+        @Override
+        public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
+            ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(), new TypeToken<ArrayList<ResponsePlayer>>() {}.getType());
+                responsePlayers.forEach(responsePlayer -> {
+                    SlurpPlayer player = SlurpPlayerManager.getPlayer(responsePlayer.getUuid());
+
+                    if (player == null) {
+                        Slurp.logger.log(Level.SEVERE, "Received player update for unknown player: " + responsePlayer.getUuid());
+                        return;
+                    }
+
+                    player.setGiveable(responsePlayer.getGiveable());
+                    player.setTaken(responsePlayer.getTaken());
+                    player.setRemaining(responsePlayer.getRemaining());
+                });
+
+            return WebSocket.Listener.super.onText(webSocket, data, last);
+        }
+
+        @Override
+        public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
+            Slurp.logger.info("Websocket closed with status code " + statusCode + " and reason: " + reason);
+            return WebSocket.Listener.super.onClose(webSocket, statusCode, reason);
+        }
     }
 }

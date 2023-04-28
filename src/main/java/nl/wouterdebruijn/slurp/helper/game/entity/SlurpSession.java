@@ -71,33 +71,6 @@ public class SlurpSession {
         }
     }
 
-    public ArrayList<SlurpPlayer> getPlayers() throws ApiUrlException, CreateSessionException, MissingSessionException, ApiResponseException {
-        Gson gson = new Gson();
-        HttpRequest request = null;
-
-        try {
-            request = HttpRequest.newBuilder()
-                    .uri(new URI(API_URL + "/session/entity/" + uuid))
-                    .GET()
-                    .header("Content-Type", "application/json")
-                    .build();
-
-            HttpClient client = HttpClient.newHttpClient();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() != 200) {
-                throw new ApiResponseException(request, response);
-            }
-
-            ResponseSessionPlayers sessionPlayersResponse = gson.fromJson(response.body(), ResponseSessionPlayers.class);
-            return sessionPlayersResponse.toSlurpPlayers();
-        } catch (URISyntaxException e) {
-            throw new ApiUrlException();
-        } catch (IOException | InterruptedException e) {
-            throw new CreateSessionException(request);
-        }
-    }
-
     public String getUuid() {
         return uuid;
     }

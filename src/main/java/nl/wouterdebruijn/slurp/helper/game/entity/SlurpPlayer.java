@@ -10,6 +10,7 @@ import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
 import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.infra.Subject;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -20,22 +21,32 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.logging.Level;
 
-public class SlurpPlayer {
+public class SlurpPlayer extends Subject {
     private static final String API_URL = SlurpConfig.apiUrl();
     private final String uuid;
     private final SlurpSession session;
     private final String username;
 
+    private final Consumable taken;
+    private final Consumable giveable;
+    private final Consumable remaining;
+
     public SlurpPlayer(String uuid, SlurpSession session, String username) {
         this.uuid = uuid;
         this.session = session;
         this.username = username;
+        this.taken = new Consumable();
+        this.giveable = new Consumable();
+        this.remaining = new Consumable();
     }
 
     public SlurpPlayer(SlurpPlayerFileAdapter slurpPlayerFileAdapter) {
         this.uuid = slurpPlayerFileAdapter.getUuid();
         this.session = slurpPlayerFileAdapter.getSession();
         this.username = slurpPlayerFileAdapter.getUsername();
+        this.taken = new Consumable();
+        this.giveable = new Consumable();
+        this.remaining = new Consumable();
     }
 
     public static SlurpPlayer create(Player player, String sessionShort) throws ApiUrlException, CreateSessionException, MissingSessionException, ApiResponseException {
@@ -80,5 +91,32 @@ public class SlurpPlayer {
 
     public String getUsername() {
         return username;
+    }
+
+    public void setTaken(Consumable taken) {
+        this.taken.set(taken);
+        this.notifyObservers();
+    }
+
+    public void setGiveable(Consumable giveable) {
+        this.giveable.set(giveable);
+        this.notifyObservers();
+    }
+
+    public void setRemaining(Consumable remaining) {
+        this.remaining.set(remaining);
+        this.notifyObservers();
+    }
+
+    public Consumable getTaken() {
+        return taken;
+    }
+
+    public Consumable getGiveable() {
+        return giveable;
+    }
+
+    public Consumable getRemaining() {
+        return remaining;
     }
 }

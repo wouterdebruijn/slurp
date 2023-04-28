@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;
 import nl.wouterdebruijn.slurp.exceptions.MissingSessionException;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
@@ -64,8 +65,19 @@ public class ResponsePlayer {
         return new SlurpPlayer(uuid, sessionCopy, username);
     }
 
-    public static class Consumable {
-        private int sips;
-        private int shots;
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Consumable getTaken() {
+        return taken;
+    }
+
+    public Consumable getRemaining() {
+        return remaining;
+    }
+
+    public Consumable getGiveable() {
+        return giveable;
     }
 }

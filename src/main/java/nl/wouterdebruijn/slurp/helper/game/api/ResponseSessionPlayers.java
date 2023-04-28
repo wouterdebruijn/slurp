@@ -1,7 +1,7 @@
-package nl.wouterdebruijn.slurp.helper.slurp.drinking.api;
+package nl.wouterdebruijn.slurp.helper.game.api;
 
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.slurp.exceptions.MissingSessionException;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.exceptions.MissingSessionException;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,7 +1,7 @@
-package nl.wouterdebruijn.slurp.helper.slurp.drinking.api;
+package nl.wouterdebruijn.slurp.helper.game.api;
 
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.entity.SlurpEntry;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class ResponseEntry {
     private String uuid;

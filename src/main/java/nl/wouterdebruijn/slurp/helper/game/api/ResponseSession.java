@@ -1,6 +1,6 @@
-package nl.wouterdebruijn.slurp.helper.slurp.drinking.api;
+package nl.wouterdebruijn.slurp.helper.game.api;
 
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 
 import java.util.Date;
 

@@ -1,6 +1,6 @@
-package nl.wouterdebruijn.slurp.helper.slurp.drinking.api;
+package nl.wouterdebruijn.slurp.helper.game.api;
 
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.entity.SlurpEntry;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 
 public class SlurpEntryBuilder {
     private int sips;

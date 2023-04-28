@@ -1,12 +1,12 @@
-package nl.wouterdebruijn.slurp.helper.slurp.drinking.entity;
+package nl.wouterdebruijn.slurp.helper.game.entity;
 
 import com.google.gson.Gson;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.manager.SlurpSessionManager;
-import nl.wouterdebruijn.slurp.helper.slurp.exceptions.*;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.api.ResponseSession;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.api.ResponseSessionPlayers;
+import nl.wouterdebruijn.slurp.helper.game.api.ResponseSession;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import nl.wouterdebruijn.slurp.exceptions.*;
+import nl.wouterdebruijn.slurp.helper.game.api.ResponseSessionPlayers;
 
 import java.io.IOException;
 import java.net.URI;

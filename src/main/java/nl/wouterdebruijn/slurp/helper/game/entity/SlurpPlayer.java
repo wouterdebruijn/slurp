@@ -1,15 +1,15 @@
-package nl.wouterdebruijn.slurp.helper.slurp.drinking.entity;
+package nl.wouterdebruijn.slurp.helper.game.entity;
 
 import com.google.gson.Gson;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.manager.SlurpPlayerManager;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.filestorage.SlurpPlayerFileAdapter;
-import nl.wouterdebruijn.slurp.helper.slurp.exceptions.ApiResponseException;
-import nl.wouterdebruijn.slurp.helper.slurp.exceptions.ApiUrlException;
-import nl.wouterdebruijn.slurp.helper.slurp.exceptions.CreateSessionException;
-import nl.wouterdebruijn.slurp.helper.slurp.exceptions.MissingSessionException;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.api.ResponsePlayer;
+import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
+import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;
+import nl.wouterdebruijn.slurp.exceptions.ApiUrlException;
+import nl.wouterdebruijn.slurp.exceptions.CreateSessionException;
+import nl.wouterdebruijn.slurp.exceptions.MissingSessionException;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;

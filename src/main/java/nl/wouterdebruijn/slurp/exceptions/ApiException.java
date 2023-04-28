@@ -1,4 +1,4 @@
-package nl.wouterdebruijn.slurp.helper.slurp.exceptions;
+package nl.wouterdebruijn.slurp.exceptions;
 
 import java.net.http.HttpRequest;
 

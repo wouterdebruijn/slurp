@@ -1,10 +1,10 @@
-package nl.wouterdebruijn.slurp.helper.slurp.drinking.manager;
+package nl.wouterdebruijn.slurp.helper.game.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.filestorage.SlurpPlayerFileAdapter;
+import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import org.bukkit.entity.Player;
 
 import java.io.*;

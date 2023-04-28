@@ -1,6 +1,6 @@
-package nl.wouterdebruijn.slurp.helper.slurp.drinking.filestorage;
+package nl.wouterdebruijn.slurp.helper.game.filestorage;
 
-import nl.wouterdebruijn.slurp.helper.slurp.drinking.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 
 public class SlurpPlayerFileAdapter extends SlurpPlayer {
     private String minecraftPlayerUuid;

@@ -1,2 +1,5 @@
 api:
   url: "https://slurp-dev.deno.dev/v1"
+
+chat:
+  prefix: "§8[§6Slurp§8] §r"

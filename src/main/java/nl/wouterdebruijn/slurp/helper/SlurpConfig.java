@@ -18,7 +18,6 @@ public class SlurpConfig {
     }
 
     public static String ApiUrl() {
-        Plugin plugin = Slurp.plugin;
         return getString("api.url");
     }
 }

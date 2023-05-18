@@ -2,9 +2,9 @@ package nl.wouterdebruijn.slurp.helper.game.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import nl.wouterdebruijn.slurp.ScoreboardManager;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
 import org.bukkit.entity.Player;
 
@@ -33,6 +33,16 @@ public class SlurpPlayerManager {
         }
         return null;
     }
+
+    public static SlurpPlayer getPlayer(Player player, SlurpSession session) {
+        for (SlurpPlayer slurpPlayer : players.values()) {
+            if (slurpPlayer.getUsername().equals(player.getName()) && slurpPlayer.getSession().getUuid().equals(session.getUuid())) {
+                return slurpPlayer;
+            }
+        }
+        return null;
+    }
+
 
     public static ArrayList<SlurpPlayer> dump() {
         return new ArrayList<>(players.values());

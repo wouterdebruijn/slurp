@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp.listener;
 
-import nl.wouterdebruijn.slurp.ScoreboardManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.ScoreboardManager;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
@@ -29,6 +30,7 @@ public class SlurpSessionSubscriptionListener implements Listener {
 
         ScoreboardManager.playerScoreboard(player);
         SlurpSessionManager.subscribeToSession(session);
+        DrinkingBuddyManager.enableDrinkingBuddyEvent(session);
     }
 
     @EventHandler

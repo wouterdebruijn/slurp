@@ -13,12 +13,12 @@ public class Consumable {
         return sips;
     }
 
-    public int getShots() {
-        return shots;
-    }
-
     public void setSips(int sips) {
         this.sips = sips;
+    }
+
+    public int getShots() {
+        return shots;
     }
 
     public void setShots(int shots) {

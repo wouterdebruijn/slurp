@@ -7,6 +7,7 @@ import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.events.DrinkingBuddyEvent;
 
 import java.io.*;
 import java.net.URI;
@@ -41,6 +42,11 @@ public class SlurpSessionManager {
 
     public static void unsubscribeFromSession(SlurpSession session) {
         WebSocket socket = websockets.get(session);
+
+        if (session == null) {
+            return;
+        }
+
         socket.sendClose(WebSocket.NORMAL_CLOSURE, "Bye")
                 .whenComplete((webSocket, throwable) -> {
                     if (throwable != null) {
@@ -140,19 +146,20 @@ public class SlurpSessionManager {
 
             Slurp.logger.info("Received websocket data: " + data.toString());
 
-            ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(), new TypeToken<ArrayList<ResponsePlayer>>() {}.getType());
-                responsePlayers.forEach(responsePlayer -> {
-                    SlurpPlayer player = SlurpPlayerManager.getPlayer(responsePlayer.getUuid());
+            ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(), new TypeToken<ArrayList<ResponsePlayer>>() {
+            }.getType());
+            responsePlayers.forEach(responsePlayer -> {
+                SlurpPlayer player = SlurpPlayerManager.getPlayer(responsePlayer.getUuid());
 
-                    if (player == null) {
-                        Slurp.logger.log(Level.WARNING, "Received player update for unknown player: " + responsePlayer.getUuid());
-                        return;
-                    }
+                if (player == null) {
+                    Slurp.logger.log(Level.WARNING, "Received player update for unknown player: " + responsePlayer.getUuid());
+                    return;
+                }
 
-                    player.setGiveable(responsePlayer.getGiveable());
-                    player.setTaken(responsePlayer.getTaken());
-                    player.setRemaining(responsePlayer.getRemaining());
-                });
+                player.setGiveable(responsePlayer.getGiveable());
+                player.setTaken(responsePlayer.getTaken());
+                player.setRemaining(responsePlayer.getRemaining());
+            });
 
             return WebSocket.Listener.super.onText(webSocket, data, last);
         }

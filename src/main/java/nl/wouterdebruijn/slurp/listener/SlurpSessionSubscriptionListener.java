@@ -16,20 +16,29 @@ public class SlurpSessionSubscriptionListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         SlurpPlayer player = SlurpPlayerManager.getPlayer(event.getPlayer());
-        SlurpSession session = SlurpSessionManager.getSession(player.getSession().getUuid());
 
-        ScoreboardManager.playerScoreboard(player);
-
-        if (session == null) {
+        if (player == null) {
             return;
         }
 
+        SlurpSession session = SlurpSessionManager.getSession(player.getSession().getUuid());
+
+        if (session == null) {
+            Slurp.logger.warning("Player " + player.getUuid() + " is in a session that does not exist in sessionmanager storage");
+        }
+
+        ScoreboardManager.playerScoreboard(player);
         SlurpSessionManager.subscribeToSession(session);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         SlurpPlayer player = SlurpPlayerManager.getPlayer(event.getPlayer());
+
+        if (player == null) {
+            return;
+        }
+
         SlurpSession session = SlurpSessionManager.getSession(player.getSession().getUuid());
 
         if (session == null) {

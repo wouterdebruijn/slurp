@@ -54,6 +54,7 @@ public class ResponsePlayer {
 
                 ResponseSession responseSession = gson.fromJson(response.body(), ResponseSession.class);
                 slurpSession = responseSession.toSlurpSession();
+                SlurpSessionManager.addSession(slurpSession);
             } catch (Exception e) {
                 throw new MissingSessionException();
             }

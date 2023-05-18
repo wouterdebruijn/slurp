@@ -39,6 +39,8 @@ public class SlurpPlayerManager {
     }
 
     public static void remove(Player player) {
+        SlurpPlayer slurpPlayer = players.get(player.getUniqueId().toString());
+        slurpPlayer.detachAll();
         players.remove(player.getUniqueId().toString());
     }
 

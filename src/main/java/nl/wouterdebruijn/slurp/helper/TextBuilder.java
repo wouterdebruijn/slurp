@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class TextBuilder {
-    private static Component prefix() {
+    public static Component prefix() {
         return Component.text(SlurpConfig.prefix());
     }
 

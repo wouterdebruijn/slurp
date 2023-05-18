@@ -13,6 +13,13 @@ public class Subject {
         observers.remove(observer);
     }
 
+    public void detachAll() {
+        for (Observer observer : observers) {
+            observer.destroy();
+        }
+        observers.clear();
+    }
+
     public void notifyObservers() {
         for (Observer observer : observers) {
             observer.update();

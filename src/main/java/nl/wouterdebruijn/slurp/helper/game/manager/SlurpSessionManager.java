@@ -33,7 +33,7 @@ public class SlurpSessionManager {
 
         HttpClient client = HttpClient.newHttpClient();
         WebSocket socket = client.newWebSocketBuilder()
-                .buildAsync(websocketURI, new SlurpSessionManager.WebSocketListener())
+                .buildAsync(websocketURI, new SlurpSessionManager.WebSocketListener(session))
                 .join();
 
         websockets.put(session, socket);
@@ -59,10 +59,6 @@ public class SlurpSessionManager {
             }
         }
         return null;
-    }
-
-    public static void remove(SlurpSession session) {
-        sessions.remove(session);
     }
 
     public static ArrayList<SlurpSession> dump() {
@@ -117,10 +113,22 @@ public class SlurpSessionManager {
 
     public static void addSession(SlurpSession session) {
         sessions.add(session);
+        subscribeToSession(session);
+    }
+
+    public static void remove(SlurpSession session) {
+        sessions.remove(session);
+        unsubscribeFromSession(session);
     }
 
     private static class WebSocketListener implements WebSocket.Listener {
         Gson gson = new Gson();
+        SlurpSession session;
+
+        public WebSocketListener(SlurpSession session) {
+            this.session = session;
+        }
+
         @Override
         public void onOpen(WebSocket webSocket) {
             Slurp.logger.info("Websocket opened");
@@ -129,12 +137,15 @@ public class SlurpSessionManager {
 
         @Override
         public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
+
+            Slurp.logger.info("Received websocket data: " + data.toString());
+
             ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(), new TypeToken<ArrayList<ResponsePlayer>>() {}.getType());
                 responsePlayers.forEach(responsePlayer -> {
                     SlurpPlayer player = SlurpPlayerManager.getPlayer(responsePlayer.getUuid());
 
                     if (player == null) {
-                        Slurp.logger.log(Level.SEVERE, "Received player update for unknown player: " + responsePlayer.getUuid());
+                        Slurp.logger.log(Level.WARNING, "Received player update for unknown player: " + responsePlayer.getUuid());
                         return;
                     }
 
@@ -149,6 +160,12 @@ public class SlurpSessionManager {
         @Override
         public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
             Slurp.logger.info("Websocket closed with status code " + statusCode + " and reason: " + reason);
+
+            if (statusCode != WebSocket.NORMAL_CLOSURE) {
+                // Resubscribe if the connection was closed unexpectedly
+                SlurpSessionManager.subscribeToSession(session);
+            }
+
             return WebSocket.Listener.super.onClose(webSocket, statusCode, reason);
         }
     }

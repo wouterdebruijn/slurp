@@ -25,29 +25,29 @@ public class Debug implements TabExecutor {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 //        Print all current sessions
-        player.sendMessage("Current players:");
-        for (SlurpPlayer slurpPlayer : SlurpPlayerManager.dump()) {
-            player.sendMessage(gson.toJson(slurpPlayer));
-            player.sendMessage("-------------");
-        }
+//        player.sendMessage("Current players:");
+//        for (SlurpPlayer slurpPlayer : SlurpPlayerManager.dump()) {
+//            player.sendMessage(gson.toJson(slurpPlayer));
+//            player.sendMessage("-------------");
+//        }
 
-        player.sendMessage("Current sessions:");
+//        player.sendMessage("Current sessions:");
         for (SlurpSession slurpPlayer : SlurpSessionManager.dump()) {
             player.sendMessage(gson.toJson(slurpPlayer));
             player.sendMessage("-------------");
         }
 
-        Slurp.logger.log(Level.INFO, "Current players:");
-        for (SlurpPlayer slurpPlayer : SlurpPlayerManager.dump()) {
-            Slurp.logger.log(Level.INFO, gson.toJson(slurpPlayer));
-            Slurp.logger.log(Level.INFO, "-------------");
-        }
-
-        Slurp.logger.log(Level.INFO, "Current sessions:");
-        for (SlurpSession slurpPlayer : SlurpSessionManager.dump()) {
-            Slurp.logger.log(Level.INFO, gson.toJson(slurpPlayer));
-            Slurp.logger.log(Level.INFO, "-------------");
-        }
+//        Slurp.logger.log(Level.INFO, "Current players:");
+//        for (SlurpPlayer slurpPlayer : SlurpPlayerManager.dump()) {
+//            Slurp.logger.log(Level.INFO, gson.toJson(slurpPlayer));
+//            Slurp.logger.log(Level.INFO, "-------------");
+//        }
+//
+//        Slurp.logger.log(Level.INFO, "Current sessions:");
+//        for (SlurpSession slurpPlayer : SlurpSessionManager.dump()) {
+//            Slurp.logger.log(Level.INFO, gson.toJson(slurpPlayer));
+//            Slurp.logger.log(Level.INFO, "-------------");
+//        }
         return true;
     }
 

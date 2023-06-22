@@ -4,8 +4,10 @@ import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -63,5 +65,23 @@ public class ConsumableGivingHandler {
 
             callback.accept(entries);
         });
+    }
+
+    public static void serverGiveConsumable(Player target, SlurpEntryBuilder entry, Consumer<ArrayList<SlurpEntry>> callback) {
+        SlurpPlayer slurpTarget = SlurpPlayerManager.getPlayer(target);
+
+        if (slurpTarget == null) {
+            return;
+        }
+
+        SlurpSession session = SlurpSessionManager.getSession(slurpTarget.getSession().getUuid());
+
+        if (session == null) {
+            return;
+        }
+
+        String serverToken = session.getToken();
+
+        SlurpEntry.create(entry, serverToken, callback);
     }
 }

@@ -76,7 +76,7 @@ public class DrinkingBuddyEvent {
             ArrayList<SlurpPlayer> players = getRandomPlayersInSession(session, 2);
 
             if (players == null) {
-                disable();
+                DrinkingBuddyManager.disableDrinkingBuddyEvent(session);
                 return;
             }
 

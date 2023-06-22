@@ -1,17 +1,24 @@
 package nl.wouterdebruijn.slurp.helper.game.events;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.handlers.TitleCountdownHandler;
 import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DrinkingBuddyEvent {
     SlurpSession session;
@@ -29,8 +36,8 @@ public class DrinkingBuddyEvent {
         ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
         ArrayList<SlurpPlayer> chosenPlayers = new ArrayList<>();
 
-        // Only run if we have more than one player
-        if (players.size() < amount)
+        // Only run if we have one more player than the amount of drinking buddies
+        if (players.size() < amount + 1)
             return null;
 
         int tries = 0;
@@ -65,7 +72,7 @@ public class DrinkingBuddyEvent {
     }
 
     public void enable() {
-        drinkingBuddyTask = Bukkit.getScheduler().runTaskTimer(Slurp.plugin, () -> {
+        drinkingBuddyTask = Bukkit.getScheduler().runTaskTimerAsynchronously(Slurp.plugin, () -> {
             ArrayList<SlurpPlayer> players = getRandomPlayersInSession(session, 2);
 
             if (players == null) {
@@ -73,7 +80,37 @@ public class DrinkingBuddyEvent {
                 return;
             }
 
-            // TODO: Create fun animation for the choosing of drinking buddies
+            // TODO: Look into Future and CompletableFuture for async stuff
+            ArrayList<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
+
+            // Run multiple async tasks and wait for them to finish
+            CompletableFuture[] futures = new CompletableFuture[onlinePlayers.size()];
+
+            for (Player player : onlinePlayers) {
+                    CompletableFuture<Void> future = TitleCountdownHandler.countdown(player, 5).thenCompose((Void) -> {
+                        boolean isDrinkingBuddy = players.contains(SlurpPlayerManager.getPlayer(player, session));
+
+                        if (isDrinkingBuddy) {
+                            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                            player.showTitle(Title.title(
+                                    Component.text("Drinking Buddy", NamedTextColor.GREEN),
+                                    Component.text("You are a drinking buddy!", NamedTextColor.GREEN)
+                            ));
+                        } else {
+                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+                            player.showTitle(Title.title(
+                                    Component.text("Not a Drinking Buddy", NamedTextColor.RED),
+                                    Component.text("You are not a drinking buddy!", NamedTextColor.RED)
+                            ));
+                        }
+                        return CompletableFuture.completedFuture(null);
+                    });
+
+                    futures[onlinePlayers.indexOf(player)] = future;
+            }
+
+            // Wait for all futures to finish
+            CompletableFuture.allOf(futures).join();
 
             DrinkingBuddyManager.setDrinkingBuddies(session, players);
 
@@ -87,7 +124,8 @@ public class DrinkingBuddyEvent {
             // Display names of all drinking buddies in broadcast
             Slurp.plugin.getServer().broadcast(TextBuilder.info("Drinking buddies: " + names));
 
-        }, 0, 20 * 60);
+        }, 20 * 5, 20 * 60);
+        // 5 seconds delay, 60 seconds interval
     }
 
     public void disable() {

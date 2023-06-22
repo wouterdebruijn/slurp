@@ -116,7 +116,6 @@ public class ScoreboardManager {
 
         private void updateSidebar() {
             if (!hasChanged()) {
-                Slurp.logger.info("No changes in scoreboard for player " + player.getUsername());
                 return;
             }
 

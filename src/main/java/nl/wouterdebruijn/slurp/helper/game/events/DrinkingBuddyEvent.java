@@ -42,13 +42,6 @@ public class DrinkingBuddyEvent {
                 return null;
             }
 
-//        Dump players to log
-            for (Player player : players) {
-                Slurp.logger.info(player.getName());
-            }
-
-            Slurp.logger.info("players: " + players.size());
-
             // Get random player
             int randomIndex = ThreadLocalRandom.current().nextInt(players.size());
             Player player = players.get(randomIndex);
@@ -80,16 +73,17 @@ public class DrinkingBuddyEvent {
                 return;
             }
 
+            // TODO: Create fun animation for the choosing of drinking buddies
+
             DrinkingBuddyManager.setDrinkingBuddies(session, players);
 
             // Call update on all players, reloading their scoreboards.
             for (SlurpPlayer player : SlurpPlayerManager.dump()) {
                 player.update();
-                Slurp.logger.info("Updated scoreboard for " + player.getUsername());
             }
 
+            // Display broadcast for drinking buddies
             String names = String.join(", ", players.stream().map(SlurpPlayer::getUsername).toArray(String[]::new));
-
             // Display names of all drinking buddies in broadcast
             Slurp.plugin.getServer().broadcast(TextBuilder.info("Drinking buddies: " + names));
 

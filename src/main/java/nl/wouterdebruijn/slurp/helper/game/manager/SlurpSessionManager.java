@@ -143,7 +143,6 @@ public class SlurpSessionManager {
 
         @Override
         public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
-
             Slurp.logger.info("Received websocket data: " + data.toString());
 
             ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(), new TypeToken<ArrayList<ResponsePlayer>>() {

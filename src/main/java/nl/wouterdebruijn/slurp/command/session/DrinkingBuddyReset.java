@@ -1,11 +1,9 @@
 package nl.wouterdebruijn.slurp.command.session;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.kyori.adventure.text.Component;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
-import nl.wouterdebruijn.slurp.helper.game.handlers.TitleCountdownHandler;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -15,10 +13,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class Debug implements TabExecutor {
+public class DrinkingBuddyReset implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player player = (Player) sender;
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (slurpPlayer == null) {
+            return true;
+        }
+
+        DrinkingBuddyManager.restartDrinkingBuddyEvent(slurpPlayer.getSession());
+
+        player.sendMessage(TextBuilder.success("Drinking buddy event restarted"));
 
         return true;
     }

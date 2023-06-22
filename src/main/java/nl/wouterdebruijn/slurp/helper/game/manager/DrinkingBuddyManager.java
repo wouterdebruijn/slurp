@@ -36,6 +36,11 @@ public class DrinkingBuddyManager {
         }
     }
 
+    public static void restartDrinkingBuddyEvent(SlurpSession session) {
+        disableDrinkingBuddyEvent(session);
+        enableDrinkingBuddyEvent(session);
+    }
+
     public static void setDrinkingBuddies(SlurpSession session, ArrayList<SlurpPlayer> players) {
         drinkingBuddies.put(session.getUuid(), players);
     }

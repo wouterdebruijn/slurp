@@ -37,13 +37,12 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("join")).setExecutor(new Join());
         Objects.requireNonNull(getCommand("create")).setExecutor(new Create());
         Objects.requireNonNull(getCommand("debug")).setExecutor(new Debug());
+        Objects.requireNonNull(getCommand("drinkingbuddyreset")).setExecutor(new DrinkingBuddyReset());
         Objects.requireNonNull(getCommand("create_entry")).setExecutor(new CreateEntry());
         Objects.requireNonNull(getCommand("leave")).setExecutor(new Leave());
 
         Objects.requireNonNull(getCommand("giveshot")).setExecutor(new GiveShot());
         Objects.requireNonNull(getCommand("givesip")).setExecutor(new GiveSip());
-
-
 
 //      Register listeners
         getServer().getPluginManager().registerEvents(new SlurpSessionSubscriptionListener(), this);

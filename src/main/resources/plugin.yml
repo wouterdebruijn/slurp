@@ -19,6 +19,10 @@ commands:
     description: Debug a slurp game
     usage: /debug
     permission: slurp.debug
+  drinkingbuddyreset:
+    description: Reset the drinking buddy
+    usage: /drinkingbuddyreset
+    permission: slurp.drinkingbuddyreset
   create_entry:
     description: Create a slurp entry
     usage: /create_entry

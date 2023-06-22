@@ -23,10 +23,10 @@ public class CreateEntry implements TabExecutor {
         Player player = (Player) sender;
 
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
-        SlurpEntryBuilder entry = new SlurpEntryBuilder(5, 5, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+        SlurpEntryBuilder entry = new SlurpEntryBuilder(5, 5, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
 
         SlurpEntry.create(entry, slurpPlayer.getSession().getToken(), response -> {
-            player.sendMessage(TextBuilder.success("Entry created!"));
+            player.sendMessage(TextBuilder.info("Entry created!"));
         });
 
         return true;

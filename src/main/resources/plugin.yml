@@ -27,3 +27,7 @@ commands:
     description: Leave a slurp game
     usage: /leave
     permission: slurp.leave
+  giveshot:
+    description: Give a shot to a player
+    usage: /giveshot
+    permission: slurp.giveshot

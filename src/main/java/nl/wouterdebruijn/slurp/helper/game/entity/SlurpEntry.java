@@ -82,7 +82,7 @@ public class SlurpEntry {
         createDirect(entry, token, entries::add);
 
         // If the player has buddies create entries for them too
-        if (buddies != null) {
+        if (buddies != null && entry.shouldTransferToDrinkingBuddies()) {
             // Create entry for each buddy
 
             for (SlurpPlayer buddy : buddies) {

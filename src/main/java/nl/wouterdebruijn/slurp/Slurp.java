@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp;
 
+import nl.wouterdebruijn.slurp.command.entry.GiveShot;
 import nl.wouterdebruijn.slurp.command.session.*;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
@@ -37,6 +38,9 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("debug")).setExecutor(new Debug());
         Objects.requireNonNull(getCommand("create_entry")).setExecutor(new CreateEntry());
         Objects.requireNonNull(getCommand("leave")).setExecutor(new Leave());
+
+        Objects.requireNonNull(getCommand("giveshot")).setExecutor(new GiveShot());
+
 
 //      Register listeners
         getServer().getPluginManager().registerEvents(new SlurpSessionSubscriptionListener(), this);

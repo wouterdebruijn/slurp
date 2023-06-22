@@ -2,10 +2,13 @@ package nl.wouterdebruijn.slurp.command.entry;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.handlers.ConsumableGivingHandler;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,26 +19,52 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GiveShot implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Player player = (Player) sender;
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (args.length != 2) {
+            return false;
+        }
 
         if (slurpPlayer == null) {
             player.sendMessage(TextBuilder.error("You are not in a session!"));
             return true;
         }
 
-//        Check if player has giveables
+        String targetName = args[0];
+        int amount = Integer.parseInt(args[1]);
+        int balance = slurpPlayer.getGiveable().getShots();
 
-//        Unimplemented
+        if (amount > balance) {
+            player.sendMessage(TextBuilder.error("You don't have enough shots to give away!"));
+            return true;
+        }
 
-        SlurpEntryBuilder entry = new SlurpEntryBuilder(5, 5, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-        SlurpEntry.create(entry, slurpPlayer.getSession().getToken(), cb -> {
-            player.sendMessage(TextBuilder.success("Saved entry!"));
+        Player target = player.getServer().getPlayer(targetName);
+
+        if (target == null) {
+            player.sendMessage(TextBuilder.error("Player not found!"));
+            return true;
+        }
+
+        SlurpPlayer targetSlurpPlayer = SlurpPlayerManager.getPlayer(target);
+
+        if (targetSlurpPlayer == null) {
+            player.sendMessage(TextBuilder.error("Player not found!"));
+            return true;
+        }
+
+        // Give the target player the shots
+        SlurpEntryBuilder entry = new SlurpEntryBuilder(0, amount, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+        ConsumableGivingHandler.playerGiveConsumable(target, player, entry, (entries) -> {
+            // Update the balance of the origin player
+            SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
+            SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken(), cb -> {});
         });
 
         return true;
@@ -43,6 +72,30 @@ public class GiveShot implements TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        Player player = (Player) sender;
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+        int balance = slurpPlayer.getGiveable().getShots();
+
+        if (args.length == 1) {
+            // return list of players
+            List<String> players = new ArrayList<>();
+            for (Player p : player.getServer().getOnlinePlayers()) {
+                if (!p.getName().equals(player.getName())) {
+                    players.add(p.getName());
+                }
+            }
+            return players;
+        }
+
+        if (args.length == 2) {
+            // return list of amounts
+            List<String> amounts = new ArrayList<>();
+            for (int i = 1; i <= balance; i++) {
+                amounts.add(String.valueOf(i));
+            }
+            return amounts;
+        }
+
         return null;
     }
 }

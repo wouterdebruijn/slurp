@@ -27,4 +27,16 @@ public class SlurpEntryBuilder {
     public SlurpEntryBuilder copyForPlayer(SlurpPlayer player) {
         return new SlurpEntryBuilder(sips, shots, player.getUuid(), session, giveable, transfer);
     }
+
+    public boolean shouldTransferToDrinkingBuddies() {
+        return !transfer && !giveable;
+    }
+
+    public int getSips() {
+        return sips;
+    }
+
+    public int getShots() {
+        return shots;
+    }
 }

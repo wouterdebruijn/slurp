@@ -31,3 +31,7 @@ commands:
     description: Give a shot to a player
     usage: /giveshot
     permission: slurp.giveshot
+  givesip:
+    description: Give a sip to a player
+    usage: /givesip
+    permission: slurp.givesip

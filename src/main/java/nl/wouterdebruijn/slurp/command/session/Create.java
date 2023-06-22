@@ -29,7 +29,7 @@ public class Create implements TabExecutor {
             }
 
             SlurpSession session = SlurpSession.create();
-            sender.sendMessage(TextBuilder.success(String.format("Created session %s", session.getUuid())));
+            sender.sendMessage(TextBuilder.success(String.format("Created session %s", session.getShortcode())));
             SlurpPlayer.create(player, session.getShortcode());
             return true;
         } catch (Exception e) {

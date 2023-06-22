@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.helper.game.manager;
 
+import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.events.DrinkingBuddyEvent;
@@ -12,9 +13,9 @@ public class DrinkingBuddyManager {
     static final ArrayList<DrinkingBuddyEvent> drinkingBuddyEvents = new ArrayList<>();
 
     public static void enableDrinkingBuddyEvent(SlurpSession session) {
+        // Check if event is already enabled
         for (DrinkingBuddyEvent event : drinkingBuddyEvents) {
             if (event.getSessionId().equals(session.getUuid())) {
-                event.enable();
                 return;
             }
         }
@@ -29,6 +30,7 @@ public class DrinkingBuddyManager {
             if (event.getSessionId().equals(session.getUuid())) {
                 event.disable();
                 drinkingBuddyEvents.remove(event);
+                deleteDrinkingBuddies(session);
                 return;
             }
         }

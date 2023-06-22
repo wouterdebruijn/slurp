@@ -86,7 +86,22 @@ public class ScoreboardManager {
             lines.set(10, "§r§r§7Shots: §f" + shots);
         }
 
+        private void setDrinkingBuddies(List<SlurpPlayer> players) {
+            for (int i = 0; i < players.size(); i++) {
+                // Add lines if needed
+                if (lines.size() < 14 + i) {
+                    lines.add(null);
+                }
+
+                SlurpPlayer player = players.get(i);
+                lines.set(13 + i, player.getUsername());
+            }
+        }
+
         private boolean hasChanged() {
+            if (lines.size() != oldLines.size())
+                return true;
+
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 String oldLine = oldLines.get(i);
@@ -101,46 +116,31 @@ public class ScoreboardManager {
 
         private void updateSidebar() {
             if (!hasChanged()) {
+                Slurp.logger.info("No changes in scoreboard for player " + player.getUsername());
                 return;
             }
 
-            // Update sidebar
-            for (int i = 0; i < 13; i++) {
+            // Add lines if needed
+            while (lines.size() > oldLines.size()) {
+                oldLines.add(null);
+            }
+
+            // Remove lines if needed
+            while (lines.size() < oldLines.size()) {
+                scoreboard.resetScores(oldLines.get(oldLines.size() - 1));
+                oldLines.remove(oldLines.size() - 1);
+            }
+
+            // Update sidebar content
+            for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 String oldLine = oldLines.get(i);
 
-                scoreboard.resetScores(oldLine);
+                if (oldLine != null)
+                    scoreboard.resetScores(oldLine);
+
                 sidebar.getScore(line).setScore(99 - i);
 
-                oldLines.set(i, line);
-            }
-
-            ArrayList<SlurpPlayer> players = DrinkingBuddyManager.getDrinkingBuddies(player.getSession());
-
-            for (var pl : players) {
-                Slurp.logger.info("---- " + pl.getUsername());
-            }
-
-            for (int i = 13; i < 13 + players.size(); i++) {
-                if (oldLines.size() >= i) {
-                    oldLines.add(null);
-                }
-
-                String oldLine = oldLines.get(i);
-
-                if (oldLine != null) {
-                    scoreboard.resetScores(oldLine);
-                }
-
-                String line = players.get(i - 13).getUsername();
-
-                if (lines.size() >= i) {
-                    lines.add(null);
-                }
-
-                lines.set(i, line);
-
-                sidebar.getScore(line).setScore(80 - i);
                 oldLines.set(i, line);
             }
         }
@@ -150,10 +150,12 @@ public class ScoreboardManager {
             Consumable remaining = player.getRemaining();
             Consumable taken = player.getTaken();
             Consumable giveable = player.getGiveable();
+            ArrayList<SlurpPlayer> players = DrinkingBuddyManager.getDrinkingBuddies(player.getSession());
 
             setRemaining(remaining.getSips(), remaining.getShots());
             setTaken(taken.getSips(), taken.getShots());
             setGiveable(giveable.getSips(), giveable.getShots());
+            setDrinkingBuddies(players);
 
             updateSidebar();
         }

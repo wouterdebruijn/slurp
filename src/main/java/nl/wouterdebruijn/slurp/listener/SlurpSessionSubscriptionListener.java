@@ -62,5 +62,6 @@ public class SlurpSessionSubscriptionListener implements Listener {
         }
 
         SlurpSessionManager.unsubscribeFromSession(session);
+        DrinkingBuddyManager.disableDrinkingBuddyEvent(session);
     }
 }

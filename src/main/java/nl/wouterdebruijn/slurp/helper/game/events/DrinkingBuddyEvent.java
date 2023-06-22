@@ -80,11 +80,13 @@ public class DrinkingBuddyEvent {
                 return;
             }
 
-            for (SlurpPlayer player : players) {
-                player.update();
-            }
-
             DrinkingBuddyManager.setDrinkingBuddies(session, players);
+
+            // Call update on all players, reloading their scoreboards.
+            for (SlurpPlayer player : SlurpPlayerManager.dump()) {
+                player.update();
+                Slurp.logger.info("Updated scoreboard for " + player.getUsername());
+            }
 
             String names = String.join(", ", players.stream().map(SlurpPlayer::getUsername).toArray(String[]::new));
 

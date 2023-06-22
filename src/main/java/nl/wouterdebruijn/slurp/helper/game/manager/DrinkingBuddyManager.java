@@ -51,4 +51,21 @@ public class DrinkingBuddyManager {
     public static void deleteDrinkingBuddies(SlurpSession session) {
         drinkingBuddies.remove(session.getUuid());
     }
+
+    /**
+     * Return the list of drinking buddies of the given player, excluding the player itself.
+     */
+    public static ArrayList<SlurpPlayer> getBuddiesOfPlayer(SlurpPlayer player) {
+        // Get drinking buddies and create copy of the list.
+        ArrayList<SlurpPlayer> buddies = new ArrayList<>(getDrinkingBuddies(player.getSession()));
+
+        for (SlurpPlayer buddy : buddies) {
+            if (buddy.getUuid().equals(player.getUuid())) {
+                // Remove the player itself from the list
+                buddies.remove(buddy);
+                return buddies;
+            }
+        }
+        return null;
+    }
 }

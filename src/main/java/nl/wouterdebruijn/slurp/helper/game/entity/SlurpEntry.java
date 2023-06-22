@@ -6,11 +6,16 @@ import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.api.ResponseEntry;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
+import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import org.bukkit.Bukkit;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public class SlurpEntry {
@@ -31,29 +36,60 @@ public class SlurpEntry {
         this.transfer = transfer;
     }
 
-    public static SlurpEntry create(SlurpEntryBuilder entry, String token) {
-        try {
-            Gson gson = new Gson();
+    public static void createDirect(SlurpEntryBuilder entry, String token, Consumer<SlurpEntry> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
+            try {
+                Gson gson = new Gson();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(API_URL + "/entry"))
-                    .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(entry)))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + token)
-                    .build();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(new URI(API_URL + "/entry"))
+                        .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(entry)))
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + token)
+                        .build();
 
-            HttpClient client = HttpClient.newHttpClient();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                HttpClient client = HttpClient.newHttpClient();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() != 200) {
-                throw new ApiResponseException(request, response);
+                if (response.statusCode() != 200) {
+                    throw new ApiResponseException(request, response);
+                }
+
+                ResponseEntry responseEntry = gson.fromJson(response.body(), ResponseEntry.class);
+                callback.accept(responseEntry.toSlurpEntry());
+            } catch (Exception e) {
+                Slurp.logger.log(Level.SEVERE, "Error while creating entry", e);
             }
+        });
+    }
 
-            ResponseEntry responseEntry = gson.fromJson(response.body(), ResponseEntry.class);
-            return responseEntry.toSlurpEntry();
-        } catch (Exception e) {
-            Slurp.logger.log(Level.SEVERE, "Error while creating entry", e);
-            return null;
+    public static void create(SlurpEntryBuilder entry, String token, Consumer<ArrayList<SlurpEntry>> callback) {
+
+        // Get drinking buddies for player
+        SlurpPlayer player = SlurpPlayerManager.getPlayer(entry.getPlayerUuid());
+
+        if (player == null) {
+            Slurp.logger.log(Level.SEVERE, "Player not found");
+            return;
         }
+
+        // Get list of drinkingbuddies
+        ArrayList<SlurpPlayer> buddies = DrinkingBuddyManager.getBuddiesOfPlayer(player);
+
+        ArrayList<SlurpEntry> entries = new ArrayList<>();
+
+        // Create entry for player
+        createDirect(entry, token, entries::add);
+
+        // If the player has buddies create entries for them too
+        if (buddies != null) {
+            // Create entry for each buddy
+
+            for (SlurpPlayer buddy : buddies) {
+                createDirect(entry.copyForPlayer(buddy), token, entries::add);
+            }
+        }
+
+        callback.accept(entries);
     }
 }

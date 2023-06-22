@@ -14,20 +14,20 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateEntry implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Player player = (Player) sender;
 
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
         SlurpEntryBuilder entry = new SlurpEntryBuilder(5, 5, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
 
-        SlurpEntry response = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
-
-        player.sendMessage(TextBuilder.success("Entry created!"));
+        SlurpEntry.create(entry, slurpPlayer.getSession().getToken(), response -> {
+            player.sendMessage(TextBuilder.success("Entry created!"));
+        });
 
         return true;
     }

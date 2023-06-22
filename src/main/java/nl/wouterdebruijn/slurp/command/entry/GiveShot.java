@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GiveShot implements TabExecutor {
@@ -33,8 +34,9 @@ public class GiveShot implements TabExecutor {
 //        Unimplemented
 
         SlurpEntryBuilder entry = new SlurpEntryBuilder(5, 5, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-        SlurpEntry response = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
-        player.sendMessage(TextBuilder.success(gson.toJson(response)));
+        SlurpEntry.create(entry, slurpPlayer.getSession().getToken(), cb -> {
+            player.sendMessage(TextBuilder.success("Saved entry!"));
+        });
 
         return true;
     }

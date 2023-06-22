@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp.helper.game.api;
 
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 
 public class SlurpEntryBuilder {
     private int sips;
@@ -19,7 +20,11 @@ public class SlurpEntryBuilder {
         this.transfer = transfer;
     }
 
-    public void build() {
-        SlurpEntry.create(this, session);
+    public String getPlayerUuid() {
+        return player;
+    }
+
+    public SlurpEntryBuilder copyForPlayer(SlurpPlayer player) {
+        return new SlurpEntryBuilder(sips, shots, player.getUuid(), session, giveable, transfer);
     }
 }

@@ -91,16 +91,16 @@ public class DrinkingBuddyEvent {
                         boolean isDrinkingBuddy = players.contains(SlurpPlayerManager.getPlayer(player, session));
 
                         if (isDrinkingBuddy) {
-                            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, 1, 1);
                             player.showTitle(Title.title(
                                     Component.text("Drinking Buddy", NamedTextColor.GREEN),
                                     Component.text("You are a drinking buddy!", NamedTextColor.GREEN)
                             ));
                         } else {
-                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1, 1);
                             player.showTitle(Title.title(
-                                    Component.text("Not a Drinking Buddy", NamedTextColor.RED),
-                                    Component.text("You are not a drinking buddy!", NamedTextColor.RED)
+                                    Component.text("Not a Drinking Buddy", NamedTextColor.GOLD),
+                                    Component.text("You are not a drinking buddy!", NamedTextColor.GOLD)
                             ));
                         }
                         return CompletableFuture.completedFuture(null);
@@ -124,8 +124,8 @@ public class DrinkingBuddyEvent {
             // Display names of all drinking buddies in broadcast
             Slurp.plugin.getServer().broadcast(TextBuilder.info("Drinking buddies: " + names));
 
-        }, 20 * 5, 20 * 60);
-        // 5 seconds delay, 60 seconds interval
+        }, 20 * 5, 20 * 60 * 15);
+        // 5 seconds delay, 15 minute interval
     }
 
     public void disable() {

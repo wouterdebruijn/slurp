@@ -73,21 +73,19 @@ public class ConsumableGivingHandler {
         }
     }
 
-    public static void serverGiveConsumable(Player target, SlurpEntryBuilder entry, Consumer<ArrayList<SlurpEntry>> callback) {
+    public static CompletableFuture<ArrayList<SlurpEntry>> serverGiveConsumable(Player target, SlurpEntryBuilder entry) {
         SlurpPlayer slurpTarget = SlurpPlayerManager.getPlayer(target);
 
         if (slurpTarget == null) {
-            return;
+            return CompletableFuture.failedFuture(new SlurpMessageException("You or the target are not in a session!"));
         }
 
-        SlurpSession session = SlurpSessionManager.getSession(slurpTarget.getSession().getUuid());
+        SlurpSession serverSession = SlurpSessionManager.getSession(slurpTarget.getSession().getUuid());
 
-        if (session == null) {
-            return;
+        if (serverSession == null) {
+            return CompletableFuture.failedFuture(new SlurpMessageException("You or the target are not in a session!"));
         }
 
-        String serverToken = session.getToken();
-
-        SlurpEntry.create(entry, serverToken);
+        return SlurpEntry.create(entry, serverSession.getToken());
     }
 }

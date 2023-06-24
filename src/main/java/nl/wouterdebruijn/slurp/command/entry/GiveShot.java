@@ -3,6 +3,7 @@ package nl.wouterdebruijn.slurp.command.entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class GiveShot implements TabExecutor {
     @Override
@@ -59,13 +61,25 @@ public class GiveShot implements TabExecutor {
             return true;
         }
 
-        // Give the target player the shots
-        SlurpEntryBuilder entry = new SlurpEntryBuilder(0, amount, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-        ConsumableGivingHandler.playerGiveConsumable(target, player, entry, (entries) -> {
-            // Update the balance of the origin player
+        try {
+            // Give the target player the shots
+            SlurpEntryBuilder entry = new SlurpEntryBuilder(0, amount, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+            ConsumableGivingHandler.playerGiveConsumable(target, player, entry).get();
+
             SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
-            SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken(), cb -> {});
-        });
+            SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof SlurpMessageException) {
+                player.sendMessage(TextBuilder.error(cause.getMessage()));
+            }
+            else {
+                player.sendMessage(TextBuilder.error("Something went wrong!"));
+            }
+        }
+        catch (Exception e) {
+            player.sendMessage(TextBuilder.error("Something went wrong!"));
+        }
 
         return true;
     }

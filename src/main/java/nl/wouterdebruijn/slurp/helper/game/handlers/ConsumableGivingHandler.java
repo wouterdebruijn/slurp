@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.helper.game.handlers;
 
+import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ConsumableGivingHandler {
@@ -23,7 +25,7 @@ public class ConsumableGivingHandler {
         return shots == 1 ? "shot" : "shots";
     }
 
-    public static void playerGiveConsumable(Player target, Player origin, SlurpEntryBuilder entry, Consumer<ArrayList<SlurpEntry>> callback) {
+    public static CompletableFuture<ArrayList<SlurpEntry>> playerGiveConsumable(Player target, Player origin, SlurpEntryBuilder entry) {
         SlurpPlayer slurpTarget = SlurpPlayerManager.getPlayer(target);
         SlurpPlayer slurpOrigin = SlurpPlayerManager.getPlayer(origin);
 
@@ -31,23 +33,24 @@ public class ConsumableGivingHandler {
         int shots = entry.getShots();
 
         if (slurpTarget == null || slurpOrigin == null) {
-            origin.sendMessage(TextBuilder.error("You or the target are not in a session!"));
-            return;
+            return CompletableFuture.failedFuture(new SlurpMessageException("You or the target are not in a session!"));
         }
 
         if (target == origin) {
-            origin.sendMessage(TextBuilder.error("You can't give drinks to yourself!"));
-            return;
+            return CompletableFuture.failedFuture(new SlurpMessageException("You can't give drinks to yourself!"));
         }
 
         ArrayList<SlurpPlayer> buddies = DrinkingBuddyManager.getBuddiesOfPlayer(slurpTarget);
 
         if (buddies != null && buddies.contains(slurpOrigin)) {
-            origin.sendMessage(TextBuilder.error("You can't give drinks to your drinking buddies!"));
-            return;
+            return CompletableFuture.failedFuture(new SlurpMessageException("You can't give drinks to your drinking buddies!"));
         }
 
-        SlurpEntry.create(entry, slurpOrigin.getSession().getToken(), entries -> {
+        CompletableFuture<ArrayList<SlurpEntry>> futureEntries = SlurpEntry.create(entry, slurpOrigin.getSession().getToken());
+
+        try {
+            ArrayList<SlurpEntry> entries = futureEntries.get();
+
             if (sips > 0 && shots > 0) {
                 origin.sendMessage(TextBuilder.success(String.format("You gave %s %d %s and %d %s!", target.getName(), sips, getTextSips(sips), shots, getTextShots(shots))));
                 target.sendMessage(TextBuilder.success(String.format("%s gave you %d %s and %d %s!", origin.getName(), sips, getTextSips(sips), shots, getTextShots(shots))));
@@ -63,8 +66,11 @@ public class ConsumableGivingHandler {
                 target.sendMessage(TextBuilder.success(String.format("%s gave you %d %s!", origin.getName(), shots, getTextShots(shots))));
             }
 
-            callback.accept(entries);
-        });
+            return CompletableFuture.completedFuture(entries);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
     public static void serverGiveConsumable(Player target, SlurpEntryBuilder entry, Consumer<ArrayList<SlurpEntry>> callback) {
@@ -82,6 +88,6 @@ public class ConsumableGivingHandler {
 
         String serverToken = session.getToken();
 
-        SlurpEntry.create(entry, serverToken, callback);
+        SlurpEntry.create(entry, serverToken);
     }
 }

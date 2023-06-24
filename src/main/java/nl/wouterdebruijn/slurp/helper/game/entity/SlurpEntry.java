@@ -15,6 +15,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -63,14 +64,14 @@ public class SlurpEntry {
         });
     }
 
-    public static void create(SlurpEntryBuilder entry, String token, Consumer<ArrayList<SlurpEntry>> callback) {
+    public static CompletableFuture<ArrayList<SlurpEntry>> create(SlurpEntryBuilder entry, String token) {
 
         // Get drinking buddies for player
         SlurpPlayer player = SlurpPlayerManager.getPlayer(entry.getPlayerUuid());
 
         if (player == null) {
             Slurp.logger.log(Level.SEVERE, "Player not found");
-            return;
+            return CompletableFuture.failedFuture(new Exception("Player not found"));
         }
 
         // Get list of drinkingbuddies
@@ -90,6 +91,6 @@ public class SlurpEntry {
             }
         }
 
-        callback.accept(entries);
+        return CompletableFuture.completedFuture(entries);
     }
 }

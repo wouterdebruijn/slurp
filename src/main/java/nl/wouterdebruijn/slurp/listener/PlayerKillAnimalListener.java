@@ -19,7 +19,7 @@ public class PlayerKillAnimalListener implements Listener {
         if (!(e.getEntity() instanceof Player)) {
             if (e.getEntity().getKiller() != null) {
                 Player p = e.getEntity().getKiller();
-                SlurpPlayer sp = SlurpPlayerManager.getPlayer(p.getUniqueId().toString());
+                SlurpPlayer sp = SlurpPlayerManager.getPlayer(p);
                 if (sp == null) {
                     p.sendMessage(TextBuilder.error("You are not in a session!"));
                     return;

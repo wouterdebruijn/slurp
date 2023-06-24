@@ -19,7 +19,7 @@ public class PlayerDiesListener implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         Player p = e.getPlayer();
-        SlurpPlayer sp = SlurpPlayerManager.getPlayer(p.getUniqueId().toString());
+        SlurpPlayer sp = SlurpPlayerManager.getPlayer(p);
         if (sp == null) {
             p.sendMessage(TextBuilder.error("You are not in a session!"));
             return;
@@ -34,7 +34,7 @@ public class PlayerDiesListener implements Listener {
             Player killerEntity = e.getPlayer().getKiller();
             if (killerEntity != null){
                 // Give the killer a shot for killing a fellow player
-                SlurpPlayer slurpKiller = SlurpPlayerManager.getPlayer(killerEntity.getUniqueId().toString());
+                SlurpPlayer slurpKiller = SlurpPlayerManager.getPlayer(killerEntity);
                 if (slurpKiller == null) {
                     killerEntity.sendMessage(TextBuilder.error("You are not in a session, stop killing people!!!"));
                     return;

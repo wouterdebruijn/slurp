@@ -32,7 +32,7 @@ public class PlayerDiesListener implements Listener {
         } else {
             // Player has been killed by an entity
             Player killerEntity = e.getPlayer().getKiller();
-            if (killerEntity != null) {
+            if (killerEntity != null){
                 // Give the killer a shot for killing a fellow player
                 SlurpPlayer slurpKiller = SlurpPlayerManager.getPlayer(killerEntity.getUniqueId().toString());
                 if (slurpKiller == null) {

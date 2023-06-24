@@ -12,7 +12,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,11 +134,11 @@ public class ScoreboardManager {
                 String line = lines.get(i);
                 String oldLine = oldLines.get(i);
 
-                if (oldLine != null)
+                if (oldLine != null && !lines.contains(oldLine)) {
                     scoreboard.resetScores(oldLine);
+                }
 
                 sidebar.getScore(line).setScore(99 - i);
-
                 oldLines.set(i, line);
             }
         }

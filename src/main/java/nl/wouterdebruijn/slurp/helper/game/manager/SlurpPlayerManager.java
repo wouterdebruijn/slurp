@@ -3,6 +3,7 @@ package nl.wouterdebruijn.slurp.helper.game.manager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
@@ -41,6 +42,21 @@ public class SlurpPlayerManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Checks if a SlurpPlayer is null and sends a message to the player if so.
+     *
+     * @param slurpPlayer Player where SlurpPlayer is derived from.
+     * @param slurper SlurpPlayer object to check if null
+     * @return True is the SlurpPlayer is null, false if it is not.
+     */
+    public static boolean checkNull(Player slurpPlayer, SlurpPlayer slurper) {
+        if (slurper == null) {
+            slurpPlayer.sendMessage(TextBuilder.error("You are not in a session!"));
+            return true;
+        }
+        return false;
     }
 
 

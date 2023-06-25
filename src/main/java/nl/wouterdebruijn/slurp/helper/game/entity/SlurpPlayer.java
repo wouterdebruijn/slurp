@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp.helper.game.entity;
 
 import com.google.gson.Gson;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.manager.ScoreboardManager;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;

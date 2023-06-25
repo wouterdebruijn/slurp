@@ -6,10 +6,9 @@ import nl.wouterdebruijn.slurp.command.session.*;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
-import nl.wouterdebruijn.slurp.listener.PlayerDiesListener;
-import nl.wouterdebruijn.slurp.listener.PlayerKillAnimalListener;
-import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
+import nl.wouterdebruijn.slurp.listener.*;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -47,8 +46,14 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("givesip")).setExecutor(new GiveSip());
 
 //      Register listeners
-        getServer().getPluginManager().registerEvents(new SlurpSessionSubscriptionListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerDiesListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerKillAnimalListener(), this);
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new BlockBreakListener(), this);
+        pm.registerEvents(new FurnaceExtractListener(), this);
+        pm.registerEvents(new PlayerConsumeListener(), this);
+        pm.registerEvents(new PlayerDamageListener(), this);
+        pm.registerEvents(new PlayerDiesListener(), this);
+        pm.registerEvents(new PlayerKillAnimalListener(), this);
+        pm.registerEvents(new PlayerMovementListener(), this);
+        pm.registerEvents(new SlurpSessionSubscriptionListener(), this);
     }
 }

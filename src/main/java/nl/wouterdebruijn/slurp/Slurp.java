@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp;
 
+import nl.wouterdebruijn.slurp.command.ConfigCmd;
 import nl.wouterdebruijn.slurp.command.entry.GiveShot;
 import nl.wouterdebruijn.slurp.command.entry.GiveSip;
 import nl.wouterdebruijn.slurp.command.session.*;
@@ -22,6 +23,7 @@ public final class Slurp extends JavaPlugin {
     public void onDisable() {
         SlurpSessionManager.saveToDisk();
         SlurpPlayerManager.saveToDisk();
+        SlurpConfig.saveConfig();
     }
 
     @Override
@@ -44,6 +46,7 @@ public final class Slurp extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("giveshot")).setExecutor(new GiveShot());
         Objects.requireNonNull(getCommand("givesip")).setExecutor(new GiveSip());
+        Objects.requireNonNull(getCommand("setvalue")).setExecutor(new ConfigCmd());
 
 //      Register listeners
         PluginManager pm = getServer().getPluginManager();

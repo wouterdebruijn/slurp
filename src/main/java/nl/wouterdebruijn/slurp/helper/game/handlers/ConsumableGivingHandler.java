@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.helper.game.handlers;
 
+import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
@@ -9,12 +10,14 @@ import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 public class ConsumableGivingHandler {
     public static String getTextSips(int sips) {
@@ -85,7 +88,20 @@ public class ConsumableGivingHandler {
         if (serverSession == null) {
             return CompletableFuture.failedFuture(new SlurpMessageException("You or the target are not in a session!"));
         }
-
         return SlurpEntry.create(entry, serverSession.getToken());
+    }
+
+    public static void giveUnifiedSlurp(Player trigger, SlurpEntryBuilder entry) {
+        SlurpPlayer triggerSP = SlurpPlayerManager.getPlayer(trigger);
+        SlurpSession serverSesh = SlurpSessionManager.getSession(triggerSP.getSession().getUuid());
+        if (serverSesh != null) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                SlurpPlayer sp = SlurpPlayerManager.getPlayer(p);
+                if (sp == null) continue;
+                SlurpEntry.createDirect(entry.copyForPlayer(sp), serverSesh.getToken());
+            }
+        } else {
+            Slurp.logger.log(Level.SEVERE, "Could not retrieve session!");
+        }
     }
 }

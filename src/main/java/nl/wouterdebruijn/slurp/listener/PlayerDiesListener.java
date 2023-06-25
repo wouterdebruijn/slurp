@@ -2,6 +2,8 @@ package nl.wouterdebruijn.slurp.listener;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import nl.wouterdebruijn.slurp.helper.ConfigValue;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
@@ -13,8 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class PlayerDiesListener implements Listener {
-    final int toDrink = 2;
-    final int toShot = 1;
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
@@ -27,7 +27,9 @@ public class PlayerDiesListener implements Listener {
         if (p.getKiller() == null) {
             // Player has not been killed by an entity, died otherwise
             // Add sips to player
-            SlurpEntryBuilder entry = new SlurpEntryBuilder(toDrink, 0, sp.getUuid(), sp.getSession().getUuid(), false, false);
+            final int sips = SlurpConfig.getValue(ConfigValue.SIP_DIE);
+            final int shots = SlurpConfig.getValue(ConfigValue.SHOT_DIE);
+            SlurpEntryBuilder entry = new SlurpEntryBuilder(sips, shots, sp.getUuid(), sp.getSession().getUuid(), false, false);
             ConsumableGivingHandler.serverGiveConsumable(p, entry);
         } else {
             // Player has been killed by an entity
@@ -39,7 +41,9 @@ public class PlayerDiesListener implements Listener {
                     killerEntity.sendMessage(TextBuilder.error("You are not in a session, stop killing people!!!"));
                     return;
                 }
-                SlurpEntryBuilder entry = new SlurpEntryBuilder(0, toShot, slurpKiller.getUuid(), slurpKiller.getSession().getUuid(),
+                final int sips = SlurpConfig.getValue(ConfigValue.SIP_KILLER);
+                final int shots = SlurpConfig.getValue(ConfigValue.SHOT_KILLER);
+                SlurpEntryBuilder entry = new SlurpEntryBuilder(sips, shots, slurpKiller.getUuid(), slurpKiller.getSession().getUuid(),
                         false, false);
                 ConsumableGivingHandler.serverGiveConsumable(killerEntity, entry);
                 // Inform killed player

@@ -8,7 +8,6 @@ import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.listener.PlayerDiesListener;
 import nl.wouterdebruijn.slurp.listener.PlayerKillAnimalListener;
-import nl.wouterdebruijn.slurp.listener.PlayerMovementListener;
 import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,6 +50,5 @@ public final class Slurp extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SlurpSessionSubscriptionListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDiesListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerKillAnimalListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerMovementListener(), this);
     }
 }

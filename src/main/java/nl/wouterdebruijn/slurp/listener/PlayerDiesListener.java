@@ -24,7 +24,7 @@ public class PlayerDiesListener implements Listener {
             p.sendMessage(TextBuilder.error("You are not in a session!"));
             return;
         }
-        if (p.getKiller() != null) {
+        if (p.getKiller() == null) {
             // Player has not been killed by an entity, died otherwise
             // Add sips to player
             SlurpEntryBuilder entry = new SlurpEntryBuilder(toDrink, 0, sp.getUuid(), sp.getSession().getUuid(), false, false);
@@ -32,7 +32,7 @@ public class PlayerDiesListener implements Listener {
         } else {
             // Player has been killed by an entity
             Player killerEntity = e.getPlayer().getKiller();
-            if (killerEntity != null){
+            if (killerEntity != null) {
                 // Give the killer a shot for killing a fellow player
                 SlurpPlayer slurpKiller = SlurpPlayerManager.getPlayer(killerEntity);
                 if (slurpKiller == null) {

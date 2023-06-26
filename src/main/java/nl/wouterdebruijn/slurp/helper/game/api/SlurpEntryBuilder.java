@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.helper.game.api;
 
+import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 
@@ -48,5 +49,59 @@ public class SlurpEntryBuilder {
 
     public int getShots() {
         return shots;
+    }
+
+    public Consumable getTaken() {
+        Consumable taken = new Consumable();
+
+        if (this.giveable) {
+            return taken;
+        }
+
+        if (shots < 0) {
+            taken.setShots(shots);
+        }
+
+        if (sips < 0) {
+            taken.setSips(sips);
+        }
+
+        return taken;
+    }
+
+    public Consumable getRemaining() {
+        Consumable remaining = new Consumable();
+
+        if (this.giveable) {
+            return remaining;
+        }
+
+        if (shots > 0) {
+            remaining.setShots(shots);
+        }
+
+        if (sips > 0) {
+            remaining.setSips(sips);
+        }
+
+        return remaining;
+    }
+
+    public Consumable getGiveable() {
+        Consumable giveable = new Consumable();
+
+        if (!this.giveable) {
+            return giveable;
+        }
+
+        if (shots > 0) {
+            giveable.setShots(shots);
+        }
+
+        if (sips > 0) {
+            giveable.setSips(sips);
+        }
+
+        return giveable;
     }
 }

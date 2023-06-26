@@ -7,7 +7,7 @@ import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
-import nl.wouterdebruijn.slurp.helper.game.handlers.TitleCountdownHandler;
+import nl.wouterdebruijn.slurp.helper.game.handlers.TitleHandler;
 import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.Bukkit;

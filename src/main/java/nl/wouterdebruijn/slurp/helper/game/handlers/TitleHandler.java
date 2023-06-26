@@ -10,7 +10,22 @@ import org.bukkit.entity.Player;
 
 import java.util.concurrent.CompletableFuture;
 
-public class TitleCountdownHandler {
+public class TitleHandler {
+    public static CompletableFuture<Void> asyncTitle(Player player, Title title) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
+            player.showTitle(title);
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            future.complete(null);
+        });
+        return future;
+    };
+
     public static CompletableFuture<Void> countdown(Player player, int seconds) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {

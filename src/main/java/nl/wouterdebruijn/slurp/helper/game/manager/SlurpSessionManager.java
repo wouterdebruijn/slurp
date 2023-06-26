@@ -170,6 +170,7 @@ public class SlurpSessionManager {
             if (statusCode != WebSocket.NORMAL_CLOSURE) {
                 // Resubscribe if the connection was closed unexpectedly
                 SlurpSessionManager.subscribeToSession(session);
+                Slurp.logger.info("Resubscribed to session " + session.getUuid());
             }
 
             return WebSocket.Listener.super.onClose(webSocket, statusCode, reason);

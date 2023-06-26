@@ -27,182 +27,24 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class RockPaperScissors {
-    private enum Move {
-        ROCK,
-        PAPER,
-        SCISSORS
-    }
-    private static class Participant {
-        private final Player player;
-        private Move move;
-        private final RockPaperScissors game;
-        public Participant(Player player, RockPaperScissors game) {
-            this.player = player;
-            this.game = game;
-        }
-        public void setMove(Move move) {
-            this.move = move;
-        }
-        public Move getMove() {
-            return this.move;
-        }
-        public Player getPlayer() {
-            return this.player;
-        }
-
-        static class GameActionListener implements Listener {
-            /**
-             * GameActionListener listener for one participant of the game.
-             */
-            private final Participant participant;
-            private final Inventory inventory;
-            private final CompletableFuture<Number> clickedSlot = new CompletableFuture<>();
-            public GameActionListener(Participant participant, Inventory inventory) {
-                this.participant = participant;
-                this.inventory = inventory;
-            }
-            @EventHandler
-            public void onInventoryClick(InventoryClickEvent event) {
-                // Check if the inventory is the same as the one we created
-                if (!Objects.equals(event.getClickedInventory(), this.inventory)) {
-                    return;
-                }
-
-                Player p = (Player) event.getWhoClicked();
-
-                // Check if the player is the same as the one we created the listener for
-                if (p != this.participant.getPlayer()) {
-                    return;
-                }
-
-                // Cancel the player clicking in the inventory
-                event.setCancelled(true);
-
-                // Check if the player clicked on an item
-                if (event.getCurrentItem() == null) {
-                    return;
-                }
-
-                clickedSlot.complete(event.getSlot());
-                event.getInventory().close();
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
-
-                // Remove the listener
-                InventoryClickEvent.getHandlerList().unregister(this);
-            }
-
-            @EventHandler
-            public void onInventoryClose(InventoryCloseEvent event) {
-                // Check if the inventory is the same as the one we created
-                if (!Objects.equals(event.getInventory(), this.inventory)) {
-                    return;
-                }
-
-                // Check if the player is the same as the one we created the listener for
-                if (event.getPlayer() != this.participant.getPlayer()) {
-                    return;
-                }
-
-                // The player closed the inventory without clicking on an item
-                if (!this.clickedSlot.isDone()) {
-                    // Open the inventory again after 5 ticks
-                    Bukkit.getScheduler().runTaskLater(Slurp.plugin, () -> {
-                        event.getPlayer().openInventory(inventory);
-                    }, 5);
-                }
-
-            }
-
-            public CompletableFuture<Number> getClickedSlot() {
-                return this.clickedSlot;
-            }
-        }
-
-        public void askMove() {
-            Inventory inv = Bukkit.createInventory(null, 27, Component.text("Rock paper scissors"));
-
-            inv.setItem(10, new ItemStack(Material.STONE));
-            inv.setItem(13, new ItemStack(Material.PAPER));
-            inv.setItem(16, new ItemStack(Material.SHEARS));
-
-            GameActionListener moveListener = new GameActionListener(this, inv);
-
-            Bukkit.getScheduler().runTask(Slurp.plugin, () -> {
-                Bukkit.getPluginManager().registerEvents(moveListener, Slurp.plugin);
-                this.player.openInventory(inv);
-            });
-
-            try {
-                int move = moveListener.getClickedSlot().get().intValue();
-
-                switch (move) {
-                    case 10 -> this.setMove(Move.ROCK);
-                    case 13 -> this.setMove(Move.PAPER);
-                    case 16 -> this.setMove(Move.SCISSORS);
-                }
-            } catch (Exception e) {
-                Slurp.logger.severe("Error while getting clicked slot");
-                e.printStackTrace();
-            }
-        }
-
-        public boolean askRematch() {
-            Inventory inv = Bukkit.createInventory(null, 27, Component.text(String.format("Rematch for double the stakes (%d)?", this.game.getStakes()*2)));
-
-            ItemStack yes = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
-            yes.editMeta(meta -> {
-                meta.displayName(Component.text("Yes"));
-            });
-            inv.setItem(10, yes);
-
-            ItemStack no = new ItemStack(Material.RED_STAINED_GLASS_PANE);
-            no.editMeta(meta -> {
-                meta.displayName(Component.text("No"));
-            });
-            inv.setItem(16, no);
-
-            GameActionListener rematchListener = new GameActionListener(this, inv);
-
-            Bukkit.getScheduler().runTask(Slurp.plugin, () -> {
-                Bukkit.getPluginManager().registerEvents(rematchListener, Slurp.plugin);
-                this.player.openInventory(inv);
-            });
-
-            try {
-                int move = rematchListener.getClickedSlot().get().intValue();
-
-                switch (move) {
-                    case 10 -> {
-                        return true;
-                    }
-                    case 16 -> {
-                        return false;
-                    }
-                }
-            } catch (Exception e) {
-                Slurp.logger.severe("Error while getting clicked slot");
-                e.printStackTrace();
-            }
-            return false;
-        }
-    }
-
     /**
      * Rock paper scissors minigame to be played by two players.
      */
     private final Participant player1;
     private final Participant player2;
     private int stakes = 1; // The amount of sips the loser has to take.
-
     public RockPaperScissors(Player p1, Player p2) {
         this.player1 = new Participant(p1, this);
         this.player2 = new Participant(p2, this);
     }
 
+    public int getStakes() {
+        return this.stakes;
+    }
+
     public void setStakes(int stakes) {
         this.stakes = stakes;
     }
-    public int getStakes() { return this.stakes; }
 
     /**
      * Up the stakes by a factor of 2.
@@ -318,5 +160,172 @@ public class RockPaperScissors {
                 }
             }
         });
+    }
+
+    private enum Move {
+        ROCK,
+        PAPER,
+        SCISSORS
+    }
+
+    private static class Participant {
+        private final Player player;
+        private final RockPaperScissors game;
+        private Move move;
+
+        public Participant(Player player, RockPaperScissors game) {
+            this.player = player;
+            this.game = game;
+        }
+
+        public Move getMove() {
+            return this.move;
+        }
+
+        public void setMove(Move move) {
+            this.move = move;
+        }
+
+        public Player getPlayer() {
+            return this.player;
+        }
+
+        public void askMove() {
+            Inventory inv = Bukkit.createInventory(null, 27, Component.text("Rock paper scissors"));
+
+            inv.setItem(10, new ItemStack(Material.STONE));
+            inv.setItem(13, new ItemStack(Material.PAPER));
+            inv.setItem(16, new ItemStack(Material.SHEARS));
+
+            GameActionListener moveListener = new GameActionListener(this, inv);
+
+            Bukkit.getScheduler().runTask(Slurp.plugin, () -> {
+                Bukkit.getPluginManager().registerEvents(moveListener, Slurp.plugin);
+                this.player.openInventory(inv);
+            });
+
+            try {
+                int move = moveListener.getClickedSlot().get().intValue();
+
+                switch (move) {
+                    case 10 -> this.setMove(Move.ROCK);
+                    case 13 -> this.setMove(Move.PAPER);
+                    case 16 -> this.setMove(Move.SCISSORS);
+                }
+            } catch (Exception e) {
+                Slurp.logger.severe("Error while getting clicked slot");
+                e.printStackTrace();
+            }
+        }
+
+        public boolean askRematch() {
+            Inventory inv = Bukkit.createInventory(null, 27, Component.text(String.format("Rematch for double the stakes (%d)?", this.game.getStakes() * 2)));
+
+            ItemStack yes = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
+            yes.editMeta(meta -> {
+                meta.displayName(Component.text("Yes"));
+            });
+            inv.setItem(10, yes);
+
+            ItemStack no = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+            no.editMeta(meta -> {
+                meta.displayName(Component.text("No"));
+            });
+            inv.setItem(16, no);
+
+            GameActionListener rematchListener = new GameActionListener(this, inv);
+
+            Bukkit.getScheduler().runTask(Slurp.plugin, () -> {
+                Bukkit.getPluginManager().registerEvents(rematchListener, Slurp.plugin);
+                this.player.openInventory(inv);
+            });
+
+            try {
+                int move = rematchListener.getClickedSlot().get().intValue();
+
+                switch (move) {
+                    case 10 -> {
+                        return true;
+                    }
+                    case 16 -> {
+                        return false;
+                    }
+                }
+            } catch (Exception e) {
+                Slurp.logger.severe("Error while getting clicked slot");
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        static class GameActionListener implements Listener {
+            /**
+             * GameActionListener listener for one participant of the game.
+             */
+            private final Participant participant;
+            private final Inventory inventory;
+            private final CompletableFuture<Number> clickedSlot = new CompletableFuture<>();
+
+            public GameActionListener(Participant participant, Inventory inventory) {
+                this.participant = participant;
+                this.inventory = inventory;
+            }
+
+            @EventHandler
+            public void onInventoryClick(InventoryClickEvent event) {
+                // Check if the inventory is the same as the one we created
+                if (!Objects.equals(event.getClickedInventory(), this.inventory)) {
+                    return;
+                }
+
+                Player p = (Player) event.getWhoClicked();
+
+                // Check if the player is the same as the one we created the listener for
+                if (p != this.participant.getPlayer()) {
+                    return;
+                }
+
+                // Cancel the player clicking in the inventory
+                event.setCancelled(true);
+
+                // Check if the player clicked on an item
+                if (event.getCurrentItem() == null) {
+                    return;
+                }
+
+                clickedSlot.complete(event.getSlot());
+                event.getInventory().close();
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+
+                // Remove the listener
+                InventoryClickEvent.getHandlerList().unregister(this);
+            }
+
+            @EventHandler
+            public void onInventoryClose(InventoryCloseEvent event) {
+                // Check if the inventory is the same as the one we created
+                if (!Objects.equals(event.getInventory(), this.inventory)) {
+                    return;
+                }
+
+                // Check if the player is the same as the one we created the listener for
+                if (event.getPlayer() != this.participant.getPlayer()) {
+                    return;
+                }
+
+                // The player closed the inventory without clicking on an item
+                if (!this.clickedSlot.isDone()) {
+                    // Open the inventory again after 5 ticks
+                    Bukkit.getScheduler().runTaskLater(Slurp.plugin, () -> {
+                        event.getPlayer().openInventory(inventory);
+                    }, 5);
+                }
+
+            }
+
+            public CompletableFuture<Number> getClickedSlot() {
+                return this.clickedSlot;
+            }
+        }
     }
 }

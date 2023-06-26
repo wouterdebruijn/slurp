@@ -24,7 +24,9 @@ public class TitleHandler {
             future.complete(null);
         });
         return future;
-    };
+    }
+
+    ;
 
     public static CompletableFuture<Void> countdown(Player player, int seconds) {
         CompletableFuture<Void> future = new CompletableFuture<>();

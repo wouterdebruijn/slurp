@@ -58,13 +58,11 @@ public class SlurpEntryBuilder {
             return taken;
         }
 
-        if (shots < 0) {
+        if (shots < 0)
             taken.setShots(shots);
-        }
 
-        if (sips < 0) {
+        if (sips < 0)
             taken.setSips(sips);
-        }
 
         return taken;
     }
@@ -76,13 +74,8 @@ public class SlurpEntryBuilder {
             return remaining;
         }
 
-        if (shots > 0) {
-            remaining.setShots(shots);
-        }
-
-        if (sips > 0) {
-            remaining.setSips(sips);
-        }
+        remaining.setShots(shots);
+        remaining.setSips(sips);
 
         return remaining;
     }
@@ -94,13 +87,8 @@ public class SlurpEntryBuilder {
             return giveable;
         }
 
-        if (shots > 0) {
-            giveable.setShots(shots);
-        }
-
-        if (sips > 0) {
-            giveable.setSips(sips);
-        }
+        giveable.setShots(shots);
+        giveable.setSips(sips);
 
         return giveable;
     }

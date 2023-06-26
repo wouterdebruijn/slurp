@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class GiveSip implements TabExecutor {
@@ -59,12 +61,13 @@ public class GiveSip implements TabExecutor {
         try {
             // Give the target player the sips
             SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, 0, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-            ConsumableGivingHandler.playerGiveConsumable(target, player, entry).get();
+            CompletableFuture<ArrayList<SlurpEntry>> addShots = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
 
-            // Update the balance of the origin player
             SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
-            SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
-        } catch (ExecutionException e) {
+            CompletableFuture<ArrayList<SlurpEntry>> removeGiveableSips = SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken());
+
+            CompletableFuture.allOf(addShots, removeGiveableSips).join();
+        } catch (CancellationException e) {
             Throwable cause = e.getCause();
             if (cause instanceof SlurpMessageException) {
                 player.sendMessage(TextBuilder.error(cause.getMessage()));

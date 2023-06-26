@@ -44,7 +44,7 @@ public class PlayerDiesListener implements Listener {
                 ConsumableGivingHandler.serverGiveConsumable(killerEntity, entry);
                 // Inform killed player
                 Component text = Component.text("You have been killed by ", NamedTextColor.GRAY).append(Component.text(killerEntity.getName(), NamedTextColor.DARK_GRAY))
-                                .append(Component.text(" and they have to take a shot!", NamedTextColor.GRAY));
+                        .append(Component.text(" and they have to take a shot!", NamedTextColor.GRAY));
                 p.sendMessage(TextBuilder.info(text));
             }
         }

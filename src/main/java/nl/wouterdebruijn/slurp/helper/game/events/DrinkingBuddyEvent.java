@@ -18,7 +18,6 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DrinkingBuddyEvent {
     SlurpSession session;
@@ -87,26 +86,26 @@ public class DrinkingBuddyEvent {
             CompletableFuture[] futures = new CompletableFuture[onlinePlayers.size()];
 
             for (Player player : onlinePlayers) {
-                    CompletableFuture<Void> future = TitleCountdownHandler.countdown(player, 5).thenCompose((Void) -> {
-                        boolean isDrinkingBuddy = players.contains(SlurpPlayerManager.getPlayer(player, session));
+                CompletableFuture<Void> future = TitleCountdownHandler.countdown(player, 5).thenCompose((Void) -> {
+                    boolean isDrinkingBuddy = players.contains(SlurpPlayerManager.getPlayer(player, session));
 
-                        if (isDrinkingBuddy) {
-                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, 1, 1);
-                            player.showTitle(Title.title(
-                                    Component.text("Drinking Buddy", NamedTextColor.GREEN),
-                                    Component.text("You are a drinking buddy!", NamedTextColor.GREEN)
-                            ));
-                        } else {
-                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1, 1);
-                            player.showTitle(Title.title(
-                                    Component.text("Not a Drinking Buddy", NamedTextColor.GOLD),
-                                    Component.text("You are not a drinking buddy!", NamedTextColor.GOLD)
-                            ));
-                        }
-                        return CompletableFuture.completedFuture(null);
-                    });
+                    if (isDrinkingBuddy) {
+                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, 1, 1);
+                        player.showTitle(Title.title(
+                                Component.text("Drinking Buddy", NamedTextColor.GREEN),
+                                Component.text("You are a drinking buddy!", NamedTextColor.GREEN)
+                        ));
+                    } else {
+                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1, 1);
+                        player.showTitle(Title.title(
+                                Component.text("Not a Drinking Buddy", NamedTextColor.GOLD),
+                                Component.text("You are not a drinking buddy!", NamedTextColor.GOLD)
+                        ));
+                    }
+                    return CompletableFuture.completedFuture(null);
+                });
 
-                    futures[onlinePlayers.indexOf(player)] = future;
+                futures[onlinePlayers.indexOf(player)] = future;
             }
 
             // Wait for all futures to finish

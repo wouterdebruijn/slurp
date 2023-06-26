@@ -1,12 +1,8 @@
 package nl.wouterdebruijn.slurp.command.entry;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
-import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.handlers.ConsumableGivingHandler;
@@ -20,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class GiveShot implements TabExecutor {
@@ -72,12 +67,10 @@ public class GiveShot implements TabExecutor {
             Throwable cause = e.getCause();
             if (cause instanceof SlurpMessageException) {
                 player.sendMessage(TextBuilder.error(cause.getMessage()));
-            }
-            else {
+            } else {
                 player.sendMessage(TextBuilder.error("Something went wrong!"));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             player.sendMessage(TextBuilder.error("Something went wrong!"));
         }
 

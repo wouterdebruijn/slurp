@@ -8,16 +8,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import java.awt.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 
 public class TitleCountdownHandler {
     public static CompletableFuture<Void> countdown(Player player, int seconds) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
-            for (int i=seconds; i > 0; i--) {
+            for (int i = seconds; i > 0; i--) {
                 NamedTextColor color;
 
                 // change color based on seconds left of total seconds
@@ -41,5 +38,7 @@ public class TitleCountdownHandler {
             future.complete(null);
         });
         return future;
-    };
+    }
+
+    ;
 }

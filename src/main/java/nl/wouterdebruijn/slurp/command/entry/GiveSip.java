@@ -68,12 +68,10 @@ public class GiveSip implements TabExecutor {
             Throwable cause = e.getCause();
             if (cause instanceof SlurpMessageException) {
                 player.sendMessage(TextBuilder.error(cause.getMessage()));
-            }
-            else {
+            } else {
                 player.sendMessage(TextBuilder.error("Something went wrong!"));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             player.sendMessage(TextBuilder.error("Something went wrong!"));
         }
 

@@ -35,7 +35,8 @@ public class PlayerKillAnimalListener implements Listener {
     private boolean isPassive(LivingEntity entity) {
         return switch (entity.getType()) {
             case ALLAY, AXOLOTL, BAT, CAMEL, CAT, DONKEY, FOX, FROG, HORSE, MUSHROOM_COW, MULE, OCELOT, PARROT, SKELETON_HORSE,
-                    SNIFFER, STRIDER, TADPOLE, TURTLE, VILLAGER, WANDERING_TRADER, BEE, LLAMA, DOLPHIN, PANDA, POLAR_BEAR, TRADER_LLAMA, WOLF -> true;
+                    SNIFFER, STRIDER, TADPOLE, TURTLE, VILLAGER, WANDERING_TRADER, BEE, LLAMA, DOLPHIN, PANDA, POLAR_BEAR, TRADER_LLAMA, WOLF ->
+                    true;
             default -> false;
         };
     }

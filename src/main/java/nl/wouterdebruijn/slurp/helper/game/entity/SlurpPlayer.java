@@ -1,7 +1,6 @@
 package nl.wouterdebruijn.slurp.helper.game.entity;
 
 import com.google.gson.Gson;
-import nl.wouterdebruijn.slurp.helper.game.manager.ScoreboardManager;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;
 import nl.wouterdebruijn.slurp.exceptions.ApiUrlException;
@@ -10,6 +9,7 @@ import nl.wouterdebruijn.slurp.exceptions.MissingSessionException;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
 import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
+import nl.wouterdebruijn.slurp.helper.game.manager.ScoreboardManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.infra.Subject;
 import org.bukkit.entity.Player;

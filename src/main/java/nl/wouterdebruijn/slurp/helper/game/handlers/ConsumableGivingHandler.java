@@ -12,9 +12,7 @@ import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class ConsumableGivingHandler {
     public static String getTextSips(int sips) {
@@ -54,14 +52,10 @@ public class ConsumableGivingHandler {
             if (sips > 0 && shots > 0) {
                 origin.sendMessage(TextBuilder.success(String.format("You gave %s %d %s and %d %s!", target.getName(), sips, getTextSips(sips), shots, getTextShots(shots))));
                 target.sendMessage(TextBuilder.success(String.format("%s gave you %d %s and %d %s!", origin.getName(), sips, getTextSips(sips), shots, getTextShots(shots))));
-            }
-
-            else if (sips > 0) {
+            } else if (sips > 0) {
                 origin.sendMessage(TextBuilder.success(String.format("You gave %s %d %s!", target.getName(), sips, getTextSips(sips))));
                 target.sendMessage(TextBuilder.success(String.format("%s gave you %d %s!", origin.getName(), sips, getTextSips(sips))));
-            }
-
-            else if (shots > 0) {
+            } else if (shots > 0) {
                 origin.sendMessage(TextBuilder.success(String.format("You gave %s %d %s!", target.getName(), shots, getTextShots(shots))));
                 target.sendMessage(TextBuilder.success(String.format("%s gave you %d %s!", origin.getName(), shots, getTextShots(shots))));
             }

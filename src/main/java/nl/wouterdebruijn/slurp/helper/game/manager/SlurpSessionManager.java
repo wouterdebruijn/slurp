@@ -7,7 +7,6 @@ import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
-import nl.wouterdebruijn.slurp.helper.game.events.DrinkingBuddyEvent;
 
 import java.io.*;
 import java.net.URI;

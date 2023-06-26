@@ -43,3 +43,7 @@ commands:
     description: Take a shot
     usage: /takeshot
     permission: slurp.takeshot
+  takesip:
+    description: Take a sip
+    usage: /takesip
+    permission: slurp.takesip

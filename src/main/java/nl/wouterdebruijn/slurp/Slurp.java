@@ -2,6 +2,8 @@ package nl.wouterdebruijn.slurp;
 
 import nl.wouterdebruijn.slurp.command.entry.GiveShot;
 import nl.wouterdebruijn.slurp.command.entry.GiveSip;
+import nl.wouterdebruijn.slurp.command.entry.TakeShot;
+import nl.wouterdebruijn.slurp.command.entry.TakeSip;
 import nl.wouterdebruijn.slurp.command.session.*;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
@@ -45,6 +47,9 @@ public final class Slurp extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("giveshot")).setExecutor(new GiveShot());
         Objects.requireNonNull(getCommand("givesip")).setExecutor(new GiveSip());
+
+        Objects.requireNonNull(getCommand("takeshot")).setExecutor(new TakeShot());
+        Objects.requireNonNull(getCommand("takesip")).setExecutor(new TakeSip());
 
 //      Register listeners
         getServer().getPluginManager().registerEvents(new SlurpSessionSubscriptionListener(), this);

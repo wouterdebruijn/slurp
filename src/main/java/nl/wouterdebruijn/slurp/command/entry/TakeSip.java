@@ -16,64 +16,51 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
-public class GiveShot implements TabExecutor {
+/**
+ * Lets the player take a sip. Updating the Slurp API
+ * Players are allowed to take more sips than they have, possibly resulting in a negative remaining count
+ */
+public class TakeSip implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player player = (Player) sender;
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
-
-        if (args.length != 2) {
-            return false;
-        }
 
         if (slurpPlayer == null) {
             player.sendMessage(TextBuilder.error("You are not in a session!"));
             return true;
         }
 
-        String targetName = args[0];
-        int amount = Integer.parseInt(args[1]);
-        int balance = slurpPlayer.getGiveable().getShots();
+        if (args.length != 1) {
+            return false;
+        }
 
-        if (amount > balance) {
-            player.sendMessage(TextBuilder.error("You don't have enough shots to give away!"));
+        int amount = Integer.parseInt(args[0]);
+
+        if (amount < 1) {
+            player.sendMessage(TextBuilder.error("You can't take less than 1 sip!"));
             return true;
         }
 
-        Player target = player.getServer().getPlayer(targetName);
-
-        if (target == null) {
-            player.sendMessage(TextBuilder.error("Player not found!"));
-            return true;
-        }
-
-        SlurpPlayer targetSlurpPlayer = SlurpPlayerManager.getPlayer(target);
-
-        if (targetSlurpPlayer == null) {
-            player.sendMessage(TextBuilder.error("Player not found!"));
-            return true;
-        }
+        // TODO: @wouterdebruijn: Dynamically convert any remaining shots to sips if the user takes to many. This requires the global config shot/sip ratio
 
         try {
             // Give the target player the shots
-            SlurpEntryBuilder entry = new SlurpEntryBuilder(0, amount, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-            CompletableFuture<ArrayList<SlurpEntry>> addShots = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
-
-            SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
-            CompletableFuture<ArrayList<SlurpEntry>> removeGiveableShots = SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken());
-
-            CompletableFuture.allOf(addShots, removeGiveableShots).join();
-        } catch (CancellationException e) {
+            SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+            SlurpEntry.create(updateEntry, slurpPlayer.getSession().getToken()).get();
+            player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextSips(amount))));
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof SlurpMessageException) {
                 player.sendMessage(TextBuilder.error(cause.getMessage()));
-            } else {
+            }
+            else {
                 player.sendMessage(TextBuilder.error("Something went wrong!"));
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             player.sendMessage(TextBuilder.error("Something went wrong!"));
         }
 
@@ -84,21 +71,10 @@ public class GiveShot implements TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player player = (Player) sender;
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
-        int balance = slurpPlayer.getGiveable().getShots();
+        int balance = slurpPlayer.getRemaining().getSips();
 
         if (args.length == 1) {
-            // return list of players
-            List<String> players = new ArrayList<>();
-            for (Player p : player.getServer().getOnlinePlayers()) {
-                if (!p.getName().equals(player.getName())) {
-                    players.add(p.getName());
-                }
-            }
-            return players;
-        }
-
-        if (args.length == 2) {
-            // return list of amounts
+            // Return list of amounts
             List<String> amounts = new ArrayList<>();
             for (int i = 1; i <= balance; i++) {
                 amounts.add(String.valueOf(i));

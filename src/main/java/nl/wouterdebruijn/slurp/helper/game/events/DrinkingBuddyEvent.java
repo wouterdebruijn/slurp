@@ -7,6 +7,7 @@ import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.handlers.TitleHandler;
 import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.Bukkit;
@@ -85,7 +86,7 @@ public class DrinkingBuddyEvent {
             CompletableFuture[] futures = new CompletableFuture[onlinePlayers.size()];
 
             for (Player player : onlinePlayers) {
-                CompletableFuture<Void> future = TitleCountdownHandler.countdown(player, 5).thenCompose((Void) -> {
+                CompletableFuture<Void> future = TitleHandler.countdown(player, 5).thenCompose((Void) -> {
                     boolean isDrinkingBuddy = players.contains(SlurpPlayerManager.getPlayer(player, session));
 
                     if (isDrinkingBuddy) {

@@ -1,0 +1,87 @@
+package nl.wouterdebruijn.slurp.command.entry;
+
+import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.handlers.ConsumableGivingHandler;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+/**
+ * Lets the player take a shot. Updating the Slurp API
+ * Players are allowed to take more shots than they have, possibly resulting in a negative remaining count
+ */
+public class TakeShot implements TabExecutor {
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        Player player = (Player) sender;
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (slurpPlayer == null) {
+            player.sendMessage(TextBuilder.error("You are not in a session!"));
+            return true;
+        }
+
+        if (args.length != 1) {
+            return false;
+        }
+
+        int amount = Integer.parseInt(args[0]);
+
+        if (amount < 1) {
+            player.sendMessage(TextBuilder.error("You can't take less than 1 shot!"));
+            return true;
+        }
+
+        // TODO: @wouterdebruijn: Dynamically convert any remaining sips to shots if the user takes to many. This requires the global config shot/sip ratio
+
+        try {
+            // Give the target player the shots
+            SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+            SlurpEntry.create(updateEntry, slurpPlayer.getSession().getToken()).get();
+            player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextShots(amount))));
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof SlurpMessageException) {
+                player.sendMessage(TextBuilder.error(cause.getMessage()));
+            }
+            else {
+                player.sendMessage(TextBuilder.error("Something went wrong!"));
+            }
+        }
+        catch (Exception e) {
+            player.sendMessage(TextBuilder.error("Something went wrong!"));
+        }
+
+        return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        Player player = (Player) sender;
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+        int balance = slurpPlayer.getRemaining().getShots();
+
+        if (args.length == 1) {
+            // Return list of amounts
+            List<String> amounts = new ArrayList<>();
+            for (int i = 1; i <= balance; i++) {
+                amounts.add(String.valueOf(i));
+            }
+            return amounts;
+        }
+
+        return null;
+    }
+}

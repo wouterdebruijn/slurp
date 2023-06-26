@@ -36,7 +36,16 @@ public class SlurpEntry {
     }
 
     public static CompletableFuture<SlurpEntry> createDirect(SlurpEntryBuilder entry, String token) {
+        // Wishfully update the player's balances, faults will be corrected by the websocket listener
+        SlurpPlayer player = SlurpPlayerManager.getPlayer(entry.getPlayerUuid());
 
+        if (player == null) {
+            return CompletableFuture.failedFuture(new Exception("Player not found"));
+        }
+
+        player.setTaken(player.getTaken().add(entry.getTaken()));
+        player.setGiveable(player.getGiveable().add(entry.getGiveable()));
+        player.setRemaining(player.getRemaining().add(entry.getRemaining()));
 
         try {
             Gson gson = new Gson();

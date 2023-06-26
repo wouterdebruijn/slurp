@@ -76,8 +76,8 @@ public class ScoreboardManager {
         }
 
         private void setTaken(int sips, int shots) {
-            lines.set(5, "§r§7Sips: §f" + sips);
-            lines.set(6, "§r§7Shots: §f" + shots);
+            lines.set(5, "§r§7Sips: §f" + -sips);
+            lines.set(6, "§r§7Shots: §f" + -shots);
         }
 
         private void setGiveable(int sips, int shots) {

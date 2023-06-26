@@ -1,6 +1,7 @@
 package nl.wouterdebruijn.slurp.helper;
 
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.game.Ores;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -8,6 +9,7 @@ public class SlurpConfig {
     public static void initialize() {
         Plugin plugin = Slurp.plugin;
         setValues();
+        setOreValues();
         plugin.saveDefaultConfig();
     }
 
@@ -84,6 +86,19 @@ public class SlurpConfig {
         } else if (!conf.contains(ConfigValue.SHOT_BOAT.getPath())) {
             conf.set(ConfigValue.SHOT_BOAT.getPath(), 0);
         }
+    }
+
+    private static void setOreValues() {
+        FileConfiguration conf = Slurp.plugin.getConfig();
+        for (Ores o : Ores.values()) { // set sip value of each ore to 1.
+            if (!conf.contains(o.getPath())) {
+                conf.set(o.getPath(), 1);
+            }
+            if (!conf.contains(o.getChancePath())) {
+                conf.set(o.getChancePath(), o.getDefaultChanceValue());
+            }
+        }
+
     }
 
     /**

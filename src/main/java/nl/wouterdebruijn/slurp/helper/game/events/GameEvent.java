@@ -90,13 +90,18 @@ public abstract class GameEvent {
                 continue;
             }
 
-            String type = map.get("type").toString();
-            int amount = Integer.parseInt(map.get("amount").toString());
-            String target = map.get("target").toString();
+            try {
+                String type = map.get("type").toString();
+                int amount = Integer.parseInt(map.get("amount").toString());
+                String target = map.get("target").toString();
+                boolean giveable = Boolean.parseBoolean(map.get("giveable").toString());
 
-            GameEventConsumable consumable = new GameEventConsumable(GameEventConsumable.ConsumableType.valueOf(type.toUpperCase()), amount, GameEventConsumable.ConsumableTarget.valueOf(target.toUpperCase()));
-            Slurp.logger.info(consumable.toString());
-            consumables.add(consumable);
+                GameEventConsumable consumable = new GameEventConsumable(GameEventConsumable.ConsumableType.valueOf(type.toUpperCase()), amount, giveable, GameEventConsumable.ConsumableTarget.valueOf(target.toUpperCase()));
+                Slurp.logger.info(consumable.toString());
+                consumables.add(consumable);
+            } catch (NullPointerException e) {
+                Slurp.logger.warning("Invalid consumable '" + list.indexOf(object) + "' for event " + name);
+            }
         }
     }
 
@@ -125,18 +130,18 @@ public abstract class GameEvent {
 
             switch (consumable.target) {
                 case PLAYER -> {
-                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), player.getUuid(), player.getSession().getUuid(), false, false);
+                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), player.getUuid(), player.getSession().getUuid(), consumable.giveable, false);
                     futures.add(SlurpEntry.create(entry, session.getToken()));
                 }
                 case ALL -> {
                     for (SlurpPlayer slurpPlayer : session.getPlayers()) {
-                        SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+                        SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), consumable.giveable, false);
                         futures.add(SlurpEntry.createDirect(entry, session.getToken()));
                     }
                 }
                 case RANDOM -> {
                     SlurpPlayer randomPlayer = session.getRandomPlayersInSession(1).get(0);
-                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), randomPlayer.getUuid(), randomPlayer.getSession().getUuid(), false, false);
+                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), randomPlayer.getUuid(), randomPlayer.getSession().getUuid(), consumable.giveable, false);
                     futures.add(SlurpEntry.create(entry, session.getToken()));
                 }
             }
@@ -149,7 +154,7 @@ public abstract class GameEvent {
         CompletableFuture.allOf(futureArray).join();
     }
 
-    protected record GameEventConsumable(GameEvent.GameEventConsumable.ConsumableType type, int amount,
+    protected record GameEventConsumable(GameEvent.GameEventConsumable.ConsumableType type, int amount, boolean giveable,
                                          GameEvent.GameEventConsumable.ConsumableTarget target) {
         public Consumable toConsumable() {
             Consumable consumable = new Consumable();

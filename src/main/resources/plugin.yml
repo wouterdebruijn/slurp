@@ -28,6 +28,10 @@ commands:
     description: Change a configuration value
     usage: /setvalue <value-to-set> <numeric-value>
     permission: slurp.admin
+  reload:
+    description: Reload the plugin
+    usage: /reload
+    permission: slurp.admin
 
     # Player commands
   join:

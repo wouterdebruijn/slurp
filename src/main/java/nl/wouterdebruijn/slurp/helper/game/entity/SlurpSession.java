@@ -97,6 +97,24 @@ public class SlurpSession {
         return active;
     }
 
+    /**
+     * Get all players in this session that are online in the Minecraft server
+     *
+     * @return ArrayList of SlurpPlayers
+     */
+    public ArrayList<SlurpPlayer> getPlayers() {
+        ArrayList<SlurpPlayer> players = new ArrayList<>();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player, this);
+
+            if (slurpPlayer != null)
+                players.add(slurpPlayer);
+        }
+
+        return players;
+    }
+
     public ArrayList<SlurpPlayer> getRandomPlayersInSession(int amount) {
         ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
         ArrayList<SlurpPlayer> chosenPlayers = new ArrayList<>();

@@ -8,6 +8,7 @@ import nl.wouterdebruijn.slurp.command.entry.TakeSip;
 import nl.wouterdebruijn.slurp.command.session.*;
 import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.game.events.ChokingPlayerEvent;
 import nl.wouterdebruijn.slurp.helper.game.events.FurnaceBurnEvent;
 import nl.wouterdebruijn.slurp.helper.game.events.GameEvent;
 import nl.wouterdebruijn.slurp.helper.game.events.LucyStoneEvent;
@@ -89,5 +90,6 @@ public final class Slurp extends JavaPlugin {
         FileConfiguration config = getConfig();
         gameEvents.add(new FurnaceBurnEvent(config).register(this));
         gameEvents.add(new LucyStoneEvent(config).register(this));
+        gameEvents.add(new ChokingPlayerEvent(config).register(this));
     }
 }

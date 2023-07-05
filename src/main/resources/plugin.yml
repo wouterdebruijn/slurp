@@ -39,6 +39,10 @@ commands:
     description: Give a sip to a player
     usage: /givesip
     permission: slurp.givesip
+  setvalue:
+    description: Change a configuration value
+    usage: /setvalue
+    permission: slurp.setvalue
   takeshot:
     description: Take a shot
     usage: /takeshot

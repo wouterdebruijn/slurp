@@ -118,7 +118,7 @@ public class SlurpConfig {
     /**
      * Set a value in the config. Only applicable to Chance, Sips or Shots
      *
-     * @param val ConfigValue's data to be stored in the config.
+     * @param val   ConfigValue's data to be stored in the config.
      * @param value Integer value to be stored in the config.
      */
     public static void setValue(ConfigValue val, int value) {

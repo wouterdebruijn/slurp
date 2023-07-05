@@ -1,7 +1,5 @@
 package nl.wouterdebruijn.slurp.helper;
 
-import org.jetbrains.annotations.Nullable;
-
 public enum ConfigValue {
 
     CHANCES_LUCYSTONE("chances.lucyStone"),

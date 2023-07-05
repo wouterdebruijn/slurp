@@ -48,7 +48,7 @@ public class SlurpPlayerManager {
      * Checks if a SlurpPlayer is null and sends a message to the player if so.
      *
      * @param slurpPlayer Player where SlurpPlayer is derived from.
-     * @param slurper SlurpPlayer object to check if null
+     * @param slurper     SlurpPlayer object to check if null
      * @return True is the SlurpPlayer is null, false if it is not.
      */
     public static boolean checkNull(Player slurpPlayer, SlurpPlayer slurper) {

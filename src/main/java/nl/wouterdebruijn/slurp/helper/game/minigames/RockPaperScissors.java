@@ -33,6 +33,7 @@ public class RockPaperScissors {
     private final Participant player1;
     private final Participant player2;
     private int stakes = 1; // The amount of sips the loser has to take.
+
     public RockPaperScissors(Player p1, Player p2) {
         this.player1 = new Participant(p1, this);
         this.player2 = new Participant(p2, this);

@@ -5,8 +5,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.helper.ConfigValue;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,7 +43,7 @@ public class ConfigCmd implements CommandExecutor, TabCompleter {
                             .append(Component.text(cValue.name().toLowerCase(), NamedTextColor.DARK_GRAY))
                             .append(Component.text(" with value ", NamedTextColor.GRAY))
                             .append(Component.text(numValue, NamedTextColor.DARK_GRAY))
-                            .append(Component.text("!",NamedTextColor.GRAY));
+                            .append(Component.text("!", NamedTextColor.GRAY));
                     sender.sendMessage(TextBuilder.info(text));
                 }
             } else {

@@ -7,47 +7,50 @@ authors: [ Wouter de Bruijn, Sjors van Holst ]
 description: A Minecraft plugin that will make you and your friends slurp the good stuff.
 website: slurp.krijninc.dev
 commands:
-  join:
-    description: Join a slurp game
-    usage: /join
-    permission: slurp.join
+  # Admin commands
   create:
     description: Create a slurp game
     usage: /create
-    permission: slurp.create
+    permission: slurp.admin
   debug:
     description: Debug a slurp game
     usage: /debug
-    permission: slurp.debug
+    permission: slurp.admin
   drinkingbuddyreset:
     description: Reset the drinking buddy
     usage: /drinkingbuddyreset
-    permission: slurp.drinkingbuddyreset
+    permission: slurp.admin
   create_entry:
     description: Create a slurp entry
     usage: /create_entry
-    permission: slurp.create_entry
-  leave:
-    description: Leave a slurp game
-    usage: /leave
-    permission: slurp.leave
-  giveshot:
-    description: Give a shot to a player
-    usage: /giveshot
-    permission: slurp.giveshot
-  givesip:
-    description: Give a sip to a player
-    usage: /givesip
-    permission: slurp.givesip
+    permission: slurp.admin
   setvalue:
     description: Change a configuration value
     usage: /setvalue <value-to-set> <numeric-value>
-    permission: slurp.setvalue
+    permission: slurp.admin
+
+    # Player commands
+  join:
+    description: Join a slurp game
+    usage: /join
+    permission: slurp.drinker
+  leave:
+    description: Leave a slurp game
+    usage: /leave
+    permission: slurp.drinker
+  giveshot:
+    description: Give a shot to a player
+    usage: /giveshot
+    permission: slurp.drinker
+  givesip:
+    description: Give a sip to a player
+    usage: /givesip
+    permission: slurp.drinker
   takeshot:
     description: Take a shot
     usage: /takeshot
-    permission: slurp.takeshot
+    permission: slurp.drinker
   takesip:
     description: Take a sip
     usage: /takesip
-    permission: slurp.takesip
+    permission: slurp.drinker

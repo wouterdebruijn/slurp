@@ -6,10 +6,12 @@ import nl.wouterdebruijn.slurp.command.entry.GiveSip;
 import nl.wouterdebruijn.slurp.command.entry.TakeShot;
 import nl.wouterdebruijn.slurp.command.entry.TakeSip;
 import nl.wouterdebruijn.slurp.command.session.*;
+import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.listener.*;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,7 +40,12 @@ public final class Slurp extends JavaPlugin {
 
         SlurpConfig.initialize();
 
-//      Register commands
+        // Register permissions
+        for (Permissions permission : Permissions.values()) {
+            Bukkit.getPluginManager().addPermission(permission.getBukkitPermission());
+        }
+
+        // Register commands
         Objects.requireNonNull(getCommand("join")).setExecutor(new Join());
         Objects.requireNonNull(getCommand("create")).setExecutor(new Create());
         Objects.requireNonNull(getCommand("debug")).setExecutor(new Debug());
@@ -53,7 +60,7 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("takeshot")).setExecutor(new TakeShot());
         Objects.requireNonNull(getCommand("takesip")).setExecutor(new TakeSip());
 
-//      Register listeners
+        // Register listeners
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new BlockBreakListener(), this);
         pm.registerEvents(new FurnaceExtractListener(), this);
@@ -61,7 +68,7 @@ public final class Slurp extends JavaPlugin {
         pm.registerEvents(new PlayerDamageListener(), this);
         pm.registerEvents(new PlayerDiesListener(), this);
         pm.registerEvents(new PlayerKillAnimalListener(), this);
-//        pm.registerEvents(new PlayerMovementListener(), this);
+        //pm.registerEvents(new PlayerMovementListener(), this);
         pm.registerEvents(new SlurpSessionSubscriptionListener(), this);
     }
 }

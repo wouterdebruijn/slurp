@@ -1,7 +1,6 @@
 package nl.wouterdebruijn.slurp.helper;
 
 public enum ConfigValue {
-
     CHANCES_LUCYSTONE("chances.lucyStone"),
     CHANCES_BURNING_HANDS("chances.burnHands"),
     CHANCES_CHOKING("chances.choking"),

@@ -12,6 +12,7 @@ import nl.wouterdebruijn.slurp.helper.game.filestorage.SlurpPlayerFileAdapter;
 import nl.wouterdebruijn.slurp.helper.game.manager.ScoreboardManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.infra.Subject;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -93,8 +94,22 @@ public class SlurpPlayer extends Subject {
         return session;
     }
 
+    /**
+     * Get the username of the player
+     * @return The username
+     * @deprecated Use {@link #getPlayer()} instead
+     */
+    @Deprecated
     public String getUsername() {
         return username;
+    }
+
+    /**
+     * Get the bukkit player matching this slurp player
+     * @return The bukkit player, or null if not found
+     */
+    public Player getPlayer() {
+        return Bukkit.getPlayer(this.username);
     }
 
     public Consumable getTaken() {

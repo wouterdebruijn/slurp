@@ -22,7 +22,7 @@ public class FurnaceBurnEvent extends GameEvent implements Listener {
     }
 
     @EventHandler
-    public void onFurnaceBurn(FurnaceExtractEvent event) {
+    public void onEvent(FurnaceExtractEvent event) {
         Player player = event.getPlayer();
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 

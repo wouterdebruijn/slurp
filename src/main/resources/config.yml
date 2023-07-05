@@ -34,5 +34,5 @@ game-events:
     consumables:
       - type: SIP
         amount: 5
-        target: ALL
+        target: PLAYER
         giveable: false

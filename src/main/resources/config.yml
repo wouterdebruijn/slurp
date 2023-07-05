@@ -3,3 +3,17 @@ api:
 
 chat:
   prefix: "§8[§6Slurp§8] §r"
+
+game:
+  sip-shot-ratio: 5
+  difficulty-multiplier: 1
+
+game-events:
+  furnace-burn:
+    enabled: true
+    chance: 1
+    message: "%player% burned their hand on the furnace! They take a shot!"
+    consumables:
+      - type: shot
+        amount: 1
+        target: player

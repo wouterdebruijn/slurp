@@ -10,6 +10,7 @@ import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.events.FurnaceBurnEvent;
 import nl.wouterdebruijn.slurp.helper.game.events.GameEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.LucyStoneEvent;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
@@ -87,5 +88,6 @@ public final class Slurp extends JavaPlugin {
         // New GameEvent API
         FileConfiguration config = getConfig();
         gameEvents.add(new FurnaceBurnEvent(config).register(this));
+        gameEvents.add(new LucyStoneEvent(config).register(this));
     }
 }

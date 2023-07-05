@@ -11,9 +11,17 @@ game:
 game-events:
   furnace-burn:
     enabled: true
-    chance: 1
-    message: "%player% burned their hand on the furnace! They take a shot!"
+    chance: 4096
+    message: "§e%player% burned their hand on the furnace! They take a shot!"
     consumables:
-      - type: shot
+      - type: SHOT
         amount: 1
-        target: player
+        target: PLAYER
+  lucy-stone:
+    enabled: true
+    chance: 8192
+    message: "§e%player% just found a §6lucystone! §eEveryone takes a shot!"
+    consumables:
+      - type: SHOT
+        amount: 1
+        target: ALL

@@ -61,7 +61,7 @@ public final class Slurp extends JavaPlugin {
         pm.registerEvents(new PlayerDamageListener(), this);
         pm.registerEvents(new PlayerDiesListener(), this);
         pm.registerEvents(new PlayerKillAnimalListener(), this);
-        pm.registerEvents(new PlayerMovementListener(), this);
+//        pm.registerEvents(new PlayerMovementListener(), this);
         pm.registerEvents(new SlurpSessionSubscriptionListener(), this);
     }
 }

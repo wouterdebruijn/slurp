@@ -8,7 +8,10 @@ import nl.wouterdebruijn.slurp.exceptions.ApiUrlException;
 import nl.wouterdebruijn.slurp.exceptions.CreateSessionException;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.api.ResponseSession;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,6 +19,8 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
 public class SlurpSession {
@@ -90,5 +95,44 @@ public class SlurpSession {
 
     public boolean isActive() {
         return active;
+    }
+
+    public ArrayList<SlurpPlayer> getRandomPlayersInSession(int amount) {
+        ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        ArrayList<SlurpPlayer> chosenPlayers = new ArrayList<>();
+
+        // Only run if we have one more player than the amount of drinking buddies
+        if (players.size() < amount + 1)
+            return null;
+
+        int tries = 0;
+
+        while (chosenPlayers.size() < amount && players.size() > 0) {
+            // If we tried 100 times, stop
+            if (tries++ > 100) {
+                Slurp.logger.warning("Could not find enough players for drinking buddy event");
+                return null;
+            }
+
+            // Get random player
+            int randomIndex = ThreadLocalRandom.current().nextInt(players.size());
+            Player player = players.get(randomIndex);
+            players.remove(randomIndex);
+
+            SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player, this);
+
+            if (slurpPlayer == null) {
+                continue;
+            }
+
+            // Add player to chosen players
+            chosenPlayers.add(slurpPlayer);
+        }
+
+        if (chosenPlayers.size() < amount) {
+            return null;
+        }
+
+        return chosenPlayers;
     }
 }

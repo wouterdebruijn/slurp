@@ -23,7 +23,7 @@ public class DrinkingBuddyReset implements TabExecutor {
             return true;
         }
 
-        DrinkingBuddyManager.restartDrinkingBuddyEvent(slurpPlayer.getSession());
+        DrinkingBuddyManager.restartDrinkingBuddyTask(slurpPlayer.getSession());
 
         player.sendMessage(TextBuilder.success("Drinking buddy event restarted"));
 

@@ -30,7 +30,7 @@ public class SlurpSessionSubscriptionListener implements Listener {
 
         ScoreboardManager.playerScoreboard(player);
         SlurpSessionManager.subscribeToSession(session);
-        DrinkingBuddyManager.enableDrinkingBuddyEvent(session);
+        DrinkingBuddyManager.enableDrinkingBuddyTask(session);
     }
 
     @EventHandler
@@ -62,6 +62,6 @@ public class SlurpSessionSubscriptionListener implements Listener {
         }
 
         SlurpSessionManager.unsubscribeFromSession(session);
-        DrinkingBuddyManager.disableDrinkingBuddyEvent(session);
+        DrinkingBuddyManager.disableDrinkingBuddyTask(session);
     }
 }

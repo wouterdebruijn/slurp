@@ -25,3 +25,11 @@ game-events:
       - type: SHOT
         amount: 1
         target: ALL
+  choking-player:
+    enabled: true
+    chance: 64
+    message: "§e%player% choked on their food! They take 5 sips!"
+    consumables:
+      - type: SIP
+        amount: 5
+        target: ALL

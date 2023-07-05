@@ -12,7 +12,9 @@ import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -24,6 +26,18 @@ public class ConsumableGivingHandler {
 
     public static String getTextShots(int shots) {
         return shots == 1 ? "shot" : "shots";
+    }
+
+    public static Component getConsumableText(int sips, int shots) {
+        if (sips > 0 && shots > 0) {
+            return Component.text(String.format("%d %s and %d %s", sips, getTextSips(sips), shots, getTextShots(shots)));
+        } else if (sips > 0) {
+            return Component.text(String.format("%d %s", sips, getTextSips(sips)));
+        } else if (shots > 0) {
+            return Component.text(String.format("%d %s", shots, getTextShots(shots)));
+        } else {
+            return Component.text("nothing");
+        }
     }
 
     public static CompletableFuture<ArrayList<SlurpEntry>> playerGiveConsumable(Player target, Player origin, SlurpEntryBuilder entry) {

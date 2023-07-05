@@ -97,7 +97,7 @@ public class SlurpEntry {
                 // Prepare futures
                 CompletableFuture[] futures = new CompletableFuture[buddies.size()];
                 for (SlurpPlayer buddy : buddies) {
-                    futures[buddies.indexOf(buddy)] = createDirect(entry, token);
+                    futures[buddies.indexOf(buddy)] = createDirect(entry.copyForPlayer(buddy), token);
                 }
 
                 // Wait for all drinking buddies entries to be posted.

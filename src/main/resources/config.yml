@@ -17,6 +17,7 @@ game-events:
       - type: SHOT
         amount: 1
         target: PLAYER
+        giveable: false
   lucy-stone:
     enabled: true
     chance: 8192
@@ -25,6 +26,7 @@ game-events:
       - type: SHOT
         amount: 1
         target: ALL
+        giveable: false
   choking-player:
     enabled: true
     chance: 64
@@ -33,3 +35,4 @@ game-events:
       - type: SIP
         amount: 5
         target: ALL
+        giveable: false

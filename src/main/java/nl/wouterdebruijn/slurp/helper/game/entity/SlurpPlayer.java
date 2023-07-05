@@ -96,6 +96,7 @@ public class SlurpPlayer extends Subject {
 
     /**
      * Get the username of the player
+     *
      * @return The username
      * @deprecated Use {@link #getPlayer()} instead
      */
@@ -106,6 +107,7 @@ public class SlurpPlayer extends Subject {
 
     /**
      * Get the bukkit player matching this slurp player
+     *
      * @return The bukkit player, or null if not found
      */
     public Player getPlayer() {

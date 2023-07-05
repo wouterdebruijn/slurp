@@ -22,6 +22,87 @@ import java.util.concurrent.CompletableFuture;
  */
 public class DrinkingBuddyManager {
     /**
+     * The list of drinking buddies for each session.
+     */
+    static final HashMap<String, ArrayList<SlurpPlayer>> drinkingBuddies = new HashMap<>();
+    /**
+     * List of active drinking buddy tasks.
+     */
+    static final ArrayList<DrinkingBuddyTask> drinkingBuddyTasks = new ArrayList<>();
+
+    /**
+     * Enable the drinking buddy event for a session.
+     *
+     * @param session The session to enable the event for.
+     */
+    public static void enableDrinkingBuddyTask(SlurpSession session) {
+        // Check if event is already enabled
+        for (DrinkingBuddyTask task : drinkingBuddyTasks) {
+            if (task.getSessionId().equals(session.getUuid())) {
+                return;
+            }
+        }
+
+        DrinkingBuddyTask task = new DrinkingBuddyTask(session);
+        task.enable();
+        drinkingBuddyTasks.add(task);
+    }
+
+    /**
+     * Disable the drinking buddy event for a session.
+     *
+     * @param session The session to disable the event for.
+     */
+    public static void disableDrinkingBuddyTask(SlurpSession session) {
+        for (DrinkingBuddyTask event : drinkingBuddyTasks) {
+            if (event.getSessionId().equals(session.getUuid())) {
+                event.disable();
+                drinkingBuddyTasks.remove(event);
+                deleteDrinkingBuddies(session);
+                return;
+            }
+        }
+    }
+
+    public static void restartDrinkingBuddyTask(SlurpSession session) {
+        disableDrinkingBuddyTask(session);
+        enableDrinkingBuddyTask(session);
+    }
+
+    private static void setDrinkingBuddies(SlurpSession session, ArrayList<SlurpPlayer> players) {
+        drinkingBuddies.put(session.getUuid(), players);
+    }
+
+    private static void deleteDrinkingBuddies(SlurpSession session) {
+        drinkingBuddies.remove(session.getUuid());
+    }
+
+    public static ArrayList<SlurpPlayer> getDrinkingBuddies(SlurpSession session) {
+        ArrayList<SlurpPlayer> buddies = drinkingBuddies.get(session.getUuid());
+        if (buddies == null) {
+            return new ArrayList<>();
+        }
+        return buddies;
+    }
+
+    /**
+     * Return the list of drinking buddies of the given player, excluding the player itself.
+     */
+    public static ArrayList<SlurpPlayer> getBuddiesOfPlayer(SlurpPlayer player) {
+        // Get drinking buddies and create copy of the list.
+        ArrayList<SlurpPlayer> buddies = new ArrayList<>(getDrinkingBuddies(player.getSession()));
+
+        for (SlurpPlayer buddy : buddies) {
+            if (buddy.getUuid().equals(player.getUuid())) {
+                // Remove the player itself from the list
+                buddies.remove(buddy);
+                return buddies;
+            }
+        }
+        return null;
+    }
+
+    /**
      * The drinking buddy task which chooses different drinking buddies every couple of minutes.
      * Adapting the bukkit task linking it to a SlurpSession.
      */
@@ -96,85 +177,5 @@ public class DrinkingBuddyManager {
         public void disable() {
             bukkitTask.cancel();
         }
-    }
-
-    /**
-     * The list of drinking buddies for each session.
-     */
-    static final HashMap<String, ArrayList<SlurpPlayer>> drinkingBuddies = new HashMap<>();
-
-    /**
-     * List of active drinking buddy tasks.
-     */
-    static final ArrayList<DrinkingBuddyTask> drinkingBuddyTasks = new ArrayList<>();
-
-    /**
-     * Enable the drinking buddy event for a session.
-     * @param session The session to enable the event for.
-     */
-    public static void enableDrinkingBuddyTask(SlurpSession session) {
-        // Check if event is already enabled
-        for (DrinkingBuddyTask task : drinkingBuddyTasks) {
-            if (task.getSessionId().equals(session.getUuid())) {
-                return;
-            }
-        }
-
-        DrinkingBuddyTask task = new DrinkingBuddyTask(session);
-        task.enable();
-        drinkingBuddyTasks.add(task);
-    }
-
-    /**
-     * Disable the drinking buddy event for a session.
-     * @param session The session to disable the event for.
-     */
-    public static void disableDrinkingBuddyTask(SlurpSession session) {
-        for (DrinkingBuddyTask event : drinkingBuddyTasks) {
-            if (event.getSessionId().equals(session.getUuid())) {
-                event.disable();
-                drinkingBuddyTasks.remove(event);
-                deleteDrinkingBuddies(session);
-                return;
-            }
-        }
-    }
-
-    public static void restartDrinkingBuddyTask(SlurpSession session) {
-        disableDrinkingBuddyTask(session);
-        enableDrinkingBuddyTask(session);
-    }
-
-    private static void setDrinkingBuddies(SlurpSession session, ArrayList<SlurpPlayer> players) {
-        drinkingBuddies.put(session.getUuid(), players);
-    }
-
-    private static void deleteDrinkingBuddies(SlurpSession session) {
-        drinkingBuddies.remove(session.getUuid());
-    }
-
-    public static ArrayList<SlurpPlayer> getDrinkingBuddies(SlurpSession session) {
-        ArrayList<SlurpPlayer> buddies = drinkingBuddies.get(session.getUuid());
-        if (buddies == null) {
-            return new ArrayList<>();
-        }
-        return buddies;
-    }
-
-    /**
-     * Return the list of drinking buddies of the given player, excluding the player itself.
-     */
-    public static ArrayList<SlurpPlayer> getBuddiesOfPlayer(SlurpPlayer player) {
-        // Get drinking buddies and create copy of the list.
-        ArrayList<SlurpPlayer> buddies = new ArrayList<>(getDrinkingBuddies(player.getSession()));
-
-        for (SlurpPlayer buddy : buddies) {
-            if (buddy.getUuid().equals(player.getUuid())) {
-                // Remove the player itself from the list
-                buddies.remove(buddy);
-                return buddies;
-            }
-        }
-        return null;
     }
 }

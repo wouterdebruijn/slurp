@@ -41,7 +41,7 @@ commands:
     permission: slurp.givesip
   setvalue:
     description: Change a configuration value
-    usage: /setvalue
+    usage: /setvalue <value-to-set> <numeric-value>
     permission: slurp.setvalue
   takeshot:
     description: Take a shot

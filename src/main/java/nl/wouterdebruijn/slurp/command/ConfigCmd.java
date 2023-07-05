@@ -19,38 +19,40 @@ public class ConfigCmd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("setvalue")) {
-            if (args.length == 2) {
-                String configValue = args[0];
-                ConfigValue cValue = null;
-                for (ConfigValue cv : ConfigValue.values()) {
-                    if (cv.name().equalsIgnoreCase(configValue)) {
-                        cValue = cv;
-                    }
-                }
-                String numValue = args[1];
-                int numVal = 0;
-                try {
-                    numVal = Integer.parseInt(numValue);
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(TextBuilder.error("Second argument must be a number!"));
-                }
-                if (cValue == null) {
-                    sender.sendMessage(TextBuilder.error("You have not entered a correct value! Hint: use tab complete"));
-                } else {
-                    SlurpConfig.setValue(cValue, numVal);
-                    Component text = Component.text("You have succesfully saved property ", NamedTextColor.GRAY)
-                            .append(Component.text(cValue.name().toLowerCase(), NamedTextColor.DARK_GRAY))
-                            .append(Component.text(" with value ", NamedTextColor.GRAY))
-                            .append(Component.text(numValue, NamedTextColor.DARK_GRAY))
-                            .append(Component.text("!", NamedTextColor.GRAY));
-                    sender.sendMessage(TextBuilder.info(text));
-                }
-            } else {
-                sender.sendMessage(TextBuilder.info("Incorrect usage. /setvalue <value-to-set> <numeric-value>"));
+        if (args.length != 2) return false;
+
+        String key = args[0];
+        ConfigValue configValue = null;
+
+        for (ConfigValue cv : ConfigValue.values()) {
+            if (cv.name().equalsIgnoreCase(key)) {
+                configValue = cv;
             }
         }
-        return false;
+
+        if (configValue == null) {
+            sender.sendMessage(TextBuilder.error("You have not entered a correct value! Hint: use tab complete"));
+            return true;
+        }
+
+        int numberValue = 0;
+
+        try {
+            numberValue = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(TextBuilder.error("The second argument must be a number!"));
+            return true;
+        }
+
+        SlurpConfig.setValue(configValue, numberValue);
+
+        Component text = Component.text("You have succesfully saved property ", NamedTextColor.GRAY)
+                .append(Component.text(configValue.name().toLowerCase(), NamedTextColor.DARK_GRAY))
+                .append(Component.text(" with value ", NamedTextColor.GRAY))
+                .append(Component.text(numberValue, NamedTextColor.DARK_GRAY))
+                .append(Component.text("!", NamedTextColor.GRAY));
+        sender.sendMessage(TextBuilder.success(text));
+        return true;
     }
 
     @Override

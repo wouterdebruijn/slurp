@@ -34,6 +34,7 @@ public final class Slurp extends JavaPlugin {
         Slurp.plugin.reloadConfig();
         FileConfiguration config = Slurp.plugin.getConfig();
         gameEvents.forEach(handler -> handler.reload(config));
+        Slurp.plugin.saveConfig();
     }
 
     @Override

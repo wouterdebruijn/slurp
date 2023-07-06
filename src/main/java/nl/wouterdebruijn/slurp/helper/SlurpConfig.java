@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class SlurpConfig {
     public static void initialize() {
+        // Load the users config file, using the default values for any missing config options
         Slurp.plugin.saveDefaultConfig();
     }
 

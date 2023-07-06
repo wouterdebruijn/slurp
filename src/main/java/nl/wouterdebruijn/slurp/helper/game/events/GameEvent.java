@@ -60,9 +60,8 @@ public abstract class GameEvent {
      * @param config The Slurp config to read from, event is searched for by eventnamename
      */
     protected void readConfig(FileConfiguration config) {
-        if (!config.isConfigurationSection(getPath())) {
-            Slurp.logger.warning("Could not find config section for event " + name);
-            return;
+        if (!config.contains(getPath())) {
+            Slurp.logger.warning(String.format("Could not find event %s in config.yml", name));
         }
 
         this.enabled = config.getBoolean(getPath() + ".enabled");
@@ -97,12 +96,12 @@ public abstract class GameEvent {
                 boolean giveable = Boolean.parseBoolean(map.get("giveable").toString());
 
                 GameEventConsumable consumable = new GameEventConsumable(GameEventConsumable.ConsumableType.valueOf(type.toUpperCase()), amount, giveable, GameEventConsumable.ConsumableTarget.valueOf(target.toUpperCase()));
-                Slurp.logger.info(consumable.toString());
                 consumables.add(consumable);
             } catch (NullPointerException e) {
                 Slurp.logger.warning("Invalid consumable '" + list.indexOf(object) + "' for event " + name);
             }
         }
+        Slurp.logger.info("Loaded event " + name + this.enabled);
     }
 
     /**

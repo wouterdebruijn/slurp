@@ -74,3 +74,12 @@ game-events:
         amount: 5
         target: PLAYER
         giveable: true
+  gold-ore:
+    enabled: true
+    chance: 8
+    message: "§e%player% found some gold ore! They can give out 5 sips!"
+    consumables:
+      - type: SIP
+        amount: 5
+        target: PLAYER
+        giveable: true

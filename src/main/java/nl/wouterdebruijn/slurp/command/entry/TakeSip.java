@@ -1,7 +1,6 @@
 package nl.wouterdebruijn.slurp.command.entry;
 
 import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
@@ -18,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Lets the player take a sip. Updating the Slurp API

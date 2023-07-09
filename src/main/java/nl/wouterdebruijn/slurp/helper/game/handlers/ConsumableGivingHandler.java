@@ -1,22 +1,17 @@
 package nl.wouterdebruijn.slurp.helper.game.handlers;
 
 import net.kyori.adventure.text.Component;
-import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
 
 public class ConsumableGivingHandler {
     public static String getTextSips(int sips) {

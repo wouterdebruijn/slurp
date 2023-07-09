@@ -55,6 +55,7 @@ public abstract class GameEvent {
 
     /**
      * Use the events random chance to determine if the event should trigger
+     *
      * @param modifier The modifier to apply to the chance
      * @return True if the event chance is met
      */
@@ -65,6 +66,7 @@ public abstract class GameEvent {
 
     /**
      * Use the events random chance to determine if the event should trigger
+     *
      * @return True if the event chance is met
      */
     protected boolean chanceTrigger() {

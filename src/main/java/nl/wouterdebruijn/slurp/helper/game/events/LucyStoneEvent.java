@@ -1,7 +1,6 @@
 package nl.wouterdebruijn.slurp.helper.game.events;
 
 import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.helper.RandomGenerator;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.Material;

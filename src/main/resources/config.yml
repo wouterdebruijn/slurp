@@ -36,3 +36,12 @@ game-events:
         amount: 5
         target: PLAYER
         giveable: false
+  broken-legs:
+    enabled: true
+    chance: 64
+    message: "§e%player% broke their legs! They take 5 sips!"
+    consumables:
+      - type: SIP
+        amount: 5
+        target: PLAYER
+        giveable: false

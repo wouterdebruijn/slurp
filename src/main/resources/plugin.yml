@@ -62,3 +62,11 @@ commands:
     description: Play rock paper scissors
     usage: /rockpaperscissors
     permission: slurp.drinker
+  convertshot:
+    description: Convert a shot to sips
+    usage: /convertshot
+    permission: slurp.drinker
+  convertsip:
+    description: Convert a sip to shots
+    usage: /convertsip
+    permission: slurp.drinker

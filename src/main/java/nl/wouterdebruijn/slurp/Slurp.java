@@ -1,10 +1,7 @@
 package nl.wouterdebruijn.slurp;
 
 import nl.wouterdebruijn.slurp.command.ConfigCmd;
-import nl.wouterdebruijn.slurp.command.entry.GiveShot;
-import nl.wouterdebruijn.slurp.command.entry.GiveSip;
-import nl.wouterdebruijn.slurp.command.entry.TakeShot;
-import nl.wouterdebruijn.slurp.command.entry.TakeSip;
+import nl.wouterdebruijn.slurp.command.entry.*;
 import nl.wouterdebruijn.slurp.command.session.*;
 import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
@@ -72,6 +69,9 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("takeshot")).setExecutor(new TakeShot());
         Objects.requireNonNull(getCommand("takesip")).setExecutor(new TakeSip());
         Objects.requireNonNull(getCommand("rockpaperscissors")).setExecutor(new PlayRockPaperScissors());
+
+        Objects.requireNonNull(getCommand("convertshot")).setExecutor(new ConvertShot());
+        Objects.requireNonNull(getCommand("convertsip")).setExecutor(new ConvertSip());
 
         // Register listeners
         PluginManager pm = getServer().getPluginManager();

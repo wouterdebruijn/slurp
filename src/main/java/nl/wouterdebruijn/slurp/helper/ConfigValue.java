@@ -1,7 +1,8 @@
 package nl.wouterdebruijn.slurp.helper;
 
 public enum ConfigValue {
-    DIFFICULTY_MULTIPLIER("game.difficulty-multiplier");
+    DIFFICULTY_MULTIPLIER("game.difficulty-multiplier"),
+    SIP_SHOT_RATIO("game.sip-shot-ratio");
 
     private final String confPath;
 

@@ -82,33 +82,4 @@ public class ConsumableGivingHandler {
             return CompletableFuture.failedFuture(e);
         }
     }
-
-    public static CompletableFuture<ArrayList<SlurpEntry>> serverGiveConsumable(Player target, SlurpEntryBuilder entry) {
-        SlurpPlayer slurpTarget = SlurpPlayerManager.getPlayer(target);
-
-        if (slurpTarget == null) {
-            return CompletableFuture.failedFuture(new SlurpMessageException("You or the target are not in a session!"));
-        }
-
-        SlurpSession serverSession = SlurpSessionManager.getSession(slurpTarget.getSession().getUuid());
-
-        if (serverSession == null) {
-            return CompletableFuture.failedFuture(new SlurpMessageException("You or the target are not in a session!"));
-        }
-        return SlurpEntry.create(entry, serverSession.getToken());
-    }
-
-    public static void giveUnifiedSlurp(Player trigger, SlurpEntryBuilder entry) {
-        SlurpPlayer triggerSP = SlurpPlayerManager.getPlayer(trigger);
-        SlurpSession serverSesh = SlurpSessionManager.getSession(triggerSP.getSession().getUuid());
-        if (serverSesh != null) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                SlurpPlayer sp = SlurpPlayerManager.getPlayer(p);
-                if (sp == null) continue;
-                SlurpEntry.createDirect(entry.copyForPlayer(sp), serverSesh.getToken());
-            }
-        } else {
-            Slurp.logger.log(Level.SEVERE, "Could not retrieve session!");
-        }
-    }
 }

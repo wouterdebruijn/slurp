@@ -85,5 +85,7 @@ public final class Slurp extends JavaPlugin {
         gameEvents.add(new PlayerKillsEvent(config).register(this));
         gameEvents.add(new PlayerDiesEvent(config).register(this));
 
+        gameEvents.add(new IronOreEvent(config).register(this));
+
     }
 }

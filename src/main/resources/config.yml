@@ -65,3 +65,12 @@ game-events:
         amount: 1
         target: PLAYER
         giveable: false
+  iron-ore:
+    enabled: true
+    chance: 16
+    message: "§e%player% found some iron ore! They can give out 5 sips!"
+    consumables:
+      - type: SIP
+        amount: 5
+        target: PLAYER
+        giveable: true

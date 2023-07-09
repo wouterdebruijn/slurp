@@ -1,6 +1,8 @@
 package nl.wouterdebruijn.slurp.command.entry;
 
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.ConfigValue;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
@@ -44,12 +46,34 @@ public class TakeSip implements TabExecutor {
             return true;
         }
 
-        // TODO: @wouterdebruijn: Dynamically convert any remaining shots to sips if the user takes to many. This requires the global config shot/sip ratio
+        int shots = 0;
+        if (amount > slurpPlayer.getRemaining().getSips()) {
+            int remainingAmount = amount - slurpPlayer.getRemaining().getSips();
+            int originalAmount = amount;
+            amount = slurpPlayer.getRemaining().getSips();
+
+            // Convert the remaining amount to sips
+            int spare = remainingAmount % SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO);
+            shots = (remainingAmount - spare) / SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO);
+
+            if (shots < 1) {
+                // Don't convert to shots if the player doesn't have enough sips, just take the sips (go negative)
+                amount = originalAmount;
+                shots = 0;
+            }
+
+            if (shots > slurpPlayer.getRemaining().getShots()) {
+                shots = slurpPlayer.getRemaining().getShots();
+            }
+
+            player.sendMessage(TextBuilder.warning(String.format("You don't have enough shots! You took %d %s and %d %s instead!", amount, ConsumableGivingHandler.getTextSips(amount), shots, ConsumableGivingHandler.getTextShots(shots))));
+        } else {
+            player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextShots(amount))));
+        }
 
         // Give the target player the shots
-        SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+        SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(-amount, -shots, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> SlurpEntry.create(updateEntry, slurpPlayer.getSession().getToken()).join());
-        player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextSips(amount))));
 
         return true;
     }

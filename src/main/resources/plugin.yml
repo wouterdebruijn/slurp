@@ -28,7 +28,7 @@ commands:
     description: Change a configuration value
     usage: /setvalue <value-to-set> <numeric-value>
     permission: slurp.admin
-  reload:
+  slurpreload:
     description: Reload the plugin
     usage: /reload
     permission: slurp.admin

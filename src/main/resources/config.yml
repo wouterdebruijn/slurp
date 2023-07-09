@@ -83,3 +83,39 @@ game-events:
         amount: 5
         target: PLAYER
         giveable: true
+  diamond-ore:
+    enabled: true
+    chance: 4
+    message: "§e%player% found some diamond ore! A random player takes a shot!"
+    consumables:
+      - type: SHOT
+        amount: 1
+        target: RANDOM
+        giveable: false
+  lapis-ore:
+    enabled: true
+    chance: 4
+    message: "§e%player% found some lapis ore! Everyone takes 5 sips!"
+    consumables:
+      - type: SIP
+        amount: 5
+        target: ALL
+        giveable: false
+  emerald-ore:
+    enabled: true
+    chance: 2
+    message: "§e%player% found some emerald ore! %target% takes 5 sips!"
+    consumables:
+      - type: SHOT
+        amount: 1
+        target: RANDOM
+        giveable: false
+  redstone-ore:
+    enabled: true
+    chance: 16
+    message: "§e%player% found some redstone ore! They give out 8 sips!"
+    consumables:
+      - type: SIP
+        amount: 8
+        target: PLAYER
+        giveable: false

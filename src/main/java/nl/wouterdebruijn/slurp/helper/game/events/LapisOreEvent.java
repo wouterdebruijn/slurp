@@ -13,11 +13,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DiamondOreEvent extends GameEvent implements Listener {
-    private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE));
+public class LapisOreEvent extends GameEvent implements Listener {
+    private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.LAPIS_ORE, Material.DEEPSLATE_LAPIS_ORE));
 
-    public DiamondOreEvent(FileConfiguration config) {
-        super(config, "diamond-ore");
+    public LapisOreEvent(FileConfiguration config) {
+        super(config, "lapis-ore");
     }
 
     @Override

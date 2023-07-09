@@ -87,6 +87,10 @@ public final class Slurp extends JavaPlugin {
 
         gameEvents.add(new IronOreEvent(config).register(this));
         gameEvents.add(new GoldOreEvent(config).register(this));
+        gameEvents.add(new DiamondOreEvent(config).register(this));
+        gameEvents.add(new EmeraldOreEvent(config).register(this));
+        gameEvents.add(new LapisOreEvent(config).register(this));
+        gameEvents.add(new RedstoneOreEvent(config).register(this));
 
     }
 }

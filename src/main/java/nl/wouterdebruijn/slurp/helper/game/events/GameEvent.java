@@ -153,7 +153,8 @@ public abstract class GameEvent {
         CompletableFuture.allOf(futureArray).join();
     }
 
-    protected record GameEventConsumable(GameEvent.GameEventConsumable.ConsumableType type, int amount, boolean giveable,
+    protected record GameEventConsumable(GameEvent.GameEventConsumable.ConsumableType type, int amount,
+                                         boolean giveable,
                                          GameEvent.GameEventConsumable.ConsumableTarget target) {
         public Consumable toConsumable() {
             Consumable consumable = new Consumable();

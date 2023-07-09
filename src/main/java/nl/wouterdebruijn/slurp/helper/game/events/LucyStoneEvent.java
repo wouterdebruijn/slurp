@@ -10,13 +10,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.inventory.FurnaceExtractEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LucyStoneEvent extends GameEvent implements Listener {
     private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.STONE, Material.DEEPSLATE, Material.DIORITE, Material.GRANITE, Material.ANDESITE));
+
     public LucyStoneEvent(FileConfiguration config) {
         super(config, "lucy-stone");
     }

@@ -37,7 +37,7 @@ public class BrokenLegsEvent extends GameEvent implements Listener {
             return;
 
         // Check if the player has a chance to trigger the event
-        if (!RandomGenerator.hasChance(this.getChance()))
+        if (!this.chanceTrigger())
             return;
 
         // Trigger the event

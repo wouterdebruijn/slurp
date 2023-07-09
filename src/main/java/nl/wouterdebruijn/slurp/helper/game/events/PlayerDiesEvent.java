@@ -31,13 +31,13 @@ public class PlayerDiesEvent extends GameEvent implements Listener {
             return;
         }
 
-        // Check if the player has a killer
-        if (player.getKiller() == null) {
+        // Check if the player has a killer do not trigger the event
+        if (player.getKiller() != null) {
             return;
         }
 
         // Check if the player has a chance to trigger the event
-        if (!RandomGenerator.hasChance(this.getChance()))
+        if (!this.chanceTrigger())
             return;
 
         // Trigger the event

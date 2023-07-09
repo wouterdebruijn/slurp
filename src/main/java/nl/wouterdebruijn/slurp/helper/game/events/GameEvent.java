@@ -1,6 +1,9 @@
 package nl.wouterdebruijn.slurp.helper.game.events;
 
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.ConfigValue;
+import nl.wouterdebruijn.slurp.helper.RandomGenerator;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
@@ -50,8 +53,23 @@ public abstract class GameEvent {
         return String.format("%s.%s", CONFIG_PATH, name);
     }
 
-    protected int getChance() {
-        return chance;
+    /**
+     * Use the events random chance to determine if the event should trigger
+     * @param modifier The modifier to apply to the chance
+     * @return True if the event chance is met
+     */
+    protected boolean chanceTrigger(int modifier) {
+        float calculatedChance = ((float) this.chance / modifier / SlurpConfig.getValue(ConfigValue.DIFFICULTY_MULTIPLIER));
+        return RandomGenerator.hasChance((int) Math.ceil(calculatedChance));
+    }
+
+    /**
+     * Use the events random chance to determine if the event should trigger
+     * @return True if the event chance is met
+     */
+    protected boolean chanceTrigger() {
+        float calculatedChance = ((float) this.chance / SlurpConfig.getValue(ConfigValue.DIFFICULTY_MULTIPLIER));
+        return RandomGenerator.hasChance((int) Math.ceil(calculatedChance));
     }
 
     /**
@@ -109,7 +127,7 @@ public abstract class GameEvent {
      *
      * @param player The player to trigger the event for
      */
-    protected void triggerFor(SlurpPlayer player) {
+    public void triggerFor(SlurpPlayer player) {
         Slurp.logger.info("Triggering event " + name + " for player " + player.getPlayer().getName());
         if (!enabled) return;
 
@@ -149,8 +167,7 @@ public abstract class GameEvent {
         CompletableFuture[] futureArray = new CompletableFuture[futures.size()];
         futures.toArray(futureArray);
 
-        // Wait for all futures to complete, creating all entries
-        CompletableFuture.allOf(futureArray).join();
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> CompletableFuture.allOf(futureArray).join());
     }
 
     protected record GameEventConsumable(GameEvent.GameEventConsumable.ConsumableType type, int amount,

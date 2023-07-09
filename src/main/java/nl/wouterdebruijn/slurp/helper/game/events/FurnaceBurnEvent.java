@@ -33,9 +33,7 @@ public class FurnaceBurnEvent extends GameEvent implements Listener {
         }
 
         // The change is divided by the amount of items, so that the chance is the same for every item in the stack
-        float calculatedChance = ((float) this.getChance() / amount);
-
-        if (!RandomGenerator.hasChance((int) Math.ceil(calculatedChance)))
+        if (!chanceTrigger(amount))
             return;
 
         this.triggerFor(slurpPlayer);

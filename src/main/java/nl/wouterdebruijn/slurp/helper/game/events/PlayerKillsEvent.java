@@ -12,7 +12,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class PlayerKillsEvent extends GameEvent implements Listener {
     public PlayerKillsEvent(FileConfiguration config) {
-        super(config, "player-death");
+        super(config, "player-kill");
     }
 
     @Override
@@ -24,20 +24,22 @@ public class PlayerKillsEvent extends GameEvent implements Listener {
     @EventHandler
     public void onEvent(PlayerDeathEvent event) {
         Player player = event.getPlayer();
-        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
-        if (SlurpPlayerManager.checkNull(player, slurpPlayer)) {
-            return;
-        }
-
-        // Check if the player has a killer
+        // Only trigger the event if the player has a killer
         if (player.getKiller() == null) {
             return;
         }
 
         // Check if the player has a chance to trigger the event
-        if (!RandomGenerator.hasChance(this.getChance()))
+        if (!this.chanceTrigger())
             return;
+
+        Player killer = player.getKiller();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(killer);
+
+        if (SlurpPlayerManager.checkNull(player, slurpPlayer)) {
+            return;
+        }
 
         // Trigger the event
         this.triggerFor(slurpPlayer);

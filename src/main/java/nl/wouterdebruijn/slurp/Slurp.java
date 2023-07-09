@@ -8,10 +8,7 @@ import nl.wouterdebruijn.slurp.command.entry.TakeSip;
 import nl.wouterdebruijn.slurp.command.session.*;
 import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.game.events.ChokingPlayerEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.FurnaceBurnEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.GameEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.LucyStoneEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.*;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
@@ -79,18 +76,14 @@ public final class Slurp extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new SlurpSessionSubscriptionListener(), this);
 
-        // pm.registerEvents(new BlockBreakListener(), this);
-        // pm.registerEvents(new PlayerConsumeListener(), this);
-        // pm.registerEvents(new PlayerDamageListener(), this);
-        // pm.registerEvents(new PlayerDiesListener(), this);
-        // pm.registerEvents(new PlayerKillAnimalListener(), this);
-        // pm.registerEvents(new PlayerMovementListener(), this);
-        // pm.registerEvents(new FurnaceExtractListener(), this);
-
         // New GameEvent API
         FileConfiguration config = getConfig();
         gameEvents.add(new FurnaceBurnEvent(config).register(this));
         gameEvents.add(new LucyStoneEvent(config).register(this));
         gameEvents.add(new ChokingPlayerEvent(config).register(this));
+        gameEvents.add(new BrokenLegsEvent(config).register(this));
+        gameEvents.add(new PlayerKillsEvent(config).register(this));
+        gameEvents.add(new PlayerDiesEvent(config).register(this));
+
     }
 }

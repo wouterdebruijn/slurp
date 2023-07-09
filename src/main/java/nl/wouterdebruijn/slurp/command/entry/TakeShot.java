@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.command.entry;
 
+import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
@@ -7,6 +8,7 @@ import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.handlers.ConsumableGivingHandler;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -16,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -46,21 +49,11 @@ public class TakeShot implements TabExecutor {
 
         // TODO: @wouterdebruijn: Dynamically convert any remaining sips to shots if the user takes to many. This requires the global config shot/sip ratio
 
-        try {
-            // Give the target player the shots
-            SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-            SlurpEntry.create(updateEntry, slurpPlayer.getSession().getToken()).get();
-            player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextShots(amount))));
-        } catch (ExecutionException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof SlurpMessageException) {
-                player.sendMessage(TextBuilder.error(cause.getMessage()));
-            } else {
-                player.sendMessage(TextBuilder.error("Something went wrong!"));
-            }
-        } catch (Exception e) {
-            player.sendMessage(TextBuilder.error("Something went wrong!"));
-        }
+        // Give the target player the shots
+        SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> SlurpEntry.create(updateEntry, slurpPlayer.getSession().getToken()).join());
+
+        player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextShots(amount))));
 
         return true;
     }

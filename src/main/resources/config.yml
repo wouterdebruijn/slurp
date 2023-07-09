@@ -45,3 +45,12 @@ game-events:
         amount: 5
         target: PLAYER
         giveable: false
+  player-death:
+    enabled: true
+    chance: 1
+    message: "§e%player% died! They take a shot!"
+    consumables:
+      - type: SHOT
+        amount: 1
+        target: PLAYER
+        giveable: false

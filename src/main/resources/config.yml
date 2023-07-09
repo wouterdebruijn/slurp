@@ -5,7 +5,7 @@ chat:
   prefix: "§8[§6Slurp§8] §r"
 
 game:
-  sip-shot-ratio: 5
+  sip-shot-ratio: 10
 
   # Modifier for the chance of events to trigger. Higher values mean more events.
   difficulty-multiplier: 1

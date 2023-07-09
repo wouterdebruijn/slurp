@@ -64,12 +64,12 @@ public class GiveSip implements TabExecutor {
             return true;
         }
 
-        // Give the target player the sips
-        SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, 0, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-        CompletableFuture<ArrayList<SlurpEntry>> addSips = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
-
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
             try {
+                // Give the target player the sips
+                SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, 0, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+                CompletableFuture<ArrayList<SlurpEntry>> addSips = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
+
                 // Wait for the sips to be added to the player, if it fails, it will throw an exception
                 addSips.get();
 

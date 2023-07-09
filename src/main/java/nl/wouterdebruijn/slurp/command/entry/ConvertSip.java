@@ -1,5 +1,6 @@
 package nl.wouterdebruijn.slurp.command.entry;
 
+import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.ConfigValue;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
@@ -7,6 +8,7 @@ import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -46,22 +48,25 @@ public class ConvertSip implements TabExecutor {
             return true;
         }
 
-        // Remove x amount of sips from player
-        SlurpEntryBuilder entry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
-        var task1 = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
-
         if (amount % SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO) > 0) {
             player.sendMessage(TextBuilder.error("You need to convert a multiple of " + SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO) + " sips!"));
             return true;
         }
 
-        int sips = amount / SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO);
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
+            // Remove x amount of sips from player
+            SlurpEntryBuilder entry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
+            var task1 = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
 
-        // Give x amount of shots to player
-        SlurpEntryBuilder entry2 = new SlurpEntryBuilder(0, sips, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
-        var task2 = SlurpEntry.create(entry2, slurpPlayer.getSession().getToken());
+            int sips = amount / SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO);
 
-        CompletableFuture.allOf(task1, task2).join();
+            // Give x amount of shots to player
+            SlurpEntryBuilder entry2 = new SlurpEntryBuilder(0, sips, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
+            var task2 = SlurpEntry.create(entry2, slurpPlayer.getSession().getToken());
+
+            CompletableFuture.allOf(task1, task2).join();
+        });
+
         return true;
     }
 
@@ -80,7 +85,7 @@ public class ConvertSip implements TabExecutor {
         if (args.length == 1) {
             // return list of amounts
             List<String> amounts = new ArrayList<>();
-            for (int i = SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO); i <= balance; i+=SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO)) {
+            for (int i = SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO); i <= balance; i += SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO)) {
                 amounts.add(String.valueOf(i));
             }
             return amounts;

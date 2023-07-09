@@ -26,8 +26,6 @@ public class TitleHandler {
         return future;
     }
 
-    ;
-
     public static CompletableFuture<Void> countdown(Player player, int seconds) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
@@ -57,5 +55,4 @@ public class TitleHandler {
         return future;
     }
 
-    ;
 }

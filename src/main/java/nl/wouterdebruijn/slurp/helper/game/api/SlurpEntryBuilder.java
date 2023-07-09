@@ -4,12 +4,12 @@ import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 
 public class SlurpEntryBuilder {
-    private int sips;
-    private int shots;
-    private String player;
-    private String session;
-    private boolean giveable;
-    private boolean transfer;
+    private final int sips;
+    private final int shots;
+    private final String player;
+    private final String session;
+    private final boolean giveable;
+    private final boolean transfer;
 
     /**
      * Create entry to change slurp data
@@ -53,7 +53,7 @@ public class SlurpEntryBuilder {
     public Consumable getTaken() {
         Consumable taken = new Consumable();
 
-        if (this.giveable) {
+        if (this.giveable || this.transfer) {
             return taken;
         }
 

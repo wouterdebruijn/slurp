@@ -19,12 +19,12 @@ import java.util.logging.Level;
 
 public class SlurpEntry {
     private static final String API_URL = SlurpConfig.apiUrl();
-    private String uuid;
-    private int sips;
-    private int shots;
-    private SlurpPlayer player;
-    private boolean giveable;
-    private boolean transfer;
+    private final String uuid;
+    private final int sips;
+    private final int shots;
+    private final SlurpPlayer player;
+    private final boolean giveable;
+    private final boolean transfer;
 
     public SlurpEntry(String uuid, int sips, int shots, SlurpPlayer player, boolean giveable, boolean transfer) {
         this.uuid = uuid;

@@ -1,14 +1,12 @@
 package nl.wouterdebruijn.slurp.command.entry;
 
 import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
 import nl.wouterdebruijn.slurp.helper.ConfigValue;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.handlers.ConsumableGivingHandler;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

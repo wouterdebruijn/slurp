@@ -71,10 +71,13 @@ public class TakeSip implements TabExecutor {
             player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextShots(amount))));
         }
 
-        // Give the target player the shots
-        SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(-amount, -shots, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> SlurpEntry.create(updateEntry, slurpPlayer.getSession().getToken()).join());
-
+        int finalAmount = amount;
+        int finalShots = shots;
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
+            // Give the target player the shots
+            SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(-finalAmount, -finalShots, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+            Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> SlurpEntry.create(updateEntry, slurpPlayer.getSession().getToken()).join());
+        });
         return true;
     }
 

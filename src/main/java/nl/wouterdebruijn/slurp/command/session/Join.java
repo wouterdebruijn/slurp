@@ -22,7 +22,7 @@ public class Join implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         try {
-            if (!(sender instanceof Player)) {
+            if (!(sender instanceof Player player)) {
                 sender.sendMessage(TextBuilder.error("You must be a player to execute this command!"));
                 return true;
             }
@@ -31,8 +31,6 @@ public class Join implements TabExecutor {
                 sender.sendMessage(TextBuilder.error("You are already in a session!"));
                 return true;
             }
-
-            Player player = (Player) sender;
 
             try {
                 String shortcode = String.join(" ", args);

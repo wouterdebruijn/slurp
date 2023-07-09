@@ -59,25 +59,27 @@ public class GiveShot implements TabExecutor {
             return true;
         }
 
-        try {
-            // Give the target player the shots
-            SlurpEntryBuilder entry = new SlurpEntryBuilder(0, amount, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-            CompletableFuture<ArrayList<SlurpEntry>> addShots = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
+        // Give the target player the shots
+        SlurpEntryBuilder entry = new SlurpEntryBuilder(0, amount, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+        CompletableFuture<ArrayList<SlurpEntry>> addShots = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
 
-            SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
-            CompletableFuture<ArrayList<SlurpEntry>> removeGiveableShots = SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken());
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
+            try {
+                // Wait for the addShots to complete
+                addShots.get();
 
-            Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> CompletableFuture.allOf(addShots, removeGiveableShots).join());
-        } catch (CancellationException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof SlurpMessageException) {
-                player.sendMessage(TextBuilder.error(cause.getMessage()));
-            } else {
-                player.sendMessage(TextBuilder.error("Something went wrong!"));
+                // Update the balance of the player
+                SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
+                SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
+            } catch (Exception e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof SlurpMessageException) {
+                    player.sendMessage(TextBuilder.error(cause.getMessage()));
+                } else {
+                    player.sendMessage(TextBuilder.error("Something went wrong!"));
+                }
             }
-        } catch (Exception e) {
-            player.sendMessage(TextBuilder.error("Something went wrong!"));
-        }
+        });
 
         return true;
     }

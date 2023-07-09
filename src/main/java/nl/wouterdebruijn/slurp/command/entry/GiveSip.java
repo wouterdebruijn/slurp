@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
 public class GiveSip implements TabExecutor {
@@ -59,25 +58,27 @@ public class GiveSip implements TabExecutor {
             return true;
         }
 
-        try {
-            // Give the target player the sips
-            SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, 0, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-            CompletableFuture<ArrayList<SlurpEntry>> addShots = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
+        // Give the target player the sips
+        SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, 0, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
+        CompletableFuture<ArrayList<SlurpEntry>> addSips = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
 
-            SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
-            CompletableFuture<ArrayList<SlurpEntry>> removeGiveableSips = SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken());
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
+            try {
+                // Wait for the sips to be added to the player, if it fails, it will throw an exception
+                addSips.get();
 
-            Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> CompletableFuture.allOf(addShots, removeGiveableSips).join());
-        } catch (CancellationException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof SlurpMessageException) {
-                player.sendMessage(TextBuilder.error(cause.getMessage()));
-            } else {
-                player.sendMessage(TextBuilder.error("Something went wrong!"));
+                // Remove the sips from the player
+                SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
+                SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
+            } catch (Exception e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof SlurpMessageException) {
+                    player.sendMessage(TextBuilder.error(cause.getMessage()));
+                } else {
+                    player.sendMessage(TextBuilder.error("Something went wrong!"));
+                }
             }
-        } catch (Exception e) {
-            player.sendMessage(TextBuilder.error("Something went wrong!"));
-        }
+        });
 
         return true;
     }

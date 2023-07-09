@@ -50,6 +50,11 @@ public class ConvertSip implements TabExecutor {
         SlurpEntryBuilder entry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
         var task1 = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
 
+        if (amount % SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO) > 0) {
+            player.sendMessage(TextBuilder.error("You need to convert a multiple of " + SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO) + " sips!"));
+            return true;
+        }
+
         int sips = amount / SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO);
 
         // Give x amount of shots to player
@@ -75,7 +80,7 @@ public class ConvertSip implements TabExecutor {
         if (args.length == 1) {
             // return list of amounts
             List<String> amounts = new ArrayList<>();
-            for (int i = SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO); i <= balance; i++) {
+            for (int i = SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO); i <= balance; i+=SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO)) {
                 amounts.add(String.valueOf(i));
             }
             return amounts;

@@ -6,6 +6,8 @@ chat:
 
 game:
   sip-shot-ratio: 5
+
+  # Modifier for the chance of events to trigger. Higher values mean more events.
   difficulty-multiplier: 1
 
 game-events:
@@ -38,7 +40,7 @@ game-events:
         giveable: false
   broken-legs:
     enabled: true
-    chance: 64
+    chance: 32
     message: "§e%player% broke their legs! They take 5 sips!"
     consumables:
       - type: SIP
@@ -49,6 +51,15 @@ game-events:
     enabled: true
     chance: 1
     message: "§e%player% died! They take a shot!"
+    consumables:
+      - type: SHOT
+        amount: 1
+        target: PLAYER
+        giveable: false
+  player-kill:
+    enabled: true
+    chance: 1
+    message: "§e%player% killed someone! They take a shot!"
     consumables:
       - type: SHOT
         amount: 1

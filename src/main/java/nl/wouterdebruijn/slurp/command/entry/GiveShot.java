@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
 public class GiveShot implements TabExecutor {
@@ -37,7 +36,13 @@ public class GiveShot implements TabExecutor {
         }
 
         String targetName = args[0];
-        int amount = Integer.parseInt(args[1]);
+        int amount;
+        try {
+            amount = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            player.sendMessage(TextBuilder.error("Invalid amount!"));
+            return true;
+        }
         int balance = slurpPlayer.getGiveable().getShots();
 
         if (amount > balance) {

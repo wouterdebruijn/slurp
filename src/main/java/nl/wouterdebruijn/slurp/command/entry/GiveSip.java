@@ -36,7 +36,13 @@ public class GiveSip implements TabExecutor {
         }
 
         String targetName = args[0];
-        int amount = Integer.parseInt(args[1]);
+        int amount;
+        try {
+            amount = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            player.sendMessage(TextBuilder.error("Invalid amount!"));
+            return true;
+        }
         int balance = slurpPlayer.getGiveable().getSips();
 
         if (amount > balance) {

@@ -71,6 +71,7 @@ public final class Slurp extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("takeshot")).setExecutor(new TakeShot());
         Objects.requireNonNull(getCommand("takesip")).setExecutor(new TakeSip());
+        Objects.requireNonNull(getCommand("rockpaperscissors")).setExecutor(new PlayRockPaperScissors());
 
         // Register listeners
         PluginManager pm = getServer().getPluginManager();

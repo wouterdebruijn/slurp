@@ -135,7 +135,7 @@ public abstract class GameEvent {
 
         ArrayList<CompletableFuture<?>> futures = new ArrayList<>();
 
-        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
+        Bukkit.getScheduler().runTask(Slurp.plugin, () -> {
             for (GameEventConsumable consumable : consumables) {
                 Consumable toAdd = consumable.toConsumable();
                 SlurpSession session = SlurpSessionManager.getSession(player.getSession().getUuid());

@@ -22,7 +22,7 @@ commands:
     permission: slurp.admin
   create_entry:
     description: Create a slurp entry
-    usage: /create_entry
+    usage: /create_entry <player> <type> <amount> <giveable> <transfer>
     permission: slurp.admin
   setvalue:
     description: Change a configuration value

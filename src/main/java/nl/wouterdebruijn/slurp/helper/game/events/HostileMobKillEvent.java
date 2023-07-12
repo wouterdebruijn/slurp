@@ -78,8 +78,12 @@ public class HostileMobKillEvent extends GameEvent implements Listener {
             return;
         }
 
-        // Check the entity type is a skeleton
+        // Check the entity type
         if (!entities.contains(event.getEntityType()))
+            return;
+
+        // Check if the player has a chance to trigger the event
+        if (!this.chanceTrigger())
             return;
 
         // Trigger the event

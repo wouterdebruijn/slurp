@@ -56,7 +56,10 @@ public class SlurpSessionSubscriptionListener implements Listener {
             }
 
             SlurpPlayer onlineSlurpPlayer = SlurpPlayerManager.getPlayer(onlinePlayer);
-            if (onlineSlurpPlayer.getSession().getUuid().equals(session.getUuid())) {
+
+            // Don't check players that are not in a session
+            // If the player is in the same session, don't close it
+            if (onlineSlurpPlayer != null && onlineSlurpPlayer.getSession().getUuid().equals(session.getUuid())) {
                 return;
             }
         }

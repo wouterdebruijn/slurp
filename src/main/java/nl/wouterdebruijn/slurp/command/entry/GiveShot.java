@@ -91,8 +91,17 @@ public class GiveShot implements TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = (Player) sender;
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(TextBuilder.error("You must be a player to execute this command!"));
+            return null;
+        }
+
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (SlurpPlayerManager.checkNullSilent(player, slurpPlayer)) {
+            return null;
+        }
+
         int balance = slurpPlayer.getGiveable().getShots();
 
         if (args.length == 1) {

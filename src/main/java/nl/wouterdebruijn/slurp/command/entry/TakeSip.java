@@ -68,7 +68,7 @@ public class TakeSip implements TabExecutor {
 
             player.sendMessage(TextBuilder.warning(String.format("You don't have enough shots! You took %d %s and %d %s instead!", amount, ConsumableGivingHandler.getTextSips(amount), shots, ConsumableGivingHandler.getTextShots(shots))));
         } else {
-            player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextShots(amount))));
+            player.sendMessage(TextBuilder.success(String.format("You took %d %s!", amount, ConsumableGivingHandler.getTextSips(amount))));
         }
 
         int finalAmount = amount;

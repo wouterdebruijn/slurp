@@ -92,6 +92,11 @@ public final class Slurp extends JavaPlugin {
         gameEvents.add(new EmeraldOreEvent(config).register(this));
         gameEvents.add(new LapisOreEvent(config).register(this));
         gameEvents.add(new RedstoneOreEvent(config).register(this));
+        gameEvents.add(new CoalOreEvent(config).register(this));
+        gameEvents.add(new NetherQuartzOreEvent(config).register(this));
+        gameEvents.add(new NetheriteOreEvent(config).register(this));
+
+        gameEvents.add(new HostileMobKillEvent(config).register(this));
 
     }
 }

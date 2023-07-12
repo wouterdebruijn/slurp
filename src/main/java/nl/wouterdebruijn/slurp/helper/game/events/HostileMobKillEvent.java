@@ -5,19 +5,57 @@ import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MobKillEvent extends GameEvent implements Listener {
-    private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.GOLD_ORE, Material.DEEPSLATE_GOLD_ORE, Material.NETHER_GOLD_ORE));
+public class HostileMobKillEvent extends GameEvent implements Listener {
+    private static final ArrayList<EntityType> entities = new ArrayList<>(Arrays.asList(
+            EntityType.ZOMBIE,
+            EntityType.SKELETON,
+            EntityType.SPIDER,
+            EntityType.CAVE_SPIDER,
+            EntityType.CREEPER,
+            EntityType.WITCH,
+            EntityType.SLIME,
+            EntityType.MAGMA_CUBE,
+            EntityType.ENDERMAN,
+            EntityType.ZOMBIFIED_PIGLIN,
+            EntityType.SILVERFISH,
+            EntityType.PHANTOM,
+            EntityType.DROWNED,
+            EntityType.HUSK,
+            EntityType.STRAY,
+            EntityType.WITHER_SKELETON,
+            EntityType.EVOKER,
+            EntityType.VEX,
+            EntityType.PILLAGER,
+            EntityType.RAVAGER,
+            EntityType.VINDICATOR,
+            EntityType.GUARDIAN,
+            EntityType.ELDER_GUARDIAN,
+            EntityType.SHULKER,
+            EntityType.ENDERMITE,
+            EntityType.GHAST,
+            EntityType.BLAZE,
+            EntityType.HOGLIN,
+            EntityType.PIGLIN,
+            EntityType.PIGLIN_BRUTE,
+            EntityType.ZOGLIN,
+            EntityType.WITHER,
+            EntityType.ENDER_DRAGON,
+            EntityType.GIANT,
+            EntityType.ILLUSIONER
+    ));
 
-    public MobKillEvent(FileConfiguration config) {
-        super(config, "gold-ore");
+    public HostileMobKillEvent(FileConfiguration config) {
+        super(config, "hostile-mob-kill");
     }
 
     @Override
@@ -27,20 +65,21 @@ public class MobKillEvent extends GameEvent implements Listener {
     }
 
     @EventHandler
-    public void onEvent(BlockBreakEvent event) {
-        Player player = event.getPlayer();
+    public void onEvent(EntityDeathEvent event) {
+        Player player = event.getEntity().getKiller();
+
+        // Check if the entity was killed by a player
+        if (player == null)
+            return;
+
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
         if (SlurpPlayerManager.checkNullSilent(player, slurpPlayer)) {
             return;
         }
 
-        // Check if the mined block is a stone
-        if (!materials.contains(event.getBlock().getType()))
-            return;
-
-        // Check if the player has a chance to trigger the event
-        if (!this.chanceTrigger())
+        // Check the entity type is a skeleton
+        if (!entities.contains(event.getEntityType()))
             return;
 
         // Trigger the event

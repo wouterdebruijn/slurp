@@ -94,7 +94,7 @@ game-events:
         giveable: false
   lapis-ore:
     enabled: true
-    chance: 4
+    chance: 16
     message: "§e%player% found some lapis ore! Everyone takes 5 sips!"
     consumables:
       - type: SIP
@@ -117,5 +117,50 @@ game-events:
     consumables:
       - type: SIP
         amount: 8
+        target: PLAYER
+        giveable: true
+  coal-ore:
+    enabled: true
+    chance: 24
+    message: "§e%player% found some coal ore! They give out 5 sips!"
+    consumables:
+      - type: SIP
+        amount: 5
+        target: PLAYER
+        giveable: true
+  quartz-ore:
+    enabled: true
+    chance: 32
+    message: "§e%player% found some quartz ore! They give out 8 sips!"
+    consumables:
+      - type: SIP
+        amount: 8
+        target: PLAYER
+        giveable: true
+  netherite-ore:
+    enabled: true
+    chance: 2
+    message: "§e%player% found some netherite ore! They give out 1 shot!"
+    consumables:
+      - type: SHOT
+        amount: 1
+        target: PLAYER
+        giveable: true
+  hostile-mob-kill:
+    enabled: true
+    chance: 16
+    message: "§e%player% killed a hostile mob! They give out 5 sips!"
+    consumables:
+      - type: SIP
+        amount: 5
+        target: PLAYER
+        giveable: true
+  passive-mob-kill:
+    enabled: true
+    chance: 16
+    message: "§e%player% killed a passive mob! They take 5 sips!"
+    consumables:
+      - type: SIP
+        amount: 5
         target: PLAYER
         giveable: false

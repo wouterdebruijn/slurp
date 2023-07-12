@@ -39,7 +39,7 @@ public class PlayRockPaperScissors implements TabExecutor {
             return true;
         }
 
-        if (slurpPlayer.getSession() != slurpPlayer2.getSession() || slurpPlayer.getSession() == null || slurpPlayer2.getSession() == null) {
+        if (slurpPlayer.getSession() == null || slurpPlayer2.getSession() == null || slurpPlayer.getSession().getUuid().equals(slurpPlayer2.getSession().getUuid())) {
             player.sendMessage(TextBuilder.error("You and the other player are not in the same session!"));
             return true;
         }

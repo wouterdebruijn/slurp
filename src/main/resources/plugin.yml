@@ -10,7 +10,7 @@ commands:
   # Admin commands
   create:
     description: Create a slurp game
-    usage: /create
+    usage: /create <session>
     permission: slurp.admin
   debug:
     description: Debug a slurp game
@@ -36,7 +36,7 @@ commands:
     # Player commands
   join:
     description: Join a slurp game
-    usage: /join
+    usage: /join <session>
     permission: slurp.drinker
   leave:
     description: Leave a slurp game
@@ -44,29 +44,29 @@ commands:
     permission: slurp.drinker
   giveshot:
     description: Give a shot to a player
-    usage: /giveshot
+    usage: /giveshot <player> <amount>
     permission: slurp.drinker
   givesip:
     description: Give a sip to a player
-    usage: /givesip
+    usage: /givesip <player> <amount>
     permission: slurp.drinker
   takeshot:
     description: Take a shot
-    usage: /takeshot
+    usage: /takeshot <amount>
     permission: slurp.drinker
   takesip:
     description: Take a sip
-    usage: /takesip
+    usage: /takesip <amount>
     permission: slurp.drinker
   rockpaperscissors:
     description: Play rock paper scissors
-    usage: /rockpaperscissors
+    usage: /rockpaperscissors <player>
     permission: slurp.drinker
   convertshot:
     description: Convert a shot to sips
-    usage: /convertshot
+    usage: /convertshot <amount>
     permission: slurp.drinker
   convertsip:
     description: Convert a sip to shots
-    usage: /convertsip
+    usage: /convertsip <amount>
     permission: slurp.drinker

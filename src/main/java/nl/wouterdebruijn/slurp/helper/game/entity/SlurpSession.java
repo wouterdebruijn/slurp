@@ -117,6 +117,10 @@ public class SlurpSession {
 
     public ArrayList<SlurpPlayer> getRandomPlayersInSession(int amount) {
         ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+
+        // Filter players by SlurpPlayer existence
+        players.removeIf(player -> SlurpPlayerManager.getPlayer(player, this) == null);
+
         ArrayList<SlurpPlayer> chosenPlayers = new ArrayList<>();
 
         // Only run if we have one more player than the amount of drinking buddies

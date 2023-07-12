@@ -142,7 +142,7 @@ public class SlurpSessionManager {
 
         @Override
         public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
-            Slurp.logger.info("Received websocket data: " + data.toString());
+            //Slurp.logger.info("Received websocket data: " + data.toString());
 
             ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(), new TypeToken<ArrayList<ResponsePlayer>>() {
             }.getType());
@@ -164,7 +164,7 @@ public class SlurpSessionManager {
 
         @Override
         public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
-            Slurp.logger.info("Websocket closed with status code " + statusCode + " and reason: " + reason);
+            Slurp.logger.warning("Websocket closed with status code " + statusCode + " and reason: " + reason);
 
             if (statusCode != WebSocket.NORMAL_CLOSURE) {
                 // Resubscribe if the connection was closed unexpectedly

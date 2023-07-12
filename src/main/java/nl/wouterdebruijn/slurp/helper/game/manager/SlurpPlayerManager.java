@@ -59,6 +59,17 @@ public class SlurpPlayerManager {
         return false;
     }
 
+    /**
+     * Checks if a SlurpPlayer is null silently.
+     *
+     * @param slurpPlayer Player where SlurpPlayer is derived from.
+     * @param slurper     SlurpPlayer object to check if null
+     * @return True is the SlurpPlayer is null, false if it is not.
+     */
+    public static boolean checkNullSilent(Player slurpPlayer, SlurpPlayer slurper) {
+        return slurper == null;
+    }
+
 
     public static ArrayList<SlurpPlayer> dump() {
         return new ArrayList<>(players.values());

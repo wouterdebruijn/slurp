@@ -31,7 +31,7 @@ public class DiamondOreEvent extends GameEvent implements Listener {
         Player player = event.getPlayer();
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
-        if (SlurpPlayerManager.checkNull(player, slurpPlayer)) {
+        if (SlurpPlayerManager.checkNullSilent(player, slurpPlayer)) {
             return;
         }
 

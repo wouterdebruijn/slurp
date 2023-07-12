@@ -27,7 +27,7 @@ public class BrokenLegsEvent extends GameEvent implements Listener {
 
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
-        if (SlurpPlayerManager.checkNull(player, slurpPlayer)) {
+        if (SlurpPlayerManager.checkNullSilent(player, slurpPlayer)) {
             return;
         }
 

@@ -36,7 +36,7 @@ public class PlayerKillsEvent extends GameEvent implements Listener {
         Player killer = player.getKiller();
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(killer);
 
-        if (SlurpPlayerManager.checkNull(player, slurpPlayer)) {
+        if (SlurpPlayerManager.checkNullSilent(player, slurpPlayer)) {
             return;
         }
 

@@ -27,7 +27,7 @@ public class FurnaceBurnEvent extends GameEvent implements Listener {
 
         int amount = event.getItemAmount();
 
-        if (SlurpPlayerManager.checkNull(player, slurpPlayer)) {
+        if (SlurpPlayerManager.checkNullSilent(player, slurpPlayer)) {
             return;
         }
 

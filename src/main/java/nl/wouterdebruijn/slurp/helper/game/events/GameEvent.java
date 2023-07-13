@@ -26,7 +26,6 @@ public abstract class GameEvent {
     private final String name;
     private boolean enabled;
     private int chance;
-    private String message;
     private ArrayList<GameEventConsumable> consumables;
 
     protected GameEvent(FileConfiguration config, String name) {
@@ -87,11 +86,6 @@ public abstract class GameEvent {
 
         this.enabled = config.getBoolean(getPath() + ".enabled");
         this.chance = config.getInt(getPath() + ".chance");
-        String messageString = config.isString(getPath() + ".message") ? config.getString(getPath() + ".message") : "";
-
-        if (messageString == null) messageString = "";
-
-        this.message = messageString;
         this.consumables = new ArrayList<>();
 
         // Config contains objects with enabled, chance, amount and target. Create a GameEventConsumable for each object
@@ -115,8 +109,9 @@ public abstract class GameEvent {
                 int amount = Integer.parseInt(map.get("amount").toString());
                 String target = map.get("target").toString();
                 boolean giveable = Boolean.parseBoolean(map.get("giveable").toString());
+                String message = map.get("message").toString();
 
-                GameEventConsumable consumable = new GameEventConsumable(GameEventConsumable.ConsumableType.valueOf(type.toUpperCase()), amount, giveable, GameEventConsumable.ConsumableTarget.valueOf(target.toUpperCase()));
+                GameEventConsumable consumable = new GameEventConsumable(GameEventConsumable.ConsumableType.valueOf(type.toUpperCase()), amount, giveable, GameEventConsumable.ConsumableTarget.valueOf(target.toUpperCase()), message);
                 consumables.add(consumable);
             } catch (NullPointerException e) {
                 Slurp.logger.warning("Invalid consumable '" + list.indexOf(object) + "' for event " + name);
@@ -157,20 +152,20 @@ public abstract class GameEvent {
                 case PLAYER -> {
                     SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), player.getUuid(), player.getSession().getUuid(), consumable.giveable, false);
                     futures.add(SlurpEntry.create(entry, session.getToken()));
-                    Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName())));
+                    Bukkit.broadcast(TextBuilder.warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName())));
                 }
                 case ALL -> {
                     for (SlurpPlayer slurpPlayer : session.getPlayers()) {
                         SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), consumable.giveable, false);
                         futures.add(SlurpEntry.createDirect(entry, session.getToken()));
                     }
-                    Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName())));
+                    Bukkit.broadcast(TextBuilder.warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName())));
                 }
                 case RANDOM -> {
                     SlurpPlayer randomPlayer = session.getRandomPlayersInSession(1).get(0);
                     SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), randomPlayer.getUuid(), randomPlayer.getSession().getUuid(), consumable.giveable, false);
                     futures.add(SlurpEntry.create(entry, session.getToken()));
-                    Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName()).replaceAll("%target%", randomPlayer.getPlayer().getName())));
+                    Bukkit.broadcast(TextBuilder.warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName()).replaceAll("%target%", randomPlayer.getPlayer().getName())));
                 }
             }
 
@@ -183,12 +178,17 @@ public abstract class GameEvent {
 
     protected record GameEventConsumable(GameEvent.GameEventConsumable.ConsumableType type, int amount,
                                          boolean giveable,
-                                         GameEvent.GameEventConsumable.ConsumableTarget target) {
+                                         GameEvent.GameEventConsumable.ConsumableTarget target,
+                                         String message) {
         public Consumable toConsumable() {
             Consumable consumable = new Consumable();
             consumable.setShots(type == ConsumableType.SHOT ? amount : 0);
             consumable.setSips(type == ConsumableType.SIP ? amount : 0);
             return consumable;
+        }
+
+        public String getMessage() {
+            return message;
         }
 
         private enum ConsumableType {

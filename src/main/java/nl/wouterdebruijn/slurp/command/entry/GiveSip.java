@@ -75,7 +75,7 @@ public class GiveSip implements TabExecutor {
 
                 // Remove the sips from the player
                 SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
-                SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
+                SlurpEntry.createDirect(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
             } catch (Exception e) {
                 Throwable cause = e.getCause();
                 if (cause instanceof SlurpMessageException) {

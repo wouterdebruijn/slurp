@@ -71,7 +71,7 @@ public class TakeShot implements TabExecutor {
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
             // Give the target player the shots
             SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(-finalSips, -finalAmount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-            Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> SlurpEntry.create(updateEntry, slurpPlayer.getSession().getToken()).join());
+            Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> SlurpEntry.createDirect(updateEntry, slurpPlayer.getSession().getToken()).join());
         });
         return true;
     }

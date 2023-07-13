@@ -35,6 +35,12 @@ public class SlurpEntry {
         this.transfer = transfer;
     }
 
+    /**
+     * Create a new entry in the API not accounting for drinking buddies
+     * @param entry The entry to create
+     * @param token The token to use for authentication
+     * @return A completable future with the created entry
+     */
     public static CompletableFuture<SlurpEntry> createDirect(SlurpEntryBuilder entry, String token) {
         // Wishfully update the player's balances, faults will be corrected by the websocket listener
         SlurpPlayer player = SlurpPlayerManager.getPlayer(entry.getPlayerUuid());
@@ -72,6 +78,12 @@ public class SlurpEntry {
         }
     }
 
+    /**
+     * Create an entry for the player and all of their drinking buddies
+     * @param entry The entry to create
+     * @param token The token to use for authentication
+     * @return A completable future containing the created entries
+     */
     public static CompletableFuture<ArrayList<SlurpEntry>> create(SlurpEntryBuilder entry, String token) {
 
         // Get drinking buddies for player

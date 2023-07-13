@@ -56,13 +56,13 @@ public class ConvertSip implements TabExecutor {
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
             // Remove x amount of sips from player
             SlurpEntryBuilder entry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
-            var task1 = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
+            var task1 = SlurpEntry.createDirect(entry, slurpPlayer.getSession().getToken());
 
             int sips = amount / SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO);
 
             // Give x amount of shots to player
             SlurpEntryBuilder entry2 = new SlurpEntryBuilder(0, sips, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
-            var task2 = SlurpEntry.create(entry2, slurpPlayer.getSession().getToken());
+            var task2 = SlurpEntry.createDirect(entry2, slurpPlayer.getSession().getToken());
 
             CompletableFuture.allOf(task1, task2).join();
         });

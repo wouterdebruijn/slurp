@@ -46,13 +46,13 @@ public class ConvertShot implements TabExecutor {
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
             // Remove x amount of shots from player
             SlurpEntryBuilder entry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
-            var task1 = SlurpEntry.create(entry, slurpPlayer.getSession().getToken());
+            var task1 = SlurpEntry.createDirect(entry, slurpPlayer.getSession().getToken());
 
             int sips = SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO) * amount;
 
             // Give x amount of sips to player
             SlurpEntryBuilder entry2 = new SlurpEntryBuilder(sips, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, true);
-            var task2 = SlurpEntry.create(entry2, slurpPlayer.getSession().getToken());
+            var task2 = SlurpEntry.createDirect(entry2, slurpPlayer.getSession().getToken());
 
             CompletableFuture.allOf(task1, task2).join();
         });

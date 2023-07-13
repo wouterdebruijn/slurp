@@ -75,7 +75,7 @@ public class GiveShot implements TabExecutor {
 
                 // Update the balance of the player
                 SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(0, -amount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
-                SlurpEntry.create(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
+                SlurpEntry.createDirect(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
             } catch (Exception e) {
                 Throwable cause = e.getCause();
                 if (cause instanceof SlurpMessageException) {

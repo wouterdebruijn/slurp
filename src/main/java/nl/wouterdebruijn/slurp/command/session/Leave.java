@@ -6,6 +6,7 @@ import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -49,6 +50,7 @@ public class Leave implements TabExecutor {
 
         if (!hasRemainingPlayers(session)) {
             SlurpSessionManager.remove(session);
+            Bukkit.broadcast(TextBuilder.info(String.format("Player %s left session %s", player.getName(), slurpPlayer.getSession().getUuid())), "slurp.drinker");
             Slurp.logger.log(Level.INFO, "Removed session " + session.getUuid() + " because it has no remaining players.");
         }
 

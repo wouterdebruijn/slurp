@@ -7,6 +7,7 @@ import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -38,6 +39,7 @@ public class Join implements TabExecutor {
 
                 player.sendMessage(TextBuilder.success(String.format("Joined session %s", slurpPlayer.getSession().getUuid())));
 
+                Bukkit.broadcast(TextBuilder.info(String.format("Player %s joined session %s", player.getName(), slurpPlayer.getSession().getUuid())), "slurp.drinker");
                 Slurp.logger.log(Level.INFO, String.format("Player %s joined session %s", player.getName(), slurpPlayer.getSession().getUuid()));
             } catch (ApiResponseException e) {
                 player.sendMessage(TextBuilder.error(e.getMessage()));

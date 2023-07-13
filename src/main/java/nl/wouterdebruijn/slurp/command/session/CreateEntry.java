@@ -49,8 +49,8 @@ public class CreateEntry implements TabExecutor {
         int shotAmount = isShot ? amount : 0;
         int sipAmount = !isShot ? amount : 0;
 
-        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
-        SlurpEntryBuilder entry = new SlurpEntryBuilder(shotAmount, sipAmount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), giveable, transfer);
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(target);
+        SlurpEntryBuilder entry = new SlurpEntryBuilder(sipAmount, shotAmount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), giveable, transfer);
 
         SlurpEntry.createDirect(entry, slurpPlayer.getSession().getToken());
 

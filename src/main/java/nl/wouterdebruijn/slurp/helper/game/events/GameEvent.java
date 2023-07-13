@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class GameEvent {
@@ -136,36 +137,40 @@ public abstract class GameEvent {
         ArrayList<CompletableFuture<?>> futures = new ArrayList<>();
 
         Bukkit.getScheduler().runTask(Slurp.plugin, () -> {
-            for (GameEventConsumable consumable : consumables) {
-                Consumable toAdd = consumable.toConsumable();
-                SlurpSession session = SlurpSessionManager.getSession(player.getSession().getUuid());
 
-                if (session == null) {
-                    Slurp.logger.warning("Session is null for player " + player.getUuid() + " in GameEvent " + name);
-                    return;
+            // Trigger a random consumable for this event
+            Random random = new Random();
+            int randomConsumable = random.nextInt(consumables.size());
+            GameEventConsumable consumable = consumables.get(randomConsumable);
+
+            Consumable toAdd = consumable.toConsumable();
+            SlurpSession session = SlurpSessionManager.getSession(player.getSession().getUuid());
+
+            if (session == null) {
+                Slurp.logger.warning("Session is null for player " + player.getUuid() + " in GameEvent " + name);
+                return;
+            }
+
+            Player minecraftPlayer = player.getPlayer();
+
+            switch (consumable.target) {
+                case PLAYER -> {
+                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), player.getUuid(), player.getSession().getUuid(), consumable.giveable, false);
+                    futures.add(SlurpEntry.create(entry, session.getToken()));
+                    Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName())));
                 }
-
-                Player minecraftPlayer = player.getPlayer();
-
-                switch (consumable.target) {
-                    case PLAYER -> {
-                        SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), player.getUuid(), player.getSession().getUuid(), consumable.giveable, false);
-                        futures.add(SlurpEntry.create(entry, session.getToken()));
-                        Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName())));
+                case ALL -> {
+                    for (SlurpPlayer slurpPlayer : session.getPlayers()) {
+                        SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), consumable.giveable, false);
+                        futures.add(SlurpEntry.createDirect(entry, session.getToken()));
                     }
-                    case ALL -> {
-                        for (SlurpPlayer slurpPlayer : session.getPlayers()) {
-                            SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), consumable.giveable, false);
-                            futures.add(SlurpEntry.createDirect(entry, session.getToken()));
-                        }
-                        Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName())));
-                    }
-                    case RANDOM -> {
-                        SlurpPlayer randomPlayer = session.getRandomPlayersInSession(1).get(0);
-                        SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), randomPlayer.getUuid(), randomPlayer.getSession().getUuid(), consumable.giveable, false);
-                        futures.add(SlurpEntry.create(entry, session.getToken()));
-                        Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName()).replaceAll("%target%", randomPlayer.getPlayer().getName())));
-                    }
+                    Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName())));
+                }
+                case RANDOM -> {
+                    SlurpPlayer randomPlayer = session.getRandomPlayersInSession(1).get(0);
+                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), randomPlayer.getUuid(), randomPlayer.getSession().getUuid(), consumable.giveable, false);
+                    futures.add(SlurpEntry.create(entry, session.getToken()));
+                    Bukkit.broadcast(TextBuilder.warning(message.replaceAll("%player%", minecraftPlayer.getName()).replaceAll("%target%", randomPlayer.getPlayer().getName())));
                 }
             }
 

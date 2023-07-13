@@ -9,15 +9,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class LogsEvent extends GameEvent implements Listener {
-    private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.OAK_LOG, Material.SPRUCE_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.ACACIA_LOG, Material.DARK_OAK_LOG, Material.CRIMSON_STEM, Material.WARPED_STEM, Material.CHERRY_LOG));
+public class TorchEvent extends GameEvent implements Listener {
+    private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.TORCH, Material.WALL_TORCH, Material.SOUL_TORCH, Material.SOUL_WALL_TORCH));
 
-    public LogsEvent(FileConfiguration config) {
-        super(config, "logs");
+    public TorchEvent(FileConfiguration config) {
+        super(config, "torch");
     }
 
     @Override
@@ -27,7 +28,7 @@ public class LogsEvent extends GameEvent implements Listener {
     }
 
     @EventHandler
-    public void onEvent(BlockBreakEvent event) {
+    public void onEvent(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 

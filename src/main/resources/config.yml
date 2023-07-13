@@ -164,3 +164,21 @@ game-events:
         amount: 5
         target: PLAYER
         giveable: false
+  logs:
+    enabled: true
+    chance: 64
+    message: "§e%player% found some logs! They give out 2 sips!"
+    consumables:
+      - type: SIP
+        amount: 2
+        target: PLAYER
+        giveable: true
+  torch:
+    enabled: true
+    chance: 64
+    message: "§e%player% placed a torch! They take a sip!"
+    consumables:
+      - type: SIP
+        amount: 1
+        target: PLAYER
+        giveable: false

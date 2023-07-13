@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LogsEvent extends GameEvent implements Listener {
-    private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE));
+    private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.OAK_LOG, Material.SPRUCE_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.ACACIA_LOG, Material.DARK_OAK_LOG, Material.CRIMSON_STEM, Material.WARPED_STEM, Material.CHERRY_LOG));
 
     public LogsEvent(FileConfiguration config) {
-        super(config, "emerald-ore");
+        super(config, "logs");
     }
 
     @Override

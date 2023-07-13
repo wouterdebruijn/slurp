@@ -97,6 +97,10 @@ public final class Slurp extends JavaPlugin {
         gameEvents.add(new NetheriteOreEvent(config).register(this));
 
         gameEvents.add(new HostileMobKillEvent(config).register(this));
+        gameEvents.add(new PassiveMobKillEvent(config).register(this));
+
+        gameEvents.add(new LogsEvent(config).register(this));
+        gameEvents.add(new TorchEvent(config).register(this));
 
     }
 }

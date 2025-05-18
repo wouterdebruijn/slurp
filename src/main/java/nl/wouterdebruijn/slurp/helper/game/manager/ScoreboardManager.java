@@ -1,10 +1,8 @@
 package nl.wouterdebruijn.slurp.helper.game.manager;
 
-import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.helper.TextBuilder;
-import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.infra.Observer;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Criteria;
@@ -12,8 +10,10 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
-import java.util.List;
+import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.infra.Observer;
 
 public class ScoreboardManager {
     public static void playerScoreboard(SlurpPlayer player) {
@@ -22,21 +22,23 @@ public class ScoreboardManager {
 
     private static class SlurpPlayerObserver implements Observer {
         // Create line arraylist with default values
-        private final List<String> lines = new ArrayList<>() {{
-            add("§cRemaining");
-            add("§7Sips: §f00");
-            add("§7Shots: §f00");
-            add("");
-            add("§aTaken");
-            add("§r§7Sips: §f00");
-            add("§r§7Shots: §f00");
-            add(" ");
-            add("§9Giveable");
-            add("§r§r§7Sips: §f00");
-            add("§r§r§7Shots: §f00");
-            add("  ");
-            add("§aDrinking buddies:");
-        }};
+        private final List<String> lines = new ArrayList<>() {
+            {
+                add("§cRemaining");
+                add("§7Sips: §f00");
+                add("§7Shots: §f00");
+                add("");
+                add("§aTaken");
+                add("§r§7Sips: §f00");
+                add("§r§7Shots: §f00");
+                add(" ");
+                add("§9Giveable");
+                add("§r§r§7Sips: §f00");
+                add("§r§r§7Shots: §f00");
+                add("  ");
+                add("§aDrinking buddies:");
+            }
+        };
         private final List<String> oldLines = new ArrayList<>();
         SlurpPlayer player;
         Objective sidebar;
@@ -145,14 +147,14 @@ public class ScoreboardManager {
 
         @Override
         public void update() {
-            Consumable remaining = player.getRemaining();
-            Consumable taken = player.getTaken();
-            Consumable giveable = player.getGiveable();
+            int remaining = player.getRemaining();
+            int taken = player.getTaken();
+            int giveable = player.getGiveable();
             ArrayList<SlurpPlayer> players = DrinkingBuddyManager.getDrinkingBuddies(player.getSession());
 
-            setRemaining(remaining.getSips(), remaining.getShots());
-            setTaken(taken.getSips(), taken.getShots());
-            setGiveable(giveable.getSips(), giveable.getShots());
+            setRemaining(remaining, remaining);
+            setTaken(taken, taken);
+            setGiveable(giveable, giveable);
             setDrinkingBuddies(players);
 
             updateSidebar();

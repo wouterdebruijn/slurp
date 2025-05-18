@@ -1,14 +1,10 @@
 package nl.wouterdebruijn.slurp.helper.game.manager;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.game.api.ResponsePlayer;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
@@ -16,6 +12,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 
 public class SlurpSessionManager {
 
@@ -142,22 +145,26 @@ public class SlurpSessionManager {
 
         @Override
         public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
-            //Slurp.logger.info("Received websocket data: " + data.toString());
+            Slurp.logger.info("Received websocket data: " + data.toString());
 
-            ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(), new TypeToken<ArrayList<ResponsePlayer>>() {
-            }.getType());
-            responsePlayers.forEach(responsePlayer -> {
-                SlurpPlayer player = SlurpPlayerManager.getPlayer(responsePlayer.getUuid());
+            // TODO: implement for Pocketbase
 
-                if (player == null) {
-                    Slurp.logger.log(Level.WARNING, "Received player update for unknown player: " + responsePlayer.getUuid());
-                    return;
-                }
+            // ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(),
+            // new TypeToken<ArrayList<ResponsePlayer>>() {
+            // }.getType());
+            // responsePlayers.forEach(responsePlayer -> {
+            // SlurpPlayer player = SlurpPlayerManager.getPlayer(responsePlayer.getId());
 
-                player.setGiveable(responsePlayer.getGiveable());
-                player.setTaken(responsePlayer.getTaken());
-                player.setRemaining(responsePlayer.getRemaining());
-            });
+            // if (player == null) {
+            // Slurp.logger.log(Level.WARNING,
+            // "Received player update for unknown player: " + responsePlayer.getId());
+            // return;
+            // }
+
+            // player.setGiveable(responsePlayer.getGiveable());
+            // player.setTaken(responsePlayer.getTaken());
+            // player.setRemaining(responsePlayer.getRemaining());
+            // });
 
             return WebSocket.Listener.super.onText(webSocket, data, last);
         }

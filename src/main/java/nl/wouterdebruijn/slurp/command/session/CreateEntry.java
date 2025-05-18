@@ -1,28 +1,27 @@
 package nl.wouterdebruijn.slurp.command.session;
 
-import nl.wouterdebruijn.slurp.helper.TextBuilder;
-import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class CreateEntry implements TabExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         Player player = (Player) sender;
 
         // <player> <type> <amount> <giveable> <transfer>
@@ -39,26 +38,23 @@ public class CreateEntry implements TabExecutor {
             return true;
         }
 
-        boolean isShot = args[1].equalsIgnoreCase("SHOT");
-
         int amount = Integer.parseInt(args[2]);
 
-        boolean giveable = args[3].equalsIgnoreCase("TRUE");
-        boolean transfer = args[4].equalsIgnoreCase("TRUE");
-
-        int shotAmount = isShot ? amount : 0;
-        int sipAmount = !isShot ? amount : 0;
+        boolean giveable = args[2].equalsIgnoreCase("TRUE");
+        boolean transfer = args[3].equalsIgnoreCase("TRUE");
 
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(target);
-        SlurpEntryBuilder entry = new SlurpEntryBuilder(sipAmount, shotAmount, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), giveable, transfer);
+        SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, slurpPlayer.getUuid(),
+                slurpPlayer.getSession().getUuid(), giveable, transfer);
 
-        SlurpEntry.createDirect(entry, slurpPlayer.getSession().getToken());
+        SlurpEntry.createDirect(entry);
 
         return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+            @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(TextBuilder.error("You must be a player to execute this command!"));
             return null;
@@ -92,7 +88,7 @@ public class CreateEntry implements TabExecutor {
         if (args.length == 3) {
             ArrayList<String> list = new ArrayList<>();
 
-            for (int i=0; i<999; i++) {
+            for (int i = 0; i < 999; i++) {
                 list.add(String.valueOf(i));
             }
 

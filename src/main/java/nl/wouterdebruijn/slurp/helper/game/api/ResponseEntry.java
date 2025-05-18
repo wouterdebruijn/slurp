@@ -4,14 +4,13 @@ import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class ResponseEntry {
-    private String uuid;
-    private int sips;
-    private int shots;
+    private String id;
+    private int units;
     private String player;
     private boolean giveable;
-    private boolean transfer;
+    private boolean hide;
 
     public SlurpEntry toSlurpEntry() {
-        return new SlurpEntry(uuid, sips, shots, SlurpPlayerManager.getPlayer(player), giveable, transfer);
+        return new SlurpEntry(id, units, SlurpPlayerManager.getPlayer(player), giveable, hide);
     }
 }

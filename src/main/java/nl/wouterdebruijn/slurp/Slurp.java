@@ -1,23 +1,51 @@
 package nl.wouterdebruijn.slurp;
 
-import nl.wouterdebruijn.slurp.command.ConfigCmd;
-import nl.wouterdebruijn.slurp.command.entry.*;
-import nl.wouterdebruijn.slurp.command.session.*;
-import nl.wouterdebruijn.slurp.helper.Permissions;
-import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.game.events.*;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
-import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.logging.Logger;
+import nl.wouterdebruijn.slurp.command.ConfigCmd;
+import nl.wouterdebruijn.slurp.command.entry.GiveSip;
+import nl.wouterdebruijn.slurp.command.entry.TakeSip;
+import nl.wouterdebruijn.slurp.command.session.Create;
+import nl.wouterdebruijn.slurp.command.session.CreateEntry;
+import nl.wouterdebruijn.slurp.command.session.Debug;
+import nl.wouterdebruijn.slurp.command.session.DrinkingBuddyReset;
+import nl.wouterdebruijn.slurp.command.session.Join;
+import nl.wouterdebruijn.slurp.command.session.Leave;
+import nl.wouterdebruijn.slurp.command.session.PlayRockPaperScissors;
+import nl.wouterdebruijn.slurp.command.session.Reload;
+import nl.wouterdebruijn.slurp.helper.Permissions;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.game.events.BrokenLegsEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.ChokingPlayerEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.CoalOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.DiamondOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.EmeraldOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.FurnaceBurnEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.GameEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.GoldOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.HostileMobKillEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.IronOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.LapisOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.LogsEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.LucyStoneEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.NetherQuartzOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.NetheriteOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.PassiveMobKillEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.PlayerDiesEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.PlayerKillsEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.RedstoneOreEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.TorchEvent;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
 
 public final class Slurp extends JavaPlugin {
     private static final ArrayList<GameEvent> gameEvents = new ArrayList<>();
@@ -62,16 +90,11 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("create_entry")).setExecutor(new CreateEntry());
         Objects.requireNonNull(getCommand("leave")).setExecutor(new Leave());
 
-        Objects.requireNonNull(getCommand("giveshot")).setExecutor(new GiveShot());
         Objects.requireNonNull(getCommand("givesip")).setExecutor(new GiveSip());
         Objects.requireNonNull(getCommand("setvalue")).setExecutor(new ConfigCmd());
 
-        Objects.requireNonNull(getCommand("takeshot")).setExecutor(new TakeShot());
         Objects.requireNonNull(getCommand("takesip")).setExecutor(new TakeSip());
         Objects.requireNonNull(getCommand("rockpaperscissors")).setExecutor(new PlayRockPaperScissors());
-
-        Objects.requireNonNull(getCommand("convertshot")).setExecutor(new ConvertShot());
-        Objects.requireNonNull(getCommand("convertsip")).setExecutor(new ConvertSip());
 
         // Register listeners
         PluginManager pm = getServer().getPluginManager();

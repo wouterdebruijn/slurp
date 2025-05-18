@@ -1,5 +1,15 @@
 package nl.wouterdebruijn.slurp.helper.game.events;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.ConfigValue;
 import nl.wouterdebruijn.slurp.helper.RandomGenerator;
@@ -11,15 +21,6 @@ import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 
 public abstract class GameEvent {
     static final String CONFIG_PATH = "game-events";
@@ -60,7 +61,8 @@ public abstract class GameEvent {
      * @return True if the event chance is met
      */
     protected boolean chanceTrigger(int modifier) {
-        float calculatedChance = ((float) this.chance / modifier / SlurpConfig.getValue(ConfigValue.DIFFICULTY_MULTIPLIER));
+        float calculatedChance = ((float) this.chance / modifier
+                / SlurpConfig.getValue(ConfigValue.DIFFICULTY_MULTIPLIER));
         return RandomGenerator.hasChance((int) Math.ceil(calculatedChance));
     }
 
@@ -77,7 +79,8 @@ public abstract class GameEvent {
     /**
      * Read an event object from the config and apply the values to this object
      *
-     * @param config The Slurp config to read from, event is searched for by eventnamename
+     * @param config The Slurp config to read from, event is searched for by
+     *               eventnamename
      */
     protected void readConfig(FileConfiguration config) {
         if (!config.contains(getPath())) {
@@ -88,7 +91,8 @@ public abstract class GameEvent {
         this.chance = config.getInt(getPath() + ".chance");
         this.consumables = new ArrayList<>();
 
-        // Config contains objects with enabled, chance, amount and target. Create a GameEventConsumable for each object
+        // Config contains objects with enabled, chance, amount and target. Create a
+        // GameEventConsumable for each object
         List<?> list = config.getList(getPath() + ".consumables");
 
         if (list == null) {
@@ -111,7 +115,9 @@ public abstract class GameEvent {
                 boolean giveable = Boolean.parseBoolean(map.get("giveable").toString());
                 String message = map.get("message").toString();
 
-                GameEventConsumable consumable = new GameEventConsumable(GameEventConsumable.ConsumableType.valueOf(type.toUpperCase()), amount, giveable, GameEventConsumable.ConsumableTarget.valueOf(target.toUpperCase()), message);
+                GameEventConsumable consumable = new GameEventConsumable(
+                        GameEventConsumable.ConsumableType.valueOf(type.toUpperCase()), amount, giveable,
+                        GameEventConsumable.ConsumableTarget.valueOf(target.toUpperCase()), message);
                 consumables.add(consumable);
             } catch (NullPointerException e) {
                 Slurp.logger.warning("Invalid consumable '" + list.indexOf(object) + "' for event " + name);
@@ -127,7 +133,8 @@ public abstract class GameEvent {
      */
     public void triggerFor(SlurpPlayer player) {
         Slurp.logger.info("Triggering event " + name + " for player " + player.getPlayer().getName());
-        if (!enabled) return;
+        if (!enabled)
+            return;
 
         ArrayList<CompletableFuture<?>> futures = new ArrayList<>();
 
@@ -150,26 +157,33 @@ public abstract class GameEvent {
 
             switch (consumable.target) {
                 case PLAYER -> {
-                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), player.getUuid(), player.getSession().getUuid(), consumable.giveable, false);
-                    futures.add(SlurpEntry.create(entry, session.getToken()));
-                    Bukkit.broadcast(TextBuilder.warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName())));
+                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), player.getUuid(),
+                            player.getSession().getUuid(), consumable.giveable, false);
+                    futures.add(SlurpEntry.create(entry));
+                    Bukkit.broadcast(TextBuilder
+                            .warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName())));
                 }
                 case ALL -> {
                     for (SlurpPlayer slurpPlayer : session.getPlayers()) {
-                        SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), consumable.giveable, false);
-                        futures.add(SlurpEntry.createDirect(entry, session.getToken()));
+                        SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), slurpPlayer.getUuid(),
+                                slurpPlayer.getSession().getUuid(), consumable.giveable, false);
+                        futures.add(SlurpEntry.createDirect(entry));
                     }
-                    Bukkit.broadcast(TextBuilder.warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName())));
+                    Bukkit.broadcast(TextBuilder
+                            .warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName())));
                 }
                 case RANDOM -> {
                     SlurpPlayer randomPlayer = session.getRandomPlayersInSession(1).get(0);
-                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), toAdd.getShots(), randomPlayer.getUuid(), randomPlayer.getSession().getUuid(), consumable.giveable, false);
-                    futures.add(SlurpEntry.create(entry, session.getToken()));
-                    Bukkit.broadcast(TextBuilder.warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName()).replaceAll("%target%", randomPlayer.getPlayer().getName())));
+                    SlurpEntryBuilder entry = new SlurpEntryBuilder(toAdd.getSips(), randomPlayer.getUuid(),
+                            randomPlayer.getSession().getUuid(), consumable.giveable, false);
+                    futures.add(SlurpEntry.create(entry));
+                    Bukkit.broadcast(TextBuilder
+                            .warning(consumable.getMessage().replaceAll("%player%", minecraftPlayer.getName())
+                                    .replaceAll("%target%", randomPlayer.getPlayer().getName())));
                 }
             }
 
-            CompletableFuture[] futureArray = new CompletableFuture[futures.size()];
+            CompletableFuture<?>[] futureArray = new CompletableFuture[futures.size()];
             futures.toArray(futureArray);
 
             CompletableFuture.allOf(futureArray).join();
@@ -177,9 +191,9 @@ public abstract class GameEvent {
     }
 
     protected record GameEventConsumable(GameEvent.GameEventConsumable.ConsumableType type, int amount,
-                                         boolean giveable,
-                                         GameEvent.GameEventConsumable.ConsumableTarget target,
-                                         String message) {
+            boolean giveable,
+            GameEvent.GameEventConsumable.ConsumableTarget target,
+            String message) {
         public Consumable toConsumable() {
             Consumable consumable = new Consumable();
             consumable.setShots(type == ConsumableType.SHOT ? amount : 0);

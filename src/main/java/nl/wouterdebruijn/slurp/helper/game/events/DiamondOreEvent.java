@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DiamondOreEvent extends GameEvent implements Listener {
-    private static final ArrayList<Material> materials = new ArrayList<>(Arrays.asList(Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE));
+    private static final ArrayList<Material> materials = new ArrayList<>(
+            Arrays.asList(Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE));
 
     public DiamondOreEvent(FileConfiguration config) {
         super(config, "diamond-ore");

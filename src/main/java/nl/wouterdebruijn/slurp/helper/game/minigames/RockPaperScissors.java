@@ -1,5 +1,19 @@
 package nl.wouterdebruijn.slurp.helper.game.minigames;
 
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -12,19 +26,6 @@ import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.handlers.TitleHandler;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 public class RockPaperScissors {
     /**
@@ -105,8 +106,10 @@ public class RockPaperScissors {
             Participant winner = this.getWinner();
             if (winner == null) {
                 // Draw
-                CompletableFuture<Void> t1 = TitleHandler.asyncTitle(this.player1.getPlayer(), Title.title(Component.text("Draw").color(NamedTextColor.YELLOW), Component.empty()));
-                CompletableFuture<Void> t2 = TitleHandler.asyncTitle(this.player2.getPlayer(), Title.title(Component.text("Draw").color(NamedTextColor.YELLOW), Component.empty()));
+                CompletableFuture<Void> t1 = TitleHandler.asyncTitle(this.player1.getPlayer(),
+                        Title.title(Component.text("Draw").color(NamedTextColor.YELLOW), Component.empty()));
+                CompletableFuture<Void> t2 = TitleHandler.asyncTitle(this.player2.getPlayer(),
+                        Title.title(Component.text("Draw").color(NamedTextColor.YELLOW), Component.empty()));
 
                 // Wait for both titles to be displayed
                 CompletableFuture.allOf(t1, t2).join();
@@ -116,8 +119,10 @@ public class RockPaperScissors {
             } else {
                 Participant loser = this.getOpponent(winner);
                 // Winner found
-                CompletableFuture<Void> t1 = TitleHandler.asyncTitle(winner.getPlayer(), Title.title(Component.text("You won!").color(NamedTextColor.GREEN), Component.empty()));
-                CompletableFuture<Void> t2 = TitleHandler.asyncTitle(loser.getPlayer(), Title.title(Component.text("You lost!").color(NamedTextColor.RED), Component.empty()));
+                CompletableFuture<Void> t1 = TitleHandler.asyncTitle(winner.getPlayer(),
+                        Title.title(Component.text("You won!").color(NamedTextColor.GREEN), Component.empty()));
+                CompletableFuture<Void> t2 = TitleHandler.asyncTitle(loser.getPlayer(),
+                        Title.title(Component.text("You lost!").color(NamedTextColor.RED), Component.empty()));
 
                 // Wait for both titles to be displayed
                 CompletableFuture.allOf(t1, t2).join();
@@ -141,7 +146,8 @@ public class RockPaperScissors {
                             return;
                         }
 
-                        SlurpSession serverSession = SlurpSessionManager.getSession(loserSlurpPlayer.getSession().getUuid());
+                        SlurpSession serverSession = SlurpSessionManager
+                                .getSession(loserSlurpPlayer.getSession().getUuid());
 
                         if (serverSession == null) {
                             Slurp.logger.severe("Error while getting server session");
@@ -149,10 +155,13 @@ public class RockPaperScissors {
                         }
 
                         // Add the stakes to the loser's inventory
-                        SlurpEntryBuilder entry = new SlurpEntryBuilder(this.getStakes(), 0, loserSlurpPlayer.getUuid(), serverSession.getUuid(), false, false);
-                        SlurpEntry.create(entry, serverSession.getToken());
+                        SlurpEntryBuilder entry = new SlurpEntryBuilder(this.getStakes(), loserSlurpPlayer.getUuid(),
+                                serverSession.getUuid(), false, false);
+                        SlurpEntry.create(entry);
 
-                        Bukkit.broadcast(TextBuilder.success(String.format("%s played rock paper scissors with %s and lost, taking %d sips.", loser.getPlayer().getName(), winner.getPlayer().getName(), this.getStakes())));
+                        Bukkit.broadcast(TextBuilder.success(
+                                String.format("%s played rock paper scissors with %s and lost, taking %d sips.",
+                                        loser.getPlayer().getName(), winner.getPlayer().getName(), this.getStakes())));
                     }
 
                 } catch (Exception e) {
@@ -220,7 +229,8 @@ public class RockPaperScissors {
         }
 
         public boolean askRematch() {
-            Inventory inv = Bukkit.createInventory(null, 27, Component.text(String.format("Rematch for double the stakes (%d)?", this.game.getStakes() * 2)));
+            Inventory inv = Bukkit.createInventory(null, 27,
+                    Component.text(String.format("Rematch for double the stakes (%d)?", this.game.getStakes() * 2)));
 
             ItemStack yes = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
             yes.editMeta(meta -> {

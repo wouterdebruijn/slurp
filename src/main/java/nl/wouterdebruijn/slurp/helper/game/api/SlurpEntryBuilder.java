@@ -1,11 +1,9 @@
 package nl.wouterdebruijn.slurp.helper.game.api;
 
-import nl.wouterdebruijn.slurp.helper.game.entity.Consumable;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 
 public class SlurpEntryBuilder {
-    private final int sips;
-    private final int shots;
+    private final int units;
     private final String player;
     private final String session;
     private final boolean giveable;
@@ -21,9 +19,8 @@ public class SlurpEntryBuilder {
      * @param giveable True if the sips can be given away, false if not.
      * @param transfer True if the sips are transferred to another player, false if not.
      */
-    public SlurpEntryBuilder(int sips, int shots, String player, String session, boolean giveable, boolean transfer) {
-        this.sips = sips;
-        this.shots = shots;
+    public SlurpEntryBuilder(int units, String player, String session, boolean giveable, boolean transfer) {
+        this.units = units;
         this.player = player;
         this.session = session;
         this.giveable = giveable;
@@ -35,60 +32,38 @@ public class SlurpEntryBuilder {
     }
 
     public SlurpEntryBuilder copyForPlayer(SlurpPlayer player) {
-        return new SlurpEntryBuilder(sips, shots, player.getUuid(), session, giveable, transfer);
+        return new SlurpEntryBuilder(units, player.getUuid(), session, giveable, transfer);
     }
 
     public boolean shouldTransferToDrinkingBuddies() {
         return !transfer && !giveable;
     }
 
-    public int getSips() {
-        return sips;
+    public int getUnits() {
+        return units;
     }
 
-    public int getShots() {
-        return shots;
-    }
-
-    public Consumable getTaken() {
-        Consumable taken = new Consumable();
-
+    public int getTaken() {
         if (this.giveable || this.transfer) {
-            return taken;
+            return 0;
         }
 
-        if (shots < 0)
-            taken.setShots(shots);
-
-        if (sips < 0)
-            taken.setSips(sips);
-
-        return taken;
+        return units;
     }
 
-    public Consumable getRemaining() {
-        Consumable remaining = new Consumable();
-
+    public int getRemaining() {
         if (this.giveable) {
-            return remaining;
+            return 0;
         }
 
-        remaining.setShots(shots);
-        remaining.setSips(sips);
-
-        return remaining;
+        return units;
     }
 
-    public Consumable getGiveable() {
-        Consumable giveable = new Consumable();
-
+    public int getGiveable() {
         if (!this.giveable) {
-            return giveable;
+            return 0;
         }
 
-        giveable.setShots(shots);
-        giveable.setSips(sips);
-
-        return giveable;
+        return units;
     }
 }

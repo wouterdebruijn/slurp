@@ -1,13 +1,9 @@
 package nl.wouterdebruijn.slurp.command.entry;
 
-import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
-import nl.wouterdebruijn.slurp.helper.TextBuilder;
-import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.handlers.ConsumableGivingHandler;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,13 +12,19 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.handlers.ConsumableGivingHandler;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class GiveSip implements TabExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         Player player = (Player) sender;
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
@@ -43,7 +45,7 @@ public class GiveSip implements TabExecutor {
             player.sendMessage(TextBuilder.error("Invalid amount!"));
             return true;
         }
-        int balance = slurpPlayer.getGiveable().getSips();
+        int balance = slurpPlayer.getGiveable();
 
         if (amount > balance) {
             player.sendMessage(TextBuilder.error("You don't have enough sips to give away!"));
@@ -67,15 +69,19 @@ public class GiveSip implements TabExecutor {
         Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
             try {
                 // Give the target player the sips
-                SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, 0, targetSlurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), false, false);
-                CompletableFuture<ArrayList<SlurpEntry>> addSips = ConsumableGivingHandler.playerGiveConsumable(target, player, entry);
+                SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, targetSlurpPlayer.getUuid(),
+                        slurpPlayer.getSession().getUuid(), false, false);
+                CompletableFuture<ArrayList<SlurpEntry>> addSips = ConsumableGivingHandler.playerGiveConsumable(target,
+                        player, entry);
 
-                // Wait for the sips to be added to the player, if it fails, it will throw an exception
+                // Wait for the sips to be added to the player, if it fails, it will throw an
+                // exception
                 addSips.get();
 
                 // Remove the sips from the player
-                SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(-amount, 0, slurpPlayer.getUuid(), slurpPlayer.getSession().getUuid(), true, false);
-                SlurpEntry.createDirect(giveableUpdateEntry, slurpPlayer.getSession().getToken()).get();
+                SlurpEntryBuilder giveableUpdateEntry = new SlurpEntryBuilder(-amount, slurpPlayer.getUuid(),
+                        slurpPlayer.getSession().getUuid(), true, false);
+                SlurpEntry.createDirect(giveableUpdateEntry).get();
             } catch (Exception e) {
                 Throwable cause = e.getCause();
                 if (cause instanceof SlurpMessageException) {
@@ -90,7 +96,8 @@ public class GiveSip implements TabExecutor {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+            @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(TextBuilder.error("You must be a player to execute this command!"));
             return null;
@@ -102,7 +109,7 @@ public class GiveSip implements TabExecutor {
             return null;
         }
 
-        int balance = slurpPlayer.getGiveable().getSips();
+        int balance = slurpPlayer.getGiveable();
 
         if (args.length == 1) {
             // return list of players

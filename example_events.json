@@ -1,0 +1,107 @@
+{
+    "events": [
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "wood",
+                "oak"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "MINED_BLOCK",
+            "context": [
+                "diamonds",
+                "ore"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "KILLED_ENTITY",
+            "context": [
+                "zombie",
+                "sword"
+            ],
+            "player": "maksje5"
+        },
+        {
+            "name": "KILLED_ENTITY",
+            "context": [
+                "zombie",
+                "sword"
+            ],
+            "player": "schotsl"
+        },
+                {
+            "name": "KILLED_PLAYER",
+            "context": [
+                "maksje5"
+            ],
+            "player": "schotsl"
+        }
+    ]
+}

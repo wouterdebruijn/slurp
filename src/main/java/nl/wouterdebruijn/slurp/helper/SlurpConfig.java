@@ -1,12 +1,17 @@
 package nl.wouterdebruijn.slurp.helper;
 
-import nl.wouterdebruijn.slurp.Slurp;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import nl.wouterdebruijn.slurp.Slurp;
+
 public class SlurpConfig {
+    static FileConfiguration config;
+
     public static void initialize() {
-        // Load the users config file, using the default values for any missing config options
+        // Load the users config file, using the default values for any missing config
+        // options
         Slurp.plugin.saveDefaultConfig();
+        config = Slurp.plugin.getConfig();
     }
 
     private static String getString(String key) {
@@ -21,6 +26,10 @@ public class SlurpConfig {
         return getString("api.url");
     }
 
+    public static String getToken() {
+        return getString("api.token");
+    }
+
     public static String prefix() {
         return getString("chat.prefix");
     }
@@ -32,9 +41,8 @@ public class SlurpConfig {
      * @return Returns integer value stored in config.
      */
     public static int getValue(ConfigValue val) {
-        FileConfiguration conf = Slurp.plugin.getConfig();
-        if (conf.contains(val.getPath())) {
-            return conf.getInt(val.getPath());
+        if (config.contains(val.getPath())) {
+            return config.getInt(val.getPath());
         }
         return 0;
     }
@@ -46,8 +54,7 @@ public class SlurpConfig {
      * @param value Integer value to be stored in the config.
      */
     public static void setValue(ConfigValue val, int value) {
-        FileConfiguration conf = Slurp.plugin.getConfig();
-        conf.set(val.getPath(), value);
+        config.set(val.getPath(), value);
         saveConfig();
     }
 

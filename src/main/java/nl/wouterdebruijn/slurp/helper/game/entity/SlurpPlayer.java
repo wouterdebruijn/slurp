@@ -18,7 +18,7 @@ import nl.wouterdebruijn.slurp.infra.Subject;
 
 public class SlurpPlayer extends Subject {
     private static final String API_URL = SlurpConfig.apiUrl();
-    private final String uuid;
+    private final String id;
     private final SlurpSession session;
     private final String username;
 
@@ -26,8 +26,8 @@ public class SlurpPlayer extends Subject {
     private int giveable;
     private int remaining;
 
-    public SlurpPlayer(String uuid, SlurpSession session, String username) {
-        this.uuid = uuid;
+    public SlurpPlayer(String id, SlurpSession session, String username) {
+        this.id = id;
         this.session = session;
         this.username = username;
         this.taken = 0;
@@ -36,7 +36,7 @@ public class SlurpPlayer extends Subject {
     }
 
     public SlurpPlayer(SlurpPlayerFileAdapter slurpPlayerFileAdapter) {
-        this.uuid = slurpPlayerFileAdapter.getUuid();
+        this.id = slurpPlayerFileAdapter.getId();
         this.session = slurpPlayerFileAdapter.getSession();
         this.username = slurpPlayerFileAdapter.getUsername();
         this.taken = 0;
@@ -44,17 +44,17 @@ public class SlurpPlayer extends Subject {
         this.remaining = 0;
     }
 
-    public static SlurpPlayer create(Player player, String sessionShort)
+    public static SlurpPlayer create(Player player, SlurpSession session)
             throws ApiUrlException, CreateSessionException, MissingSessionException, ApiResponseException,
             ExecutionException, InterruptedException {
-        SlurpPlayer slurpPlayer = PocketBase.createPlayer(player, sessionShort).get();
+        SlurpPlayer slurpPlayer = PocketBase.createPlayer(player, session.getId()).get();
         SlurpPlayerManager.addPlayer(player, slurpPlayer);
         ScoreboardManager.playerScoreboard(slurpPlayer);
         return slurpPlayer;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
     public SlurpSession getSession() {

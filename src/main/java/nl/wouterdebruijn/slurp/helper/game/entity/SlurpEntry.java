@@ -13,14 +13,14 @@ import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class SlurpEntry {
     private static final String API_URL = SlurpConfig.apiUrl();
-    private final String uuid;
+    private final String id;
     private final int units;
     private final SlurpPlayer player;
     private final boolean giveable;
     private final boolean transfer;
 
-    public SlurpEntry(String uuid, int units, SlurpPlayer player, boolean giveable, boolean transfer) {
-        this.uuid = uuid;
+    public SlurpEntry(String id, int units, SlurpPlayer player, boolean giveable, boolean transfer) {
+        this.id = id;
         this.units = units;
         this.player = player;
         this.giveable = giveable;
@@ -37,7 +37,7 @@ public class SlurpEntry {
     public static CompletableFuture<SlurpEntry> createDirect(SlurpEntryBuilder entry) {
         // Wishfully update the player's balances, faults will be corrected by the
         // websocket listener
-        SlurpPlayer player = SlurpPlayerManager.getPlayer(entry.getPlayerUuid());
+        SlurpPlayer player = SlurpPlayerManager.getPlayer(entry.getPlayerId());
 
         if (player == null) {
             return CompletableFuture.failedFuture(new Exception("Player not found"));
@@ -60,7 +60,7 @@ public class SlurpEntry {
     public static CompletableFuture<ArrayList<SlurpEntry>> create(SlurpEntryBuilder entry) {
 
         // Get drinking buddies for player
-        SlurpPlayer player = SlurpPlayerManager.getPlayer(entry.getPlayerUuid());
+        SlurpPlayer player = SlurpPlayerManager.getPlayer(entry.getPlayerId());
 
         if (player == null) {
             Slurp.logger.log(Level.SEVERE, "Player not found");
@@ -80,7 +80,7 @@ public class SlurpEntry {
             // If the player has buddies create entries for them too
             if (buddies != null && entry.shouldTransferToDrinkingBuddies()) {
                 // Prepare futures
-                CompletableFuture[] futures = new CompletableFuture[buddies.size()];
+                CompletableFuture<SlurpEntry>[] futures = new CompletableFuture[buddies.size()];
                 for (SlurpPlayer buddy : buddies) {
                     futures[buddies.indexOf(buddy)] = createDirect(entry.copyForPlayer(buddy));
                 }

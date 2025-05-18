@@ -35,7 +35,7 @@ public class SlurpPlayerManager {
     public static SlurpPlayer getPlayer(String uuid) {
         // Return the SlurpPlayer matching the given UUID (Slurp UUID)
         for (SlurpPlayer slurpPlayer : players.values()) {
-            if (slurpPlayer.getUuid().equals(uuid)) {
+            if (slurpPlayer.getId().equals(uuid)) {
                 return slurpPlayer;
             }
         }
@@ -45,7 +45,7 @@ public class SlurpPlayerManager {
     public static SlurpPlayer getPlayer(Player player, SlurpSession session) {
         for (SlurpPlayer slurpPlayer : players.values()) {
             if (slurpPlayer.getPlayer().getName().equals(player.getName())
-                    && slurpPlayer.getSession().getUuid().equals(session.getUuid())) {
+                    && slurpPlayer.getSession().getId().equals(session.getId())) {
                 return slurpPlayer;
             }
         }
@@ -107,7 +107,7 @@ public class SlurpPlayerManager {
 
                 // Go through arraylist and add to hashmap
                 playerList.forEach(slurpPlayerFileAdapter -> {
-                    Slurp.logger.log(Level.INFO, "Loaded player: " + slurpPlayerFileAdapter.getUsername());
+                    Slurp.logger.log(Level.INFO, "Loaded player: " + slurpPlayerFileAdapter.getId());
                     players.put(slurpPlayerFileAdapter.getMinecraftPlayerUuid(),
                             new SlurpPlayer(slurpPlayerFileAdapter));
                 });

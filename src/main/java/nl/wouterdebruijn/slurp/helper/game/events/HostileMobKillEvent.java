@@ -1,19 +1,18 @@
 package nl.wouterdebruijn.slurp.helper.game.events;
 
-import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
-import org.bukkit.Material;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class HostileMobKillEvent extends GameEvent implements Listener {
     private static final ArrayList<EntityType> entities = new ArrayList<>(Arrays.asList(
@@ -51,8 +50,7 @@ public class HostileMobKillEvent extends GameEvent implements Listener {
             EntityType.WITHER,
             EntityType.ENDER_DRAGON,
             EntityType.GIANT,
-            EntityType.ILLUSIONER
-    ));
+            EntityType.ILLUSIONER));
 
     public HostileMobKillEvent(FileConfiguration config) {
         super(config, "hostile-mob-kill");

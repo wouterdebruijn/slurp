@@ -1,11 +1,8 @@
 package nl.wouterdebruijn.slurp.command.session;
 
-import nl.wouterdebruijn.slurp.Slurp;
-import nl.wouterdebruijn.slurp.helper.TextBuilder;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import java.util.List;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,14 +11,18 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.logging.Level;
+import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 
 public class Leave implements TabExecutor {
 
     private boolean hasRemainingPlayers(SlurpSession session) {
         for (SlurpPlayer slurpPlayerI : SlurpPlayerManager.dump()) {
-            if (slurpPlayerI.getSession().getUuid().equals(session.getUuid())) {
+            if (slurpPlayerI.getSession().getId().equals(session.getId())) {
                 return true;
             }
         }
@@ -29,7 +30,8 @@ public class Leave implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         Player player = (Player) sender;
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
@@ -38,7 +40,7 @@ public class Leave implements TabExecutor {
             return true;
         }
 
-        SlurpSession session = SlurpSessionManager.getSession(slurpPlayer.getSession().getUuid());
+        SlurpSession session = SlurpSessionManager.getSession(slurpPlayer.getSession().getId());
 
         if (session == null) {
             player.sendMessage(TextBuilder.error("You are not in a session."));
@@ -50,15 +52,19 @@ public class Leave implements TabExecutor {
 
         if (!hasRemainingPlayers(session)) {
             SlurpSessionManager.remove(session);
-            Bukkit.broadcast(TextBuilder.info(String.format("Player %s left session %s", player.getName(), slurpPlayer.getSession().getUuid())), "slurp.drinker");
-            Slurp.logger.log(Level.INFO, "Removed session " + session.getUuid() + " because it has no remaining players.");
+            Bukkit.broadcast(TextBuilder.info(
+                    String.format("Player %s left session %s", player.getName(), slurpPlayer.getSession().getId())),
+                    "slurp.drinker");
+            Slurp.logger.log(Level.INFO,
+                    "Removed session " + session.getId() + " because it has no remaining players.");
         }
 
         return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+            @NotNull String label, @NotNull String[] args) {
         return null;
     }
 }

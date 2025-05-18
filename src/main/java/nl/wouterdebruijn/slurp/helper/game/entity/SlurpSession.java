@@ -10,24 +10,22 @@ import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.endpoint.PocketBase;
 import nl.wouterdebruijn.slurp.exceptions.ApiException;
 import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;
-import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class SlurpSession {
-    private static final String API_URL = SlurpConfig.apiUrl();
     private final String shortcode;
-    private final String uuid;
+    private final String id;
     private final boolean active;
 
     public SlurpSession(SlurpSession session) {
         this.shortcode = session.getShortcode();
-        this.uuid = session.getUuid();
+        this.id = session.getId();
         this.active = session.isActive();
     }
 
     public SlurpSession(String shortcode, String uuid, boolean active) {
         this.shortcode = shortcode;
-        this.uuid = uuid;
+        this.id = uuid;
         this.active = active;
     }
 
@@ -35,8 +33,8 @@ public class SlurpSession {
         return PocketBase.createSession();
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
     public String getShortcode() {

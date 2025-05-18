@@ -1,5 +1,11 @@
 package nl.wouterdebruijn.slurp.listener;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
@@ -7,11 +13,6 @@ import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.ScoreboardManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 public class SlurpSessionSubscriptionListener implements Listener {
     @EventHandler
@@ -22,10 +23,11 @@ public class SlurpSessionSubscriptionListener implements Listener {
             return;
         }
 
-        SlurpSession session = SlurpSessionManager.getSession(player.getSession().getUuid());
+        SlurpSession session = SlurpSessionManager.getSession(player.getSession().getId());
 
         if (session == null) {
-            Slurp.logger.warning("Player " + player.getUuid() + " is in a session that does not exist in sessionmanager storage");
+            Slurp.logger.warning(
+                    "Player " + player.getId() + " is in a session that does not exist in sessionmanager storage");
         }
 
         ScoreboardManager.playerScoreboard(player);
@@ -41,13 +43,14 @@ public class SlurpSessionSubscriptionListener implements Listener {
             return;
         }
 
-        SlurpSession session = SlurpSessionManager.getSession(player.getSession().getUuid());
+        SlurpSession session = SlurpSessionManager.getSession(player.getSession().getId());
 
         if (session == null) {
             return;
         }
 
-        // Check if there are any other players online in the session, if not, unsubscribe from the session
+        // Check if there are any other players online in the session, if not,
+        // unsubscribe from the session
         for (Player onlinePlayer : Slurp.plugin.getServer().getOnlinePlayers()) {
 
             // Don't check the player that just left
@@ -59,7 +62,7 @@ public class SlurpSessionSubscriptionListener implements Listener {
 
             // Don't check players that are not in a session
             // If the player is in the same session, don't close it
-            if (onlineSlurpPlayer != null && onlineSlurpPlayer.getSession().getUuid().equals(session.getUuid())) {
+            if (onlineSlurpPlayer != null && onlineSlurpPlayer.getSession().getId().equals(session.getId())) {
                 return;
             }
         }

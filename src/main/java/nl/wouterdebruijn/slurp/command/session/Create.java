@@ -1,9 +1,8 @@
 package nl.wouterdebruijn.slurp.command.session;
 
-import nl.wouterdebruijn.slurp.helper.TextBuilder;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -11,12 +10,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class Create implements TabExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         try {
             if (!(sender instanceof Player player)) {
                 sender.sendMessage(TextBuilder.error("You must be a player to execute this command."));
@@ -30,7 +32,7 @@ public class Create implements TabExecutor {
 
             SlurpSession session = SlurpSession.create();
             sender.sendMessage(TextBuilder.success(String.format("Created session %s", session.getShortcode())));
-            SlurpPlayer.create(player, session.getShortcode());
+            SlurpPlayer.create(player, session);
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -38,7 +40,8 @@ public class Create implements TabExecutor {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+            @NotNull String label, @NotNull String[] args) {
         return new ArrayList<>();
     }
 }

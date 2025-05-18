@@ -21,6 +21,7 @@ import nl.wouterdebruijn.slurp.command.session.Join;
 import nl.wouterdebruijn.slurp.command.session.Leave;
 import nl.wouterdebruijn.slurp.command.session.PlayRockPaperScissors;
 import nl.wouterdebruijn.slurp.command.session.Reload;
+import nl.wouterdebruijn.slurp.endpoint.PocketBase;
 import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.events.BrokenLegsEvent;
@@ -63,7 +64,6 @@ public final class Slurp extends JavaPlugin {
     public void onDisable() {
         SlurpSessionManager.saveToDisk();
         SlurpPlayerManager.saveToDisk();
-        SlurpConfig.saveConfig();
     }
 
     @Override
@@ -75,6 +75,7 @@ public final class Slurp extends JavaPlugin {
         SlurpPlayerManager.loadFromDisk();
 
         SlurpConfig.initialize();
+        PocketBase.initialize(SlurpConfig.getToken());
 
         // Register permissions
         for (Permissions permission : Permissions.values()) {

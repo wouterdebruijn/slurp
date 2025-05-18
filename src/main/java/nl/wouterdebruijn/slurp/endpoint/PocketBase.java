@@ -11,7 +11,9 @@ import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.exceptions.ApiResponseException;
@@ -32,28 +34,26 @@ public class PocketBase {
     private static final String API_URL = SlurpConfig.apiUrl();
 
     private static PocketBase instance;
-    private static Gson gson;
 
     private String token;
 
+    private PocketBase(String token) {
+        this.token = token;
+    }
+
     public static PocketBase getInstance() {
-        if (instance == null) {
-            instance = new PocketBase();
-        }
         return instance;
     }
 
-    public static void initialize() {
-        instance = new PocketBase();
+    public static void initialize(String token) {
+        instance = new PocketBase(token);
     }
 
     public static CompletableFuture<SlurpEntry> createEntry(SlurpEntryBuilder entry) {
         try {
-            Gson gson = new Gson();
-
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(API_URL + "/api/collections/entry/records"))
-                    .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(entry)))
+                    .uri(new URI(API_URL + "/api/collections/entries/records"))
+                    .POST(HttpRequest.BodyPublishers.ofString(PocketBaseGson.getGson().toJson(entry)))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + instance.token)
                     .build();
@@ -65,7 +65,7 @@ public class PocketBase {
                 throw new ApiResponseException(request, response);
             }
 
-            ResponseEntry responseEntry = gson.fromJson(response.body(), ResponseEntry.class);
+            ResponseEntry responseEntry = PocketBaseGson.getGson().fromJson(response.body(), ResponseEntry.class);
             return CompletableFuture.completedFuture(responseEntry.toSlurpEntry());
         } catch (Exception e) {
             Slurp.logger.log(Level.SEVERE, "Error while creating entry", e);
@@ -73,15 +73,15 @@ public class PocketBase {
         }
     }
 
-    public static CompletableFuture<SlurpPlayer> createPlayer(Player player, String sessionShort)
+    public static CompletableFuture<SlurpPlayer> createPlayer(Player player, String sessionId)
             throws CreateSessionException, ApiUrlException, ApiResponseException, MissingSessionException {
         HttpRequest request = null;
 
         try {
             request = HttpRequest.newBuilder()
-                    .uri(new URI(API_URL + "/api/collections/player/records"))
+                    .uri(new URI(API_URL + "/api/collections/players/records"))
                     .POST(HttpRequest.BodyPublishers.ofString(String
-                            .format("{\"session\": \"%s\", \"username\": \"%s\"}", sessionShort, player.getName())))
+                            .format("{\"session\": \"%s\", \"username\": \"%s\"}", sessionId, player.getName())))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + instance.token)
                     .build();
@@ -93,8 +93,8 @@ public class PocketBase {
                 throw new ApiResponseException(request, response);
             }
 
-            ResponsePlayer responsePlayer = gson.fromJson(response.body(), ResponsePlayer.class);
-            Slurp.logger.info(gson.toJson(responsePlayer));
+            ResponsePlayer responsePlayer = PocketBaseGson.getGson().fromJson(response.body(), ResponsePlayer.class);
+            Slurp.logger.info(PocketBaseGson.getGson().toJson(responsePlayer));
 
             SlurpPlayer slurpPlayer = responsePlayer.toSlurpPlayer();
             Slurp.logger.log(Level.INFO, String.format("Created player %s", slurpPlayer.getPlayer().getName()));
@@ -113,7 +113,7 @@ public class PocketBase {
 
         try {
             request = HttpRequest.newBuilder()
-                    .uri(new URI(API_URL + "/session"))
+                    .uri(new URI(API_URL + "/api/collections/sessions/records"))
                     .POST(HttpRequest.BodyPublishers.ofString("{}"))
                     .header("Content-Type", "application/json")
                     .build();
@@ -125,16 +125,55 @@ public class PocketBase {
                 throw new ApiResponseException(request, response);
             }
 
-            ResponseSession responseSession = gson.fromJson(response.body(), ResponseSession.class);
-            Slurp.logger.info(gson.toJson(responseSession));
+            ResponseSession responseSession = PocketBaseGson.getGson().fromJson(response.body(), ResponseSession.class);
+            Slurp.logger.info(PocketBaseGson.getGson().toJson(responseSession));
 
             SlurpSession session = responseSession.toSlurpSession();
             Slurp.logger.log(Level.INFO,
-                    String.format("Created session %s, (%s)", session.getShortcode(), session.getUuid()));
+                    String.format("Created session %s, (%s)", session.getShortcode(), session.getId()));
 
             SlurpSessionManager.addSession(session);
 
             return session;
+        } catch (URISyntaxException e) {
+            throw new ApiUrlException();
+        } catch (IOException | InterruptedException e) {
+            throw new CreateSessionException(request);
+        }
+    }
+
+    public static CompletableFuture<SlurpSession> getSession(String shortcode) throws ApiResponseException,
+            ApiUrlException, CreateSessionException {
+        HttpRequest request = null;
+
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(API_URL + "/api/collections/sessions/records?skipTotal=true&filter=shortcode='"
+                            + shortcode + "'"))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + instance.token)
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new ApiResponseException(request, response);
+            }
+
+            JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+            JsonElement sessionElement = jsonObject.getAsJsonArray("items").get(0);
+
+            ResponseSession responseSession = PocketBaseGson.getGson()
+                    .fromJson(sessionElement, ResponseSession.class);
+
+            Slurp.logger.info(PocketBaseGson.getGson().toJson(responseSession));
+
+            SlurpSession session = responseSession.toSlurpSession();
+            Slurp.logger.log(Level.INFO,
+                    String.format("Created session %s, (%s)", session.getShortcode(), session.getId()));
+
+            return CompletableFuture.completedFuture(session);
         } catch (URISyntaxException e) {
             throw new ApiUrlException();
         } catch (IOException | InterruptedException e) {

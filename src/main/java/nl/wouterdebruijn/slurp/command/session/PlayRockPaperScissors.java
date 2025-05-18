@@ -1,9 +1,8 @@
 package nl.wouterdebruijn.slurp.command.session;
 
-import nl.wouterdebruijn.slurp.helper.TextBuilder;
-import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
-import nl.wouterdebruijn.slurp.helper.game.minigames.RockPaperScissors;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,12 +11,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helper.game.minigames.RockPaperScissors;
 
 public class PlayRockPaperScissors implements TabExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         Player player = (Player) sender;
         Player player2 = Bukkit.getPlayer(args[0]);
 
@@ -39,7 +41,8 @@ public class PlayRockPaperScissors implements TabExecutor {
             return true;
         }
 
-        if (slurpPlayer.getSession() == null || slurpPlayer2.getSession() == null || !slurpPlayer.getSession().getUuid().equals(slurpPlayer2.getSession().getUuid())) {
+        if (slurpPlayer.getSession() == null || slurpPlayer2.getSession() == null
+                || !slurpPlayer.getSession().getId().equals(slurpPlayer2.getSession().getId())) {
             player.sendMessage(TextBuilder.error("You and the other player are not in the same session!"));
             return true;
         }
@@ -50,8 +53,10 @@ public class PlayRockPaperScissors implements TabExecutor {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length != 1) return null;
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+            @NotNull String label, @NotNull String[] args) {
+        if (args.length != 1)
+            return null;
 
         ArrayList<String> players = new ArrayList<>();
         Bukkit.getOnlinePlayers().forEach(player -> players.add(player.getName()));

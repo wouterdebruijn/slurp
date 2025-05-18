@@ -44,8 +44,8 @@ public class CreateEntry implements TabExecutor {
         boolean transfer = args[3].equalsIgnoreCase("TRUE");
 
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(target);
-        SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, slurpPlayer.getUuid(),
-                slurpPlayer.getSession().getUuid(), giveable, transfer);
+        SlurpEntryBuilder entry = new SlurpEntryBuilder(amount, slurpPlayer.getId(),
+                slurpPlayer.getSession().getId(), giveable, transfer);
 
         SlurpEntry.createDirect(entry);
 

@@ -147,7 +147,7 @@ public class RockPaperScissors {
                         }
 
                         SlurpSession serverSession = SlurpSessionManager
-                                .getSession(loserSlurpPlayer.getSession().getUuid());
+                                .getSession(loserSlurpPlayer.getSession().getId());
 
                         if (serverSession == null) {
                             Slurp.logger.severe("Error while getting server session");
@@ -155,8 +155,8 @@ public class RockPaperScissors {
                         }
 
                         // Add the stakes to the loser's inventory
-                        SlurpEntryBuilder entry = new SlurpEntryBuilder(this.getStakes(), loserSlurpPlayer.getUuid(),
-                                serverSession.getUuid(), false, false);
+                        SlurpEntryBuilder entry = new SlurpEntryBuilder(this.getStakes(), loserSlurpPlayer.getId(),
+                                serverSession.getId(), false, false);
                         SlurpEntry.create(entry);
 
                         Bukkit.broadcast(TextBuilder.success(

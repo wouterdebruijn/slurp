@@ -53,7 +53,7 @@ public class SlurpSessionManager {
 
         @Override
         public void onSubscribe(Subscription subscription) {
-            Slurp.logger.info("Subscribed to realtime events");
+            Slurp.logger.info("Subscribed to realtime events (SSE)");
             subscription.request(1);
 
             this.subscription = subscription;
@@ -89,8 +89,8 @@ public class SlurpSessionManager {
 
                         subscription.request(Long.MAX_VALUE);
                     } catch (Exception e) {
-                        Slurp.logger.log(Level.SEVERE, "Failed to register subscriptions, empty connection");
-                        Slurp.logger.log(Level.SEVERE, e.getMessage());
+                        Slurp.logger.severe("Failed to register subscriptions, empty connection");
+                        Slurp.logger.severe(e.getMessage());
                     }
                 }
 
@@ -108,11 +108,8 @@ public class SlurpSessionManager {
                     int received = jsonObject.get("received").getAsInt();
 
                     slurpPlayer.setGiveable(giveable);
-                    slurpPlayer.setTaken(taken);
+                    slurpPlayer.setTaken(jsonObject.get("taken").getAsInt());
                     slurpPlayer.setRemaining(received - taken);
-
-                    Slurp.logger.info("Updated player: " + slurpPlayer.getUsername() + " (" + giveable + ", "
-                            + taken + ", " + received + ")");
                 }
 
             } else {
@@ -124,13 +121,21 @@ public class SlurpSessionManager {
         public void onError(Throwable throwable) {
             Slurp.logger.severe("Error in SSE subscription: " + throwable.getMessage());
             // Handle error
+
+            Slurp.plugin.getServer().getScheduler().runTaskLaterAsynchronously(Slurp.plugin,
+                    () -> {
+                        try {
+                            SlurpSessionManager.subscribe();
+                        } catch (Exception e) {
+                            Slurp.logger.severe("Failed to resubscribe to SSE: " + e.getMessage());
+                        }
+                    }, 20 * 5); // Retry after 5 seconds
         }
 
         @Override
         public void onComplete() {
             // Sessions should not complete?
-            Slurp.logger.info("SSE subscription completed");
-
+            Slurp.logger.info("SSE subscription completed, restarting...");
             SlurpSessionManager.subscribe();
         }
     }
@@ -161,7 +166,6 @@ public class SlurpSessionManager {
                     return null;
                 });
 
-        Slurp.logger.info("Subscribed to realtime events (SSE)");
         return sseRequest;
     }
 

@@ -1,23 +1,45 @@
 package nl.wouterdebruijn.slurp.command.session;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
+import com.google.gson.JsonArray;
+
+import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.endpoint.GoogleAI;
+import nl.wouterdebruijn.slurp.helper.game.entity.EventLog;
 
 public class Debug implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
             @NotNull String[] args) {
-        Player player = (Player) sender;
 
-        sender.sendMessage(SlurpSessionManager.future.toString());
+        ArrayList<EventLog> eventLogs = Slurp.aiHandlerEvent.getEventLogs();
+
+        if (eventLogs.isEmpty()) {
+            sender.sendMessage("No events logged yet.");
+            return true;
+        }
+
+        JsonArray jsonArray = new JsonArray();
+        for (EventLog eventLog : eventLogs) {
+            jsonArray.add(eventLog.toJson());
+        }
+
+        sender.sendMessage("Event logs: " + jsonArray.toString());
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("generate")) {
+            GoogleAI.generateActions(eventLogs);
+            sender.sendMessage("Actions generated.");
+        } else {
+            sender.sendMessage("Use /debug generate to generate actions.");
+        }
 
         return true;
     }

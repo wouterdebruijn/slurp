@@ -21,29 +21,12 @@ import nl.wouterdebruijn.slurp.command.session.Join;
 import nl.wouterdebruijn.slurp.command.session.Leave;
 import nl.wouterdebruijn.slurp.command.session.PlayRockPaperScissors;
 import nl.wouterdebruijn.slurp.command.session.Reload;
+import nl.wouterdebruijn.slurp.endpoint.GoogleAI;
 import nl.wouterdebruijn.slurp.endpoint.PocketBase;
 import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.game.events.BrokenLegsEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.ChokingPlayerEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.CoalOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.DiamondOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.EmeraldOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.FurnaceBurnEvent;
+import nl.wouterdebruijn.slurp.helper.game.events.AIHandlerEvent;
 import nl.wouterdebruijn.slurp.helper.game.events.GameEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.GoldOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.HostileMobKillEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.IronOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.LapisOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.LogsEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.LucyStoneEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.NetherQuartzOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.NetheriteOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.PassiveMobKillEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.PlayerDiesEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.PlayerKillsEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.RedstoneOreEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.TorchEvent;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
@@ -52,6 +35,8 @@ public final class Slurp extends JavaPlugin {
     private static final ArrayList<GameEvent> gameEvents = new ArrayList<>();
     public static Plugin plugin = null;
     public static Logger logger = null;
+
+    public static AIHandlerEvent aiHandlerEvent = null;
 
     public static void reload() {
         Slurp.plugin.reloadConfig();
@@ -80,6 +65,8 @@ public final class Slurp extends JavaPlugin {
         SlurpConfig.initialize();
         PocketBase.initialize(SlurpConfig.getToken());
 
+        GoogleAI.initialize(SlurpConfig.getGoogleAIToken());
+
         // Register permissions
         for (Permissions permission : Permissions.values()) {
             Bukkit.getPluginManager().addPermission(permission.getBukkitPermission());
@@ -105,29 +92,31 @@ public final class Slurp extends JavaPlugin {
         pm.registerEvents(new SlurpSessionSubscriptionListener(), this);
 
         // New GameEvent API
-        FileConfiguration config = getConfig();
-        gameEvents.add(new FurnaceBurnEvent(config).register(this));
-        gameEvents.add(new LucyStoneEvent(config).register(this));
-        gameEvents.add(new ChokingPlayerEvent(config).register(this));
-        gameEvents.add(new BrokenLegsEvent(config).register(this));
-        gameEvents.add(new PlayerKillsEvent(config).register(this));
-        gameEvents.add(new PlayerDiesEvent(config).register(this));
+        // FileConfiguration config = getConfig();
+        // gameEvents.add(new FurnaceBurnEvent(config).register(this));
+        // gameEvents.add(new LucyStoneEvent(config).register(this));
+        // gameEvents.add(new ChokingPlayerEvent(config).register(this));
+        // gameEvents.add(new BrokenLegsEvent(config).register(this));
+        // gameEvents.add(new PlayerKillsEvent(config).register(this));
+        // gameEvents.add(new PlayerDiesEvent(config).register(this));
 
-        gameEvents.add(new IronOreEvent(config).register(this));
-        gameEvents.add(new GoldOreEvent(config).register(this));
-        gameEvents.add(new DiamondOreEvent(config).register(this));
-        gameEvents.add(new EmeraldOreEvent(config).register(this));
-        gameEvents.add(new LapisOreEvent(config).register(this));
-        gameEvents.add(new RedstoneOreEvent(config).register(this));
-        gameEvents.add(new CoalOreEvent(config).register(this));
-        gameEvents.add(new NetherQuartzOreEvent(config).register(this));
-        gameEvents.add(new NetheriteOreEvent(config).register(this));
+        // gameEvents.add(new IronOreEvent(config).register(this));
+        // gameEvents.add(new GoldOreEvent(config).register(this));
+        // gameEvents.add(new DiamondOreEvent(config).register(this));
+        // gameEvents.add(new EmeraldOreEvent(config).register(this));
+        // gameEvents.add(new LapisOreEvent(config).register(this));
+        // gameEvents.add(new RedstoneOreEvent(config).register(this));
+        // gameEvents.add(new CoalOreEvent(config).register(this));
+        // gameEvents.add(new NetherQuartzOreEvent(config).register(this));
+        // gameEvents.add(new NetheriteOreEvent(config).register(this));
 
-        gameEvents.add(new HostileMobKillEvent(config).register(this));
-        gameEvents.add(new PassiveMobKillEvent(config).register(this));
+        // gameEvents.add(new HostileMobKillEvent(config).register(this));
+        // gameEvents.add(new PassiveMobKillEvent(config).register(this));
 
-        gameEvents.add(new LogsEvent(config).register(this));
-        gameEvents.add(new TorchEvent(config).register(this));
+        // gameEvents.add(new LogsEvent(config).register(this));
+        // gameEvents.add(new TorchEvent(config).register(this));
 
+        Slurp.aiHandlerEvent = new AIHandlerEvent();
+        Slurp.plugin.getServer().getPluginManager().registerEvents(Slurp.aiHandlerEvent, plugin);
     }
 }

@@ -74,8 +74,19 @@ public class SlurpPlayerManager {
      * @param slurper     SlurpPlayer object to check if null
      * @return True is the SlurpPlayer is null, false if it is not.
      */
+    @Deprecated
     public static boolean checkNullSilent(Player slurpPlayer, SlurpPlayer slurper) {
         return slurper == null;
+    }
+
+    /**
+     * Checks if a SlurpPlayer is null silently.
+     *
+     * @param slurpPlayer SlurpPlayer object to check if null
+     * @return True is the SlurpPlayer is null, false if it is not.
+     */
+    public static boolean checkNullSilent(SlurpPlayer slurpPlayer) {
+        return slurpPlayer == null;
     }
 
     public static ArrayList<SlurpPlayer> dump() {

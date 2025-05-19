@@ -30,6 +30,10 @@ public class SlurpConfig {
         return getString("api.token");
     }
 
+    public static String getGoogleAIToken() {
+        return getString("google-ai.token");
+    }
+
     public static String prefix() {
         return getString("chat.prefix");
     }

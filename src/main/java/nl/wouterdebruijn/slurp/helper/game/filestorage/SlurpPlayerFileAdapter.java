@@ -6,7 +6,7 @@ public class SlurpPlayerFileAdapter extends SlurpPlayer {
     private final String minecraftPlayerUuid;
 
     public SlurpPlayerFileAdapter(SlurpPlayer player, String minecraftUuid) {
-        super(player.getId(), player.getSession(), player.getPlayer().getName());
+        super(player.getId(), player.getSession(), player.getUsername());
         minecraftPlayerUuid = minecraftUuid;
     }
 

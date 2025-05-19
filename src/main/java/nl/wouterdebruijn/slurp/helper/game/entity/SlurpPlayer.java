@@ -67,7 +67,7 @@ public class SlurpPlayer extends Subject {
      * @return The username of the player
      */
     public String getUsername() {
-        return this.getPlayer().getName();
+        return username;
     }
 
     /**

@@ -47,7 +47,7 @@ public class SlurpEntryBuilder {
     }
 
     public int getTaken() {
-        if (this.giveable || this.transfer) {
+        if (this.giveable || this.transfer || this.units > 0) {
             return 0;
         }
 
@@ -55,7 +55,7 @@ public class SlurpEntryBuilder {
     }
 
     public int getRemaining() {
-        if (this.giveable) {
+        if (this.giveable || this.units < 0) {
             return 0;
         }
 
@@ -63,7 +63,7 @@ public class SlurpEntryBuilder {
     }
 
     public int getGiveable() {
-        if (!this.giveable) {
+        if (!this.giveable || this.units < 0) {
             return 0;
         }
 

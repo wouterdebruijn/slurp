@@ -5,71 +5,164 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.http.WebSocket;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Flow;
+import java.util.concurrent.Flow.Subscription;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import cloud.prefab.sse.SSEHandler;
+import cloud.prefab.sse.events.CommentEvent;
+import cloud.prefab.sse.events.DataEvent;
+import cloud.prefab.sse.events.Event;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.endpoint.PocketBase;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 
 public class SlurpSessionManager {
 
     private static final String API_URL = SlurpConfig.apiUrl();
     public static ArrayList<SlurpSession> sessions = new ArrayList<>();
-    public static HashMap<SlurpSession, WebSocket> websockets = new HashMap<>();
 
-    /**
-     * Method needs to be refactored to use the new API
-     */
-    @Deprecated
-    public static void subscribeToSession(SlurpSession session) {
-        return;
+    public static Future<?> future = null;
 
-        // if (websockets.containsKey(session)) {
-        // // Don't subscribe if we're already subscribed
-        // return;
-        // }
+    public static void addSession(SlurpSession session) {
+        sessions.add(session);
+    }
 
-        // URI websocketURI = URI.create((API_URL + "/socket/session/" +
-        // session.getId()).replace("http", "ws"));
-
-        // HttpClient client = HttpClient.newHttpClient();
-        // WebSocket socket = client.newWebSocketBuilder()
-        // .buildAsync(websocketURI, new SlurpSessionManager.WebSocketListener(session))
-        // .join();
-
-        // websockets.put(session, socket);
+    public static void removeSession(SlurpSession session) {
+        sessions.remove(session);
     }
 
     /**
-     * Method needs to be refactored to use the new API
+     * SSE Flow subscriber, handles SSE events from pocketbase
      */
-    @Deprecated
-    public static void unsubscribeFromSession(SlurpSession session) {
-        return;
+    private static class FlowSubscriber implements Flow.Subscriber<Event> {
+        private String clientId;
+        Subscription subscription;
 
-        // WebSocket socket = websockets.get(session);
+        @Override
+        public void onSubscribe(Subscription subscription) {
+            Slurp.logger.info("Subscribed to realtime events");
+            subscription.request(1);
 
-        // if (session == null) {
-        // return;
-        // }
+            this.subscription = subscription;
+        }
 
-        // socket.sendClose(WebSocket.NORMAL_CLOSURE, "Bye")
-        // .whenComplete((webSocket, throwable) -> {
-        // if (throwable != null) {
-        // Slurp.logger.log(Level.SEVERE, "Failed to close websocket connection");
-        // throw new RuntimeException(throwable);
-        // }
-        // });
+        @Override
+        public void onNext(Event item) {
+            if (item instanceof CommentEvent) {
+                CommentEvent commentEvent = (CommentEvent) item;
+                Slurp.logger.info("Received SSE comment: " + commentEvent.getComment());
+                // Handle the comment
+            } else if (item instanceof DataEvent) {
+                DataEvent dataEvent = (DataEvent) item;
 
-        // websockets.remove(session);
+                String eventName = dataEvent.getEventName();
+                String dataString = dataEvent.getData();
+
+                Slurp.logger.info("Received SSE event (" + eventName + "): " + dataString.trim());
+                // Handle the event
+                // You can parse the data and update the session list accordingly
+
+                JsonObject jsonObject = JsonParser.parseString(dataString.trim()).getAsJsonObject();
+
+                if (eventName.equals("PB_CONNECT")) {
+                    // Connected to server, register clientId
+                    clientId = jsonObject.get("clientId").getAsString();
+
+                    ArrayList<String> subscriptions = new ArrayList<String>();
+                    subscriptions.add("player_entries");
+
+                    try {
+                        PocketBase.registerSubscriptions(clientId, subscriptions);
+
+                        subscription.request(Long.MAX_VALUE);
+                    } catch (Exception e) {
+                        Slurp.logger.log(Level.SEVERE, "Failed to register subscriptions, empty connection");
+                        Slurp.logger.log(Level.SEVERE, e.getMessage());
+                    }
+                }
+
+                if (eventName.equals("player_entries")) {
+                    SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(jsonObject.get("id").getAsString());
+
+                    if (slurpPlayer == null) {
+                        Slurp.logger.warning("Received unknown player: " + jsonObject.get("id").getAsString() + " " +
+                                jsonObject.get("username").getAsString());
+                        return;
+                    }
+
+                    int giveable = jsonObject.get("giveable").getAsInt();
+                    int taken = jsonObject.get("taken").getAsInt() * -1;
+                    int received = jsonObject.get("received").getAsInt();
+
+                    slurpPlayer.setGiveable(giveable);
+                    slurpPlayer.setTaken(taken);
+                    slurpPlayer.setRemaining(received - taken);
+
+                    Slurp.logger.info("Updated player: " + slurpPlayer.getUsername() + " (" + giveable + ", "
+                            + taken + ", " + received + ")");
+                }
+
+            } else {
+                Slurp.logger.warning("Received unknown SSE event: " + item);
+            }
+        }
+
+        @Override
+        public void onError(Throwable throwable) {
+            Slurp.logger.severe("Error in SSE subscription: " + throwable.getMessage());
+            // Handle error
+        }
+
+        @Override
+        public void onComplete() {
+            // Sessions should not complete?
+            Slurp.logger.info("SSE subscription completed");
+
+            SlurpSessionManager.subscribe();
+        }
+    }
+
+    public static HttpRequest subscribe() {
+        // Subscribe to session using SSE
+        HttpClient httpClient = HttpClient.newHttpClient();
+
+        HttpRequest sseRequest = HttpRequest.newBuilder()
+                .uri(java.net.URI.create(API_URL + "/api/realtime"))
+                .header("Authorization", "Bearer " + SlurpConfig.getToken())
+                .header("Accept", "text/event-stream")
+                .build();
+
+        SSEHandler sseHandler = new SSEHandler();
+
+        FlowSubscriber flowSubscriber = new FlowSubscriber();
+
+        sseHandler.subscribe(flowSubscriber);
+
+        SlurpSessionManager.future = httpClient.sendAsync(sseRequest,
+                HttpResponse.BodyHandlers.fromLineSubscriber(sseHandler))
+                .handle((ignored, throwable) -> {
+                    if (throwable != null) {
+                        Slurp.logger.severe("Failed to subscribe to realtime SSE");
+                        throw new RuntimeException(throwable);
+                    }
+                    return null;
+                });
+
+        Slurp.logger.info("Subscribed to realtime events (SSE)");
+        return sseRequest;
     }
 
     /**
@@ -148,69 +241,6 @@ public class SlurpSessionManager {
         } catch (Exception e) {
             Slurp.logger.log(Level.SEVERE, "Failed to load sessions from disk");
             throw new RuntimeException(e);
-        }
-    }
-
-    public static void addSession(SlurpSession session) {
-        sessions.add(session);
-        subscribeToSession(session);
-    }
-
-    public static void remove(SlurpSession session) {
-        sessions.remove(session);
-        unsubscribeFromSession(session);
-    }
-
-    private static class WebSocketListener implements WebSocket.Listener {
-        SlurpSession session;
-
-        public WebSocketListener(SlurpSession session) {
-            this.session = session;
-        }
-
-        @Override
-        public void onOpen(WebSocket webSocket) {
-            Slurp.logger.info("Websocket opened");
-            WebSocket.Listener.super.onOpen(webSocket);
-        }
-
-        @Override
-        public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
-            Slurp.logger.info("Received websocket data: " + data.toString());
-
-            // TODO: implement for Pocketbase
-
-            // ArrayList<ResponsePlayer> responsePlayers = gson.fromJson(data.toString(),
-            // new TypeToken<ArrayList<ResponsePlayer>>() {
-            // }.getType());
-            // responsePlayers.forEach(responsePlayer -> {
-            // SlurpPlayer player = SlurpPlayerManager.getPlayer(responsePlayer.getId());
-
-            // if (player == null) {
-            // Slurp.logger.log(Level.WARNING,
-            // "Received player update for unknown player: " + responsePlayer.getId());
-            // return;
-            // }
-
-            // player.setGiveable(responsePlayer.getGiveable());
-            // player.setTaken(responsePlayer.getTaken());
-            // player.setRemaining(responsePlayer.getRemaining());
-            // });
-
-            return WebSocket.Listener.super.onText(webSocket, data, last);
-        }
-
-        @Override
-        public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
-            Slurp.logger.warning("Websocket closed with status code " + statusCode + " and reason: " + reason);
-
-            if (statusCode != WebSocket.NORMAL_CLOSURE) {
-                // Resubscribe if the connection was closed unexpectedly
-                SlurpSessionManager.subscribeToSession(session);
-                Slurp.logger.info("Resubscribed to session " + session.getId());
-            }
-
-            return WebSocket.Listener.super.onClose(webSocket, statusCode, reason);
         }
     }
 }

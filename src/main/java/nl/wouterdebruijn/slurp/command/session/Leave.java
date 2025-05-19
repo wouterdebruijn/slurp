@@ -51,7 +51,7 @@ public class Leave implements TabExecutor {
         player.sendMessage(TextBuilder.success("You have left the session."));
 
         if (!hasRemainingPlayers(session)) {
-            SlurpSessionManager.remove(session);
+            SlurpSessionManager.removeSession(session);
             Bukkit.broadcast(TextBuilder.info(
                     String.format("Player %s left session %s", player.getName(), slurpPlayer.getSession().getId())),
                     "slurp.drinker");

@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
@@ -135,6 +136,42 @@ public class PocketBase {
             SlurpSessionManager.addSession(session);
 
             return session;
+        } catch (URISyntaxException e) {
+            throw new ApiUrlException();
+        } catch (IOException | InterruptedException e) {
+            throw new CreateSessionException(request);
+        }
+    }
+
+    public static void registerSubscriptions(String clientId, ArrayList<String> subscriptions)
+            throws ApiResponseException, ApiUrlException, CreateSessionException {
+        HttpRequest request = null;
+
+        try {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("clientId", clientId);
+
+            JsonElement element = PocketBaseGson.getGson().toJsonTree(subscriptions);
+
+            jsonObject.add("subscriptions", element);
+
+            Slurp.logger.info("Registering SSE subscriptions: " + jsonObject.toString());
+
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(API_URL + "/api/realtime"))
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonObject.toString()))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + SlurpConfig.getToken())
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200 && response.statusCode() != 204) {
+                throw new ApiResponseException(request, response);
+            }
+
+            Slurp.logger.info("Registered SSE subscriptions: " + subscriptions);
         } catch (URISyntaxException e) {
             throw new ApiUrlException();
         } catch (IOException | InterruptedException e) {

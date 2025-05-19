@@ -31,7 +31,6 @@ public class SlurpSessionSubscriptionListener implements Listener {
         }
 
         ScoreboardManager.playerScoreboard(player);
-        SlurpSessionManager.subscribeToSession(session);
         DrinkingBuddyManager.enableDrinkingBuddyTask(session);
     }
 
@@ -67,7 +66,6 @@ public class SlurpSessionSubscriptionListener implements Listener {
             }
         }
 
-        SlurpSessionManager.unsubscribeFromSession(session);
         DrinkingBuddyManager.disableDrinkingBuddyTask(session);
     }
 }

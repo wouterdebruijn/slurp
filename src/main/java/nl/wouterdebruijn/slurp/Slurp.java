@@ -74,6 +74,9 @@ public final class Slurp extends JavaPlugin {
         SlurpSessionManager.loadFromDisk();
         SlurpPlayerManager.loadFromDisk();
 
+        // Subscribe to the PocketBase SSE events
+        SlurpSessionManager.subscribe();
+
         SlurpConfig.initialize();
         PocketBase.initialize(SlurpConfig.getToken());
 

@@ -32,10 +32,10 @@ public class SlurpPlayerManager {
         return players.get(player.getUniqueId().toString());
     }
 
-    public static SlurpPlayer getPlayer(String uuid) {
-        // Return the SlurpPlayer matching the given UUID (Slurp UUID)
+    public static SlurpPlayer getPlayer(String id) {
+        // Return the SlurpPlayer matching the given id (Slurp id)
         for (SlurpPlayer slurpPlayer : players.values()) {
-            if (slurpPlayer.getId().equals(uuid)) {
+            if (slurpPlayer.getId().equals(id)) {
                 return slurpPlayer;
             }
         }

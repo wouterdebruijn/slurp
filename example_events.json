@@ -96,10 +96,38 @@
             ],
             "player": "schotsl"
         },
-                {
+        {
             "name": "KILLED_PLAYER",
             "context": [
                 "maksje5"
+            ],
+            "player": "schotsl"
+        },
+        {
+            "name": "DIED",
+            "context": [
+                "lava"
+            ],
+            "player": "electrogamez"
+        },
+        {
+            "name": "JUMPED",
+            "context": [
+                "amount:9875"
+            ],
+            "player": "electrogamez"
+        },
+                {
+            "name": "JUMPED",
+            "context": [
+                "amount:2541"
+            ],
+            "player": "maksje5"
+        },
+        {
+            "name": "JUMPED",
+            "context": [
+                "amount:522"
             ],
             "player": "schotsl"
         }

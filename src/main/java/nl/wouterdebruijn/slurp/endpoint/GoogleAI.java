@@ -7,6 +7,8 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
+import org.bukkit.Sound;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -92,7 +94,7 @@ public class GoogleAI {
                             }
                         }
 
-                        int inTime = SlurpConfig.getValue(ConfigValue.GENERATION_INTERVAL) / allowedActions;
+                        int inTime = SlurpConfig.getValue(ConfigValue.GENERATION_INTERVAL) / (allowedActions + 1);
                         Slurp.logger.info("Total actions " + actions.size() + ", allowed actions: " + allowedActions);
                         Slurp.logger.info("Interval time: " + inTime / 60 + " minutes, " + inTime % 60
                                 + " seconds per action.");
@@ -101,23 +103,23 @@ public class GoogleAI {
 
                         for (int i = 0; i < actions.size(); i++) {
                             final JsonObject action = actions.get(i).getAsJsonObject();
+                            String target = action.get("target").getAsString();
+                            int amount = action.get("amount").getAsInt()
+                                    * SlurpConfig.getValue(ConfigValue.DIFFICULTY_MULTIPLIER);
+                            boolean giveable = action.get("giveable").getAsBoolean();
+                            String message = action.get("message").getAsString();
+                            String type = action.get("type").getAsString();
+                            int rarity = action.get("rarity").getAsInt();
 
-                            if (action.get("amount").getAsInt() <= 0
-                                    || action.get("rarity").getAsInt() < SlurpConfig
-                                            .getValue(ConfigValue.MINIMAL_RARITY)) {
+                            if (amount <= 0 || rarity < SlurpConfig.getValue(ConfigValue.MINIMAL_RARITY)) {
+                                Slurp.logger.info("Skipped: \"" + message + "\" with amount "
+                                        + action.get("amount").getAsInt() + " and rarity "
+                                        + action.get("rarity").getAsInt());
+
                                 continue;
                             }
 
                             Slurp.plugin.getServer().getScheduler().runTaskLaterAsynchronously(Slurp.plugin, () -> {
-                                String target = action.get("target").getAsString();
-                                int amount = action.get("amount").getAsInt()
-                                        * SlurpConfig.getValue(ConfigValue.DIFFICULTY_MULTIPLIER);
-                                boolean giveable = action.get("giveable").getAsBoolean();
-                                String title = action.get("title").getAsString();
-                                String message = action.get("message").getAsString();
-                                String type = action.get("type").getAsString();
-                                int rarity = action.get("rarity").getAsInt();
-
                                 final ArrayList<SlurpPlayer> players = new ArrayList<>();
 
                                 if (target.equals("<all>")) {
@@ -148,18 +150,23 @@ public class GoogleAI {
                                                     .orElse("Unknown");
 
                                     Component suffix = Component.text("[" + amount + "]")
-                                            .color(giveable ? NamedTextColor.BLUE : NamedTextColor.RED)
-                                            .append(Component.text(" (Rarity: " + rarity + ")",
-                                                    NamedTextColor.GRAY))
-                                            .append(Component.text(" (Type: " + type + ")",
-                                                    type.equals("penalty") ? NamedTextColor.RED
-                                                            : NamedTextColor.GREEN));
+                                            .color(giveable ? NamedTextColor.BLUE : NamedTextColor.RED);
 
                                     Slurp.plugin.getServer()
-                                            .broadcast(TextBuilder.success(Component.text(message))
+                                            .broadcast(TextBuilder
+                                                    .prefix(Component.text(message)
+                                                            .color(type.equals("penalty") ? NamedTextColor.RED
+                                                                    : NamedTextColor.GREEN))
                                                     .append(Component.text(" ")).append(suffix)
                                                     .append(Component.text(" (Player: " + targetName + ")",
                                                             NamedTextColor.GRAY)));
+
+                                    if (rarity > SlurpConfig.getValue(ConfigValue.SOUND_RARITY)) {
+                                        for (SlurpPlayer player : players) {
+                                            player.getPlayer().playSound(player.getPlayer().getLocation(),
+                                                    Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                                        }
+                                    }
                                 });
                             }, inTime * processedActions * 20);
 
@@ -192,8 +199,6 @@ public class GoogleAI {
                 "The 'target' field should contain the name of the player who is affected by the action. " +
                 "The 'amount' field should contain the number of sips to be given or taken. " +
                 "The 'giveable' field should be true if the action is a reward (giving sips to another player) and false if it is a penalty (taking sips from a player). "
-                +
-                "The 'title' field should contain a short title for the action, and the 'message' field should contain a longer description of the action. "
                 +
                 "The 'message' field should be a fun message for the players with the reason for the action. Be creative and make it fun! Messages should be engaging and entertaining, be funny, and relevant to the event that triggered the action. Do not explain the action in the message, just make it fun and engaging. You are allowed to use make fun of the players, make jokes, make references to the game, or use any other creative way to make the message fun. Swear words are allowed, if they make sense in the context of the action. Drop some memes or references to the game, but do not overdo it. "
                 + "The 'type' field should be either 'penalty' or 'reward', depending on the action. " +
@@ -266,9 +271,6 @@ public class GoogleAI {
                                             },
                                             "giveable":{
                                                 "type":"boolean"
-                                            },
-                                            "title":{
-                                                "type":"string"
                                             },
                                             "message":{
                                                 "type":"string"

@@ -8,6 +8,10 @@ public class TextBuilder {
         return Component.text(SlurpConfig.prefix());
     }
 
+    public static Component prefix(Component message) {
+        return prefix().append(message);
+    }
+
     public static Component error(String message) {
         return prefix().append(Component.text(message).color(NamedTextColor.RED));
     }

@@ -4,7 +4,8 @@ public enum ConfigValue {
     DIFFICULTY_MULTIPLIER("game.difficulty-multiplier"),
     SIP_SHOT_RATIO("game.sip-shot-ratio"),
     GENERATION_INTERVAL("game.generation-interval"),
-    MINIMAL_RARITY("game.minimal-rarity");
+    MINIMAL_RARITY("game.minimal-rarity"),
+    SOUND_RARITY("game.sound-rarity");
 
     private final String confPath;
 

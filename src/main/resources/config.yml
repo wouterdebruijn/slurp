@@ -18,4 +18,8 @@ game:
   # Modifier for the chance of events to trigger. Higher values mean more events.
   difficulty-multiplier: 1
 
+  # Minimum rarity for an event to be considered.
   minimal-rarity: 30
+
+  # Minimal rarity for event to play a sound.
+  sound-rarity: 80

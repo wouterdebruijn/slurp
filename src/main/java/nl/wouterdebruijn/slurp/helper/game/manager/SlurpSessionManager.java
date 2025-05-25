@@ -71,7 +71,6 @@ public class SlurpSessionManager {
                 String eventName = dataEvent.getEventName();
                 String dataString = dataEvent.getData();
 
-                Slurp.logger.info("Received SSE event (" + eventName + "): " + dataString.trim());
                 // Handle the event
                 // You can parse the data and update the session list accordingly
 

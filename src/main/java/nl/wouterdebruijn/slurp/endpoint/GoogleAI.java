@@ -5,14 +5,24 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.ConfigValue;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+import nl.wouterdebruijn.slurp.helper.TextBuilder;
+import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.EventLog;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class GoogleAI {
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent";
@@ -33,11 +43,11 @@ public class GoogleAI {
         instance = new GoogleAI(token);
     }
 
-    public static void generateActions(ArrayList<EventLog> eventLogs) {
+    public static void generateActions(ArrayList<EventLog> eventLogs, SlurpSession session) {
         JsonArray jsonArray = new JsonArray();
 
         if (instance == null) {
-            Slurp.logger.warning("GoogleAI instance is not initialized.");
+            Slurp.logger.severe("GoogleAI instance is not initialized.");
             return;
         }
 
@@ -46,8 +56,6 @@ public class GoogleAI {
         }
 
         GoogleAIRequest request = new GoogleAIRequest(jsonArray.toString());
-
-        Slurp.logger.info("Sending request to Google AI: " + request.toJson().toString());
 
         try {
             HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -61,6 +69,8 @@ public class GoogleAI {
 
             HttpClient client = HttpClient.newHttpClient();
 
+            Slurp.logger.info("Sending request to Google AI with " + jsonArray.size() + " events.");
+
             client.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)
                     .thenAccept(response -> {
@@ -72,27 +82,97 @@ public class GoogleAI {
                         JsonObject jsonActions = JsonParser.parseString(jsonString).getAsJsonObject();
                         JsonArray actions = jsonActions.getAsJsonArray("actions");
 
+                        int allowedActions = 0;
+
                         for (int i = 0; i < actions.size(); i++) {
                             JsonObject action = actions.get(i).getAsJsonObject();
-                            String target = action.get("target").getAsString();
-                            double amount = action.get("amount").getAsDouble();
-                            boolean giveable = action.get("giveable").getAsBoolean();
-                            String title = action.get("title").getAsString();
-                            String message = action.get("message").getAsString();
-
-                            // Process the action here
-                            Slurp.plugin.getServer().broadcast(Component.text(
-                                    String.format("Action: %s\nAmount: %.2f\nGiveable: %s\nTitle: %s\nMessage: %s",
-                                            target, amount, giveable, title, message)));
-
-                            // TODO: Implement the logic to apply the action to the player
-
+                            if (action.get("amount").getAsInt() > 0 && action.get("rarity").getAsInt() >= SlurpConfig
+                                    .getValue(ConfigValue.MINIMAL_RARITY)) {
+                                allowedActions++;
+                            }
                         }
+
+                        int inTime = SlurpConfig.getValue(ConfigValue.GENERATION_INTERVAL) / allowedActions;
+                        Slurp.logger.info("Total actions " + actions.size() + ", allowed actions: " + allowedActions);
+                        Slurp.logger.info("Interval time: " + inTime / 60 + " minutes, " + inTime % 60
+                                + " seconds per action.");
+
+                        int processedActions = 0;
+
+                        for (int i = 0; i < actions.size(); i++) {
+                            final JsonObject action = actions.get(i).getAsJsonObject();
+
+                            if (action.get("amount").getAsInt() <= 0
+                                    || action.get("rarity").getAsInt() < SlurpConfig
+                                            .getValue(ConfigValue.MINIMAL_RARITY)) {
+                                continue;
+                            }
+
+                            Slurp.plugin.getServer().getScheduler().runTaskLaterAsynchronously(Slurp.plugin, () -> {
+                                String target = action.get("target").getAsString();
+                                int amount = action.get("amount").getAsInt()
+                                        * SlurpConfig.getValue(ConfigValue.DIFFICULTY_MULTIPLIER);
+                                boolean giveable = action.get("giveable").getAsBoolean();
+                                String title = action.get("title").getAsString();
+                                String message = action.get("message").getAsString();
+                                String type = action.get("type").getAsString();
+                                int rarity = action.get("rarity").getAsInt();
+
+                                final ArrayList<SlurpPlayer> players = new ArrayList<>();
+
+                                if (target.equals("<all>")) {
+                                    players.addAll(session.getPlayers());
+                                } else if (target.equals("<random>")) {
+                                    players.addAll(session.getRandomPlayersInSession(1));
+                                } else {
+                                    players.add(
+                                            SlurpPlayerManager.getPlayer(Slurp.plugin.getServer().getPlayer(target)));
+                                }
+
+                                var futures = new ArrayList<CompletableFuture<ArrayList<SlurpEntry>>>();
+
+                                for (SlurpPlayer player : players) {
+                                    var future = SlurpEntry.create(
+                                            new SlurpEntryBuilder(amount, player.getId(), player.getSession().getId(),
+                                                    giveable, false));
+
+                                    futures.add(future);
+                                }
+
+                                var all = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+
+                                all.thenAccept(v -> {
+                                    String targetName = players.size() == 1 ? players.get(0).getUsername()
+                                            : players.stream().map(SlurpPlayer::getUsername)
+                                                    .reduce((a, b) -> a + ", " + b)
+                                                    .orElse("Unknown");
+
+                                    Component suffix = Component.text("[" + amount + "]")
+                                            .color(giveable ? NamedTextColor.BLUE : NamedTextColor.RED)
+                                            .append(Component.text(" (Rarity: " + rarity + ")",
+                                                    NamedTextColor.GRAY))
+                                            .append(Component.text(" (Type: " + type + ")",
+                                                    type.equals("penalty") ? NamedTextColor.RED
+                                                            : NamedTextColor.GREEN));
+
+                                    Slurp.plugin.getServer()
+                                            .broadcast(TextBuilder.success(Component.text(message))
+                                                    .append(Component.text(" ")).append(suffix)
+                                                    .append(Component.text(" (Player: " + targetName + ")",
+                                                            NamedTextColor.GRAY)));
+                                });
+                            }, inTime * processedActions * 20);
+
+                            processedActions++;
+                        }
+
+                        Slurp.logger.info("Actions processed successfully.");
                         Slurp.aiHandlerEvent.clearEventLogs();
 
                     })
                     .exceptionally(e -> {
                         Slurp.logger.warning("Failed to send request: " + e.getMessage());
+                        e.printStackTrace();
                         return null;
                     });
 
@@ -103,11 +183,27 @@ public class GoogleAI {
     }
 
     private final static class GoogleAIRequest {
-        private static final String systemPrompt = "You are an excellent gamemaster monitoring player events from a Minecraft server. Events are received in bulk as a JSON array, and you process all events at once. Each event has a small chance of triggering a dynamic action that awards or deducts points from players. Points can be negative or transferable, depending on the event. Actions must always reflect the nature of the event: for example, mining diamonds might grant positive, transferable points, while dying to a creeper might deduct non-transferable points. No event should award or deduct more than a handful of points, and the amount should match the event's difficulty. Be very sparing with points for frequent events, as these should not be rewarded often.\n"
+        private static final String systemPrompt = "You are a helpful assistant that generates actions for a drinking game based on events on a Minecraft server. "
                 +
-                "You will receive events in JSON format. Not every event should result in an action—actions should be spontaneous and rare, especially for common events. Be extremely creative with the title and message; make them fun and non-repetitive. Slightly explicit or edgy contents is allowed here, like swearing or making fun of a player, if it contributes to to the funniness of a joke. You should return multiple actions to take if applicable.\n"
+                "Your task is to analyze the provided events and generate a list of actions that contain the penalties and rewards for the players involved. "
                 +
-                "Do not provide any other information, comments, or explanations for any steps taken";
+                "A penalty would be drinking a certain amount of sips (giveable: false), while a reward would be giving a certain amount of sips to another player (giveable: true). The amount should be a positive integer, and the actions should be fun and engaging for the players. Another reward option is to give some sips to all other players (giveable: false, target: '<all>'). Or a random player (giveable: false, target: '<random>'). "
+                +
+                "The 'target' field should contain the name of the player who is affected by the action. " +
+                "The 'amount' field should contain the number of sips to be given or taken. " +
+                "The 'giveable' field should be true if the action is a reward (giving sips to another player) and false if it is a penalty (taking sips from a player). "
+                +
+                "The 'title' field should contain a short title for the action, and the 'message' field should contain a longer description of the action. "
+                +
+                "The 'message' field should be a fun message for the players with the reason for the action. Be creative and make it fun! Messages should be engaging and entertaining, be funny, and relevant to the event that triggered the action. Do not explain the action in the message, just make it fun and engaging. You are allowed to use make fun of the players, make jokes, make references to the game, or use any other creative way to make the message fun. Swear words are allowed, if they make sense in the context of the action. Drop some memes or references to the game, but do not overdo it. "
+                + "The 'type' field should be either 'penalty' or 'reward', depending on the action. " +
+                "The 'rarity' field should be a number between 1 and 100, indicating the difficulty and rarity of the action. Mining common block or doing trivial actions should not be rare (closer to 1), while doing something extraordinary or very difficult should be rare (closer to 100). "
+                + "You should generate a list of actions based on the provided events. " +
+                "If there are no actions to be generated, return an empty array. " +
+                "Make sure to follow the structure exactly as described, and do not include any additional text or explanations. "
+                +
+                "The response should be a valid JSON object that matches the structure provided. ";
+
         private final String prompt;
 
         public GoogleAIRequest(String prompt) {
@@ -176,6 +272,13 @@ public class GoogleAI {
                                             },
                                             "message":{
                                                 "type":"string"
+                                            },
+                                            "type":{
+                                                "type":"string",
+                                                "enum":["penalty", "reward"]
+                                            },
+                                            "rarity":{
+                                                "type":"number"
                                             }
                                         }
                                     }
@@ -185,6 +288,28 @@ public class GoogleAI {
                         }""").getAsJsonObject();
 
             root.add("generationConfig", generationConfig);
+
+            JsonArray safetySettings = JsonParser.parseString("""
+                    [
+                        {
+                            "category": "HARM_CATEGORY_HARASSMENT",
+                            "threshold": "BLOCK_NONE"
+                        },
+                        {
+                            "category": "HARM_CATEGORY_HATE_SPEECH",
+                            "threshold": "BLOCK_NONE"
+                        },
+                        {
+                            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                            "threshold": "BLOCK_NONE"
+                        },
+                        {
+                            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                            "threshold": "BLOCK_NONE"
+                        }
+                    ]""").getAsJsonArray();
+
+            root.add("safetySettings", safetySettings);
 
             return root;
         }

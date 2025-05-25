@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import nl.wouterdebruijn.slurp.Slurp;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.manager.ActionGenerationManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.ScoreboardManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
@@ -26,12 +27,19 @@ public class SlurpSessionSubscriptionListener implements Listener {
         SlurpSession session = SlurpSessionManager.getSession(player.getSession().getId());
 
         if (session == null) {
-            Slurp.logger.warning(
+            Slurp.logger.severe(
                     "Player " + player.getId() + " is in a session that does not exist in sessionmanager storage");
+
+            return;
         }
 
         ScoreboardManager.playerScoreboard(player);
         DrinkingBuddyManager.enableDrinkingBuddyTask(session);
+
+        // Ensure the action generation handler is set up for the session
+        ActionGenerationManager.ensureHandler(session);
+
+        Slurp.logger.info("Restored session " + session.getShortcode());
     }
 
     @EventHandler
@@ -67,5 +75,8 @@ public class SlurpSessionSubscriptionListener implements Listener {
         }
 
         DrinkingBuddyManager.disableDrinkingBuddyTask(session);
+        ActionGenerationManager.removeHandler(session);
+
+        Slurp.logger.info("Cleaned up session " + session.getShortcode());
     }
 }

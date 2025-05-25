@@ -11,10 +11,10 @@ import org.jetbrains.annotations.Nullable;
 
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
-import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.ActionGenerationManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
-public class DrinkingBuddyReset implements TabExecutor {
+public class ActionGeneratorReset implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
             @NotNull String[] args) {
@@ -25,9 +25,9 @@ public class DrinkingBuddyReset implements TabExecutor {
             return true;
         }
 
-        DrinkingBuddyManager.restartDrinkingBuddyTask(slurpPlayer.getSession());
+        ActionGenerationManager.restartAIHandlerTask(slurpPlayer.getSession());
 
-        player.sendMessage(TextBuilder.success("Drinking buddy event restarted"));
+        player.sendMessage(TextBuilder.success("AI handler event restarted"));
 
         return true;
     }

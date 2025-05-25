@@ -24,8 +24,6 @@ public class CreateEntry implements TabExecutor {
             @NotNull String[] args) {
         Player player = (Player) sender;
 
-        // <player> <type> <amount> <giveable> <transfer>
-
         if (args.length != 5) {
             player.sendMessage(TextBuilder.error("Invalid arguments"));
             return true;

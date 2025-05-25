@@ -16,6 +16,10 @@ commands:
     description: Debug a slurp game
     usage: /debug
     permission: slurp.admin
+  actiongeneratorreset:
+    description: Reset the action generators
+    usage: /actiongeneratorreset
+    permission: slurp.admin
   drinkingbuddyreset:
     description: Reset the drinking buddy
     usage: /drinkingbuddyreset
@@ -32,7 +36,6 @@ commands:
     description: Reload the plugin
     usage: /reload
     permission: slurp.admin
-
     # Player commands
   join:
     description: Join a slurp game

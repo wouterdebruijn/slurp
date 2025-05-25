@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import nl.wouterdebruijn.slurp.command.ConfigCmd;
 import nl.wouterdebruijn.slurp.command.entry.GiveSip;
 import nl.wouterdebruijn.slurp.command.entry.TakeSip;
+import nl.wouterdebruijn.slurp.command.session.ActionGeneratorReset;
 import nl.wouterdebruijn.slurp.command.session.Create;
 import nl.wouterdebruijn.slurp.command.session.CreateEntry;
 import nl.wouterdebruijn.slurp.command.session.Debug;
@@ -23,7 +24,6 @@ import nl.wouterdebruijn.slurp.endpoint.GoogleAI;
 import nl.wouterdebruijn.slurp.endpoint.PocketBase;
 import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
-import nl.wouterdebruijn.slurp.helper.game.events.AIHandlerEvent;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
@@ -32,8 +32,6 @@ public final class Slurp extends JavaPlugin {
     public static Plugin plugin = null;
     public static Logger logger = null;
 
-    public static AIHandlerEvent aiHandlerEvent = null;
-
     public static void reload() {
         Slurp.plugin.reloadConfig();
         Slurp.plugin.saveConfig();
@@ -41,6 +39,8 @@ public final class Slurp extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        SlurpSessionManager.unsubscribe();
+
         SlurpSessionManager.saveToDisk();
         SlurpPlayerManager.saveToDisk();
     }
@@ -72,6 +72,7 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("debug")).setExecutor(new Debug());
         Objects.requireNonNull(getCommand("slurpreload")).setExecutor(new Reload());
         Objects.requireNonNull(getCommand("drinkingbuddyreset")).setExecutor(new DrinkingBuddyReset());
+        Objects.requireNonNull(getCommand("actiongeneratorreset")).setExecutor(new ActionGeneratorReset());
         Objects.requireNonNull(getCommand("create_entry")).setExecutor(new CreateEntry());
         Objects.requireNonNull(getCommand("leave")).setExecutor(new Leave());
 
@@ -84,8 +85,5 @@ public final class Slurp extends JavaPlugin {
         // Register listeners
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new SlurpSessionSubscriptionListener(), this);
-
-        Slurp.aiHandlerEvent = new AIHandlerEvent();
-        Slurp.plugin.getServer().getPluginManager().registerEvents(Slurp.aiHandlerEvent, plugin);
     }
 }

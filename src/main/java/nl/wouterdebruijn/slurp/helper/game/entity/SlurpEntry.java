@@ -17,14 +17,14 @@ public class SlurpEntry {
     private final int units;
     private final SlurpPlayer player;
     private final boolean giveable;
-    private final boolean transfer;
+    private final boolean hide;
 
-    public SlurpEntry(String id, int units, SlurpPlayer player, boolean giveable, boolean transfer) {
+    public SlurpEntry(String id, int units, SlurpPlayer player, boolean giveable, boolean hide) {
         this.id = id;
         this.units = units;
         this.player = player;
         this.giveable = giveable;
-        this.transfer = transfer;
+        this.hide = hide;
     }
 
     /**

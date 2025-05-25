@@ -70,6 +70,7 @@ public class PocketBase {
             return CompletableFuture.completedFuture(responseEntry.toSlurpEntry());
         } catch (Exception e) {
             Slurp.logger.log(Level.SEVERE, "Error while creating entry", e);
+            Slurp.logger.info("Request: " + PocketBaseGson.getGson().toJson(entry));
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -108,14 +109,35 @@ public class PocketBase {
         }
     }
 
+    private static final String[] CODES = {
+            "vodka", "whiskey", "rum", "gin", "tequila", "brandy", "cognac", "absinthe", "schnapps", "bourbon"
+    };
+
+    private static String generateShortcode() {
+        StringBuilder shortcode = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            int randomIndex = (int) (Math.random() * CODES.length);
+            shortcode.append(CODES[randomIndex]);
+            if (i < 2) {
+                shortcode.append("-");
+            }
+        }
+        shortcode.append((int) (Math.random() * 1000)); // Append a random number to ensure uniqueness
+        return shortcode.toString();
+    }
+
     public static SlurpSession createSession()
             throws ApiResponseException, ApiUrlException, CreateSessionException {
         HttpRequest request = null;
 
         try {
+            JsonObject jsonObject = new JsonObject();
+
+            jsonObject.addProperty("shortcode", generateShortcode());
+
             request = HttpRequest.newBuilder()
                     .uri(new URI(API_URL + "/api/collections/sessions/records"))
-                    .POST(HttpRequest.BodyPublishers.ofString("{}"))
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonObject.toString()))
                     .header("Content-Type", "application/json")
                     .build();
 

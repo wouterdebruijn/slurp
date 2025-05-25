@@ -24,6 +24,7 @@ import nl.wouterdebruijn.slurp.helper.game.entity.EventLog;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
+import nl.wouterdebruijn.slurp.helper.game.manager.ActionGenerationManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class GoogleAI {
@@ -174,7 +175,8 @@ public class GoogleAI {
                         }
 
                         Slurp.logger.info("Actions processed successfully.");
-                        Slurp.aiHandlerEvent.clearEventLogs();
+
+                        ActionGenerationManager.getHandler(session).clearEventLogs();
 
                     })
                     .exceptionally(e -> {

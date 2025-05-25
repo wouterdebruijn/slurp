@@ -7,7 +7,7 @@ public class SlurpEntryBuilder {
     private final String player;
     private final String session;
     private final boolean giveable;
-    private final boolean transfer;
+    private final boolean hide;
 
     /**
      * Create entry to change slurp data
@@ -19,15 +19,14 @@ public class SlurpEntryBuilder {
      * @param player   Player UUID whom the entry is meant for.
      * @param session  UUID of the session of the player whom the entry is for.
      * @param giveable True if the sips can be given away, false if not.
-     * @param transfer True if the sips are transferred to another player, false if
-     *                 not.
+     * @param hide     Hide from calc and graph.
      */
-    public SlurpEntryBuilder(int units, String player, String session, boolean giveable, boolean transfer) {
+    public SlurpEntryBuilder(int units, String player, String session, boolean giveable, boolean hide) {
         this.units = units;
         this.player = player;
         this.session = session;
         this.giveable = giveable;
-        this.transfer = transfer;
+        this.hide = hide;
     }
 
     public String getPlayerId() {
@@ -35,11 +34,11 @@ public class SlurpEntryBuilder {
     }
 
     public SlurpEntryBuilder copyForPlayer(SlurpPlayer player) {
-        return new SlurpEntryBuilder(units, player.getId(), session, giveable, transfer);
+        return new SlurpEntryBuilder(units, player.getId(), session, giveable, hide);
     }
 
     public boolean shouldTransferToDrinkingBuddies() {
-        return !transfer && !giveable;
+        return !hide && !giveable;
     }
 
     public int getUnits() {
@@ -47,7 +46,7 @@ public class SlurpEntryBuilder {
     }
 
     public int getTaken() {
-        if (this.giveable || this.transfer || this.units > 0) {
+        if (this.giveable || this.hide || this.units > 0) {
             return 0;
         }
 

@@ -3,6 +3,7 @@ package nl.wouterdebruijn.slurp.helper.game.events;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,19 +17,74 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.google.gson.JsonObject;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.endpoint.GoogleAI;
+import nl.wouterdebruijn.slurp.helper.ConfigValue;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.entity.EventLog;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class AIHandlerEvent implements Listener {
 
-    HashMap<String, EventLog> eventLogs = new HashMap<>();
+    private final HashMap<String, EventLog> eventLogs = new HashMap<>();
+    private final SlurpSession session;
+
+    private BukkitTask task = null;
+
+    public AIHandlerEvent(SlurpSession session) {
+        this.session = session;
+        Slurp.plugin.getServer().getPluginManager().registerEvents(this, Slurp.plugin);
+    }
+
+    /**
+     * Schedules the AI handler to process events at a fixed interval.
+     * The interval is defined in the SlurpConfig under
+     * ConfigValue.GENERATION_INTERVAL.
+     */
+    public void schedule() {
+        if (task != null) {
+            Slurp.logger.warning("AIHandlerEvent task is already scheduled. Cancelling the previous task.");
+            task.cancel();
+            task = null;
+        }
+
+        task = Slurp.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Slurp.plugin, () -> {
+            if (eventLogs.isEmpty()) {
+                return;
+            }
+
+            ArrayList<EventLog> logs = new ArrayList<>(eventLogs.values());
+            eventLogs.clear();
+
+            Slurp.logger.info("Processing " + logs.size() + " events for session: " + session.getId());
+
+            // Process the logs with the AI handler
+            GoogleAI.generateActions(logs, session);
+
+            Slurp.logger.info("Processed " + logs.size() + " events for session: " + session.getId());
+        }, 0, 20 * SlurpConfig.getValue(ConfigValue.GENERATION_INTERVAL));
+    }
+
+    /**
+     * Cancels the scheduled AI handler task if it is running.
+     * This method should be called when the session ends or when the AI handler
+     * is no longer needed.
+     */
+    public void cancel() {
+        if (task != null) {
+            task.cancel();
+            task = null;
+        }
+    }
 
     public ArrayList<EventLog> getEventLogs() {
         return new ArrayList<EventLog>(eventLogs.values());
@@ -200,6 +256,12 @@ public class AIHandlerEvent implements Listener {
             return;
         }
 
+        Advancement advancement = event.getAdvancement();
+        if (!(advancement.getKey().getKey().equals("root") && advancement.getKey().getNamespace().equals("minecraft")
+                && advancement.getKey().getKey().startsWith("story"))) {
+            return;
+        }
+
         JsonObject data = new JsonObject();
         data.addProperty("Player", player.getName());
         data.addProperty("Advancement", event.getAdvancement().getKey().toString());
@@ -223,28 +285,6 @@ public class AIHandlerEvent implements Listener {
 
         JsonObject data = new JsonObject();
         data.addProperty("Player", player.getName());
-
-        EventLog eventLog = new EventLog(eventName, data);
-        logEvent(eventLog);
-
-        Slurp.logger.info("Event logged: " + eventName + " - " + data);
-    }
-
-    @EventHandler
-    public void onPlayerTeleportEvent(org.bukkit.event.player.PlayerTeleportEvent event) {
-        String eventName = "PlayerTeleportEvent";
-
-        Player player = event.getPlayer();
-        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
-
-        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
-            return;
-        }
-
-        JsonObject data = new JsonObject();
-        data.addProperty("Player", player.getName());
-        data.addProperty("From", event.getFrom().toString());
-        data.addProperty("To", event.getTo().toString());
 
         EventLog eventLog = new EventLog(eventName, data);
         logEvent(eventLog);
@@ -323,13 +363,54 @@ public class AIHandlerEvent implements Listener {
 
     @EventHandler
     public void entityDamageEvent(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
+        Player player = null;
+        Player damager = null;
+
+        if (event.getEntity() instanceof Player) {
+            player = (Player) event.getEntity();
+        }
+
+        if (event.getDamageSource() != null && event.getDamageSource().getDirectEntity() instanceof Player) {
+            damager = (Player) event.getDamageSource().getDirectEntity();
+        }
+
+        if (player == null && damager == null) {
+            return; // No player involved in the damage event
         }
 
         String eventName = "PlayerDamageEvent";
 
-        Player player = (Player) event.getEntity();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player != null ? player : damager);
+
+        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
+            return;
+        }
+
+        JsonObject data = new JsonObject();
+
+        if (player != null) {
+            data.addProperty("Player", player.getName());
+        } else {
+            data.addProperty("Entity", event.getEntity().getType().name());
+        }
+
+        data.addProperty("Damage", event.getFinalDamage());
+        data.addProperty("Cause", event.getCause().name());
+        if (damager != null) {
+            data.addProperty("Damager", damager.getName());
+        }
+
+        EventLog eventLog = new EventLog(eventName, data);
+        logEvent(eventLog);
+
+        Slurp.logger.info("Event logged: " + eventName + " - " + data);
+    }
+
+    @EventHandler
+    public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent event) {
+        String eventName = "PlayerEatItemEvent";
+
+        Player player = event.getPlayer();
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
 
         if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
@@ -338,14 +419,7 @@ public class AIHandlerEvent implements Listener {
 
         JsonObject data = new JsonObject();
         data.addProperty("Player", player.getName());
-        data.addProperty("Damage", event.getFinalDamage());
-        data.addProperty("Cause", event.getCause().name());
-
-        Player damager = null;
-        if (event.getDamageSource() != null && event.getDamageSource().getDirectEntity() instanceof Player) {
-            damager = (Player) event.getDamageSource().getDirectEntity();
-            data.addProperty("Damager", damager.getName());
-        }
+        data.addProperty("Item", event.getItem().getType().name());
 
         EventLog eventLog = new EventLog(eventName, data);
         logEvent(eventLog);

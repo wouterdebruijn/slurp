@@ -168,6 +168,15 @@ public class SlurpSessionManager {
         return sseRequest;
     }
 
+    public static void unsubscribe() {
+        if (future != null) {
+            future.cancel(true);
+            future = null;
+        }
+
+        Slurp.logger.info("Unsubscribed from realtime SSE events");
+    }
+
     /**
      * Retrieves a SlurpSession by its ID.
      *

@@ -204,8 +204,6 @@ public class PocketBase {
             ResponseSession responseSession = PocketBaseGson.getGson()
                     .fromJson(sessionElement, ResponseSession.class);
 
-            Slurp.logger.info(PocketBaseGson.getGson().toJson(responseSession));
-
             SlurpSession session = responseSession.toSlurpSession();
             Slurp.logger.log(Level.INFO,
                     String.format("Created session %s, (%s)", session.getShortcode(), session.getId()));

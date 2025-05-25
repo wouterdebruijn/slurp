@@ -179,7 +179,6 @@ public class SlurpSessionManager {
         // Get session from cache
         for (SlurpSession slurpSession : sessions) {
             if (slurpSession.getId().equals(session)) {
-                Slurp.logger.info("Loaded session from cache: " + slurpSession.getId());
                 return slurpSession;
             }
         }

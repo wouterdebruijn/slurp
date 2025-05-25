@@ -1,11 +1,9 @@
 package nl.wouterdebruijn.slurp;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,13 +24,11 @@ import nl.wouterdebruijn.slurp.endpoint.PocketBase;
 import nl.wouterdebruijn.slurp.helper.Permissions;
 import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.game.events.AIHandlerEvent;
-import nl.wouterdebruijn.slurp.helper.game.events.GameEvent;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 import nl.wouterdebruijn.slurp.listener.SlurpSessionSubscriptionListener;
 
 public final class Slurp extends JavaPlugin {
-    private static final ArrayList<GameEvent> gameEvents = new ArrayList<>();
     public static Plugin plugin = null;
     public static Logger logger = null;
 
@@ -40,8 +36,6 @@ public final class Slurp extends JavaPlugin {
 
     public static void reload() {
         Slurp.plugin.reloadConfig();
-        FileConfiguration config = Slurp.plugin.getConfig();
-        gameEvents.forEach(handler -> handler.reload(config));
         Slurp.plugin.saveConfig();
     }
 
@@ -90,31 +84,6 @@ public final class Slurp extends JavaPlugin {
         // Register listeners
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new SlurpSessionSubscriptionListener(), this);
-
-        // New GameEvent API
-        // FileConfiguration config = getConfig();
-        // gameEvents.add(new FurnaceBurnEvent(config).register(this));
-        // gameEvents.add(new LucyStoneEvent(config).register(this));
-        // gameEvents.add(new ChokingPlayerEvent(config).register(this));
-        // gameEvents.add(new BrokenLegsEvent(config).register(this));
-        // gameEvents.add(new PlayerKillsEvent(config).register(this));
-        // gameEvents.add(new PlayerDiesEvent(config).register(this));
-
-        // gameEvents.add(new IronOreEvent(config).register(this));
-        // gameEvents.add(new GoldOreEvent(config).register(this));
-        // gameEvents.add(new DiamondOreEvent(config).register(this));
-        // gameEvents.add(new EmeraldOreEvent(config).register(this));
-        // gameEvents.add(new LapisOreEvent(config).register(this));
-        // gameEvents.add(new RedstoneOreEvent(config).register(this));
-        // gameEvents.add(new CoalOreEvent(config).register(this));
-        // gameEvents.add(new NetherQuartzOreEvent(config).register(this));
-        // gameEvents.add(new NetheriteOreEvent(config).register(this));
-
-        // gameEvents.add(new HostileMobKillEvent(config).register(this));
-        // gameEvents.add(new PassiveMobKillEvent(config).register(this));
-
-        // gameEvents.add(new LogsEvent(config).register(this));
-        // gameEvents.add(new TorchEvent(config).register(this));
 
         Slurp.aiHandlerEvent = new AIHandlerEvent();
         Slurp.plugin.getServer().getPluginManager().registerEvents(Slurp.aiHandlerEvent, plugin);

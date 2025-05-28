@@ -13,6 +13,7 @@ import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.manager.ActionGenerationManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
+import nl.wouterdebruijn.slurp.helper.game.manager.SlurpSessionManager;
 
 public class ActionGeneratorReset implements TabExecutor {
     @Override
@@ -25,7 +26,7 @@ public class ActionGeneratorReset implements TabExecutor {
             return true;
         }
 
-        ActionGenerationManager.restartAIHandlerTask(slurpPlayer.getSession());
+        ActionGenerationManager.restartAIHandlerTask(SlurpSessionManager.getSession(slurpPlayer.getSession().getId()));
 
         player.sendMessage(TextBuilder.success("AI handler event restarted"));
 

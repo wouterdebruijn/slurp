@@ -95,7 +95,7 @@ public class ScoreboardManager {
                 }
 
                 SlurpPlayer player = players.get(i);
-                lines.set(13 + i, player.getUsername());
+                lines.set(13 + i, "§b" + player.getUsername());
             }
         }
 

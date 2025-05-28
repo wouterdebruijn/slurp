@@ -273,26 +273,6 @@ public class AIHandlerEvent implements Listener {
     }
 
     @EventHandler
-    public void onPlayerRespawnEvent(org.bukkit.event.player.PlayerRespawnEvent event) {
-        String eventName = "PlayerRespawnEvent";
-
-        Player player = event.getPlayer();
-        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
-
-        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
-            return;
-        }
-
-        JsonObject data = new JsonObject();
-        data.addProperty("Player", player.getName());
-
-        EventLog eventLog = new EventLog(eventName, data);
-        logEvent(eventLog);
-
-        Slurp.logger.info("Event logged: " + eventName + " - " + data);
-    }
-
-    @EventHandler
     public void onPlayerChatEvent(AsyncChatEvent event) {
         String eventName = "PlayerChatEvent";
 

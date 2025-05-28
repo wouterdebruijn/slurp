@@ -12,6 +12,7 @@ import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -202,7 +203,7 @@ public class PocketBase {
     }
 
     public static CompletableFuture<SlurpSession> getSession(String shortcode) throws ApiResponseException,
-            ApiUrlException, CreateSessionException {
+            ApiUrlException, MissingSessionException {
         HttpRequest request = null;
 
         try {
@@ -221,7 +222,13 @@ public class PocketBase {
             }
 
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
-            JsonElement sessionElement = jsonObject.getAsJsonArray("items").get(0);
+            JsonArray items = jsonObject.getAsJsonArray("items");
+
+            if (items.size() == 0) {
+                throw new MissingSessionException();
+            }
+
+            JsonElement sessionElement = items.get(0);
 
             ResponseSession responseSession = PocketBaseGson.getGson()
                     .fromJson(sessionElement, ResponseSession.class);
@@ -234,7 +241,7 @@ public class PocketBase {
         } catch (URISyntaxException e) {
             throw new ApiUrlException();
         } catch (IOException | InterruptedException e) {
-            throw new CreateSessionException(request);
+            throw new MissingSessionException();
         }
     }
 

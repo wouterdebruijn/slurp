@@ -12,7 +12,7 @@ public class ActionGenerationManager {
     public static void ensureHandler(SlurpSession session) {
         if (!handlers.containsKey(session)) {
             addHandler(session, new AIHandlerEvent(session));
-            Slurp.logger.info("Created new AI handler for session: " + session.getShortcode());
+            Slurp.logger.warning("Created new AI handler for session: " + session.getShortcode());
         }
     }
 

@@ -28,7 +28,7 @@ import nl.wouterdebruijn.slurp.helper.game.manager.ActionGenerationManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class GoogleAI {
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent";
+    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent";
 
     private String token;
 

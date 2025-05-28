@@ -11,6 +11,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.ConfigValue;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.infra.Observer;
@@ -147,14 +149,16 @@ public class ScoreboardManager {
 
         @Override
         public void update() {
+            int sipShotRatio = SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO);
+
             int remaining = player.getRemaining();
             int taken = player.getTaken();
             int giveable = player.getGiveable();
             ArrayList<SlurpPlayer> players = DrinkingBuddyManager.getDrinkingBuddies(player.getSession());
 
-            setRemaining(remaining, remaining);
-            setTaken(taken, taken);
-            setGiveable(giveable, giveable);
+            setRemaining(remaining % sipShotRatio, remaining / sipShotRatio);
+            setTaken(taken % sipShotRatio, taken / sipShotRatio);
+            setGiveable(giveable % sipShotRatio, giveable / sipShotRatio);
             setDrinkingBuddies(players);
 
             updateSidebar();

@@ -33,7 +33,7 @@ public class ActionGenerationManager {
         AIHandlerEvent handler = getHandler(session);
         if (handler != null) {
             handler.cancel();
-            addHandler(session, new AIHandlerEvent(session));
+            handler.schedule();
             Slurp.logger.info("Restarted AI handler for session: " + session.getShortcode());
         } else {
             Slurp.logger.warning("No AI handler found for session: " + session.getShortcode());

@@ -9,7 +9,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import nl.wouterdebruijn.slurp.command.ConfigCmd;
+import nl.wouterdebruijn.slurp.command.entry.GiveShot;
 import nl.wouterdebruijn.slurp.command.entry.GiveSip;
+import nl.wouterdebruijn.slurp.command.entry.TakeShot;
 import nl.wouterdebruijn.slurp.command.entry.TakeSip;
 import nl.wouterdebruijn.slurp.command.session.ActionGeneratorReset;
 import nl.wouterdebruijn.slurp.command.session.Create;
@@ -57,7 +59,14 @@ public final class Slurp extends JavaPlugin {
         SlurpSessionManager.subscribe();
 
         SlurpConfig.initialize();
-        PocketBase.initialize(SlurpConfig.getToken());
+        try {
+            PocketBase.authenticate(SlurpConfig.getUsername(), SlurpConfig.getPassword()).thenAccept(a -> {
+                logger.info("Successfully authenticated with PocketBase.");
+            });
+        } catch (Exception e) {
+            logger.severe("Failed to authenticate with PocketBase: " + e.getMessage());
+            e.printStackTrace();
+        }
 
         GoogleAI.initialize(SlurpConfig.getGoogleAIToken());
 
@@ -76,10 +85,14 @@ public final class Slurp extends JavaPlugin {
         Objects.requireNonNull(getCommand("create_entry")).setExecutor(new CreateEntry());
         Objects.requireNonNull(getCommand("leave")).setExecutor(new Leave());
 
-        Objects.requireNonNull(getCommand("givesip")).setExecutor(new GiveSip());
         Objects.requireNonNull(getCommand("setvalue")).setExecutor(new ConfigCmd());
 
+        Objects.requireNonNull(getCommand("givesip")).setExecutor(new GiveSip());
         Objects.requireNonNull(getCommand("takesip")).setExecutor(new TakeSip());
+
+        Objects.requireNonNull(getCommand("giveshot")).setExecutor(new GiveShot());
+        Objects.requireNonNull(getCommand("takeshot")).setExecutor(new TakeShot());
+
         Objects.requireNonNull(getCommand("rockpaperscissors")).setExecutor(new PlayRockPaperScissors());
 
         // Register listeners

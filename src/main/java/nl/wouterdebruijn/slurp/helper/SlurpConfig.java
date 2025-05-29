@@ -30,6 +30,20 @@ public class SlurpConfig {
         return getString("api.token");
     }
 
+    public static String setToken(String token) {
+        config.set("api.token", token);
+        saveConfig();
+        return token;
+    }
+
+    public static String getUsername() {
+        return getString("api.username");
+    }
+
+    public static String getPassword() {
+        return getString("api.password");
+    }
+
     public static String getGoogleAIToken() {
         return getString("google-ai.token");
     }

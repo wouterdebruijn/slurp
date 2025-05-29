@@ -38,7 +38,7 @@ public class ScoreboardManager {
                 add("§r§r§7Sips: §f00");
                 add("§r§r§7Shots: §f00");
                 add("  ");
-                add("§aDrinking buddies:");
+                add("§eDrinking buddies:");
             }
         };
         private final List<String> oldLines = new ArrayList<>();
@@ -97,7 +97,7 @@ public class ScoreboardManager {
                 }
 
                 SlurpPlayer player = players.get(i);
-                lines.set(13 + i, "§b" + player.getUsername());
+                lines.set(13 + i, "§7" + player.getUsername());
             }
         }
 

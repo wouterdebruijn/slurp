@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.bukkit.entity.Player;
 
 import com.google.gson.JsonArray;
@@ -49,6 +50,38 @@ public class PocketBase {
 
     public static void initialize(String token) {
         instance = new PocketBase(token);
+    }
+
+    public static CompletableFuture<Null> authenticate(String username, String password) throws ApiUrlException,
+            ApiResponseException {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI(API_URL + "/api/collections/users/auth-with-password"))
+                    .POST(HttpRequest.BodyPublishers
+                            .ofString(String.format("{\"identity\": \"%s\", \"password\": \"%s\"}",
+                                    username, password)))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new ApiResponseException(request, response);
+            }
+
+            JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+            String token = jsonObject.get("token").getAsString();
+
+            SlurpConfig.setToken(token);
+            initialize(token);
+
+            return CompletableFuture.completedFuture(null);
+        } catch (URISyntaxException e) {
+            return CompletableFuture.failedFuture(new ApiUrlException());
+        } catch (IOException | InterruptedException e) {
+            return CompletableFuture.failedFuture(new ApiResponseException(null, null));
+        }
     }
 
     public static CompletableFuture<SlurpEntry> createEntry(SlurpEntryBuilder entry) {
@@ -245,4 +278,36 @@ public class PocketBase {
         }
     }
 
+    public static CompletableFuture<JsonObject> getPlayerStats(String playerId)
+            throws ApiResponseException, ApiUrlException, MissingSessionException {
+        HttpRequest request = null;
+
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(API_URL + "/api/collections/players_view/records?filter=id='" + playerId + "'"))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + instance.token)
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new ApiResponseException(request, response);
+            }
+
+            JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+            JsonArray items = jsonObject.getAsJsonArray("items");
+            if (items.size() == 0) {
+                throw new MissingSessionException();
+            }
+            JsonElement playerElement = items.get(0);
+
+            return CompletableFuture.completedFuture(playerElement.getAsJsonObject());
+        } catch (URISyntaxException e) {
+            throw new ApiUrlException();
+        } catch (IOException | InterruptedException e) {
+            throw new MissingSessionException();
+        }
+    }
 }

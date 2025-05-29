@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 import net.kyori.adventure.text.Component;
 import nl.wouterdebruijn.slurp.exceptions.SlurpMessageException;
+import nl.wouterdebruijn.slurp.helper.ConfigValue;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
 import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
@@ -15,8 +17,27 @@ import nl.wouterdebruijn.slurp.helper.game.manager.DrinkingBuddyManager;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 public class ConsumableGivingHandler {
-    public static String getUnitText(int sips) {
-        return sips == 1 ? "unit" : "units";
+    public static String getUnitText(int units) {
+        int sipShotRatio = SlurpConfig.getValue(ConfigValue.SIP_SHOT_RATIO);
+
+        // Display text for x shots and y sips
+        int shots = units / sipShotRatio;
+        int sips = units % sipShotRatio;
+
+        StringBuilder text = new StringBuilder();
+
+        if (shots > 0) {
+            text.append(shots).append(" shot").append(shots > 1 ? "s" : "");
+        }
+
+        if (sips > 0) {
+            if (text.length() > 0) {
+                text.append(" and ");
+            }
+            text.append(sips).append(" sip").append(sips > 1 ? "s" : "");
+        }
+
+        return text.toString();
     }
 
     public static Component getConsumableText(int units) {
@@ -52,9 +73,11 @@ public class ConsumableGivingHandler {
             ArrayList<SlurpEntry> entries = futureEntries.get();
 
             origin.sendMessage(TextBuilder
-                    .success(String.format("You gave %s %d %s!", target.getName(), units, getUnitText(units))));
+                    .success(String.format("You gave %s %s!", target.getName(),
+                            getUnitText(units))));
             target.sendMessage(TextBuilder
-                    .success(String.format("%s gave you %d %s!", origin.getName(), units, getUnitText(units))));
+                    .success(String.format("%s gave you %s!", origin.getName(),
+                            getUnitText(units))));
 
             return CompletableFuture.completedFuture(entries);
         } catch (Exception e) {

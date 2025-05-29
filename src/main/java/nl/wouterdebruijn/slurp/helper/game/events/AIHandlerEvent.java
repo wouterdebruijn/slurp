@@ -8,15 +8,23 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -358,7 +366,7 @@ public class AIHandlerEvent implements Listener {
             return; // No player involved in the damage event
         }
 
-        String eventName = "PlayerDamageEvent";
+        String eventName = "EntityDamageEvent";
 
         SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player != null ? player : damager);
 
@@ -406,4 +414,175 @@ public class AIHandlerEvent implements Listener {
 
         Slurp.logger.info("Event logged: " + eventName + " - " + data);
     }
+
+    @EventHandler
+    public void onEntityTameEvent(EntityTameEvent event) {
+        if (!(event.getOwner() instanceof Player)) {
+            return; // Only log events for players
+        }
+
+        String eventName = "PlayerTameEntityEvent";
+
+        Player player = (Player) event.getOwner();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
+            return;
+        }
+
+        JsonObject data = new JsonObject();
+        data.addProperty("Player", player.getName());
+        data.addProperty("Entity", event.getEntity().getType().name());
+
+        EventLog eventLog = new EventLog(eventName, data);
+        logEvent(eventLog);
+
+        Slurp.logger.info("Event logged: " + eventName + " - " + data);
+    }
+
+    @EventHandler
+    public void onClickEvent(PlayerInteractEvent event) {
+        String eventName = "PlayerInteractEvent";
+
+        Player player = event.getPlayer();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
+            return;
+        }
+
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            return; // Only log right-click actions
+        }
+
+        JsonObject data = new JsonObject();
+        data.addProperty("Player", player.getName());
+        data.addProperty("Action", event.getAction().name());
+
+        if (event.getItem() != null) {
+            data.addProperty("Item", event.getItem().getType().name());
+        }
+
+        if (event.getClickedBlock() != null) {
+            data.addProperty("Block", event.getClickedBlock().getType().name());
+        }
+
+        EventLog eventLog = new EventLog(eventName, data);
+        logEvent(eventLog);
+
+        Slurp.logger.info("Event logged: " + eventName + " - " + data);
+    }
+
+    @EventHandler
+    public void onPlayerSleepEvent(PlayerBedLeaveEvent event) {
+        String eventName = "PlayerSleepEvent";
+
+        Player player = event.getPlayer();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
+            return;
+        }
+
+        JsonObject data = new JsonObject();
+        data.addProperty("Player", player.getName());
+
+        EventLog eventLog = new EventLog(eventName, data);
+        logEvent(eventLog);
+
+        Slurp.logger.info("Event logged: " + eventName + " - " + data);
+    }
+
+    @EventHandler
+    public void onPlayerItemBreakEvent(PlayerItemBreakEvent event) {
+        String eventName = "PlayerItemBreakEvent";
+
+        Player player = event.getPlayer();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
+            return;
+        }
+
+        JsonObject data = new JsonObject();
+        data.addProperty("Player", player.getName());
+        data.addProperty("Item", event.getBrokenItem().getType().name());
+
+        EventLog eventLog = new EventLog(eventName, data);
+        logEvent(eventLog);
+
+        Slurp.logger.info("Event logged: " + eventName + " - " + data);
+    }
+
+    @EventHandler
+    public void onEntityBreedEvent(EntityBreedEvent event) {
+        if (!(event.getBreeder() instanceof Player)) {
+            return; // Only log events for players
+        }
+
+        String eventName = "PlayerBreedEvent";
+
+        Player player = (Player) event.getBreeder();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
+            return;
+        }
+
+        JsonObject data = new JsonObject();
+        data.addProperty("Player", player.getName());
+        data.addProperty("Entity", event.getEntity().getType().name());
+
+        EventLog eventLog = new EventLog(eventName, data);
+        logEvent(eventLog);
+
+        Slurp.logger.info("Event logged: " + eventName + " - " + data);
+    }
+
+    @EventHandler
+    public void onPlayerThrowEggEvent(PlayerEggThrowEvent event) {
+        String eventName = "PlayerThrowEggEvent";
+
+        Player player = event.getPlayer();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
+            return;
+        }
+
+        JsonObject data = new JsonObject();
+        data.addProperty("Player", player.getName());
+        data.addProperty("Item", event.getEgg().getType().name());
+
+        EventLog eventLog = new EventLog(eventName, data);
+        logEvent(eventLog);
+
+        Slurp.logger.info("Event logged: " + eventName + " - " + data);
+    }
+
+    @EventHandler
+    public void onProjectileLaunchEvent(ProjectileLaunchEvent event) {
+        if (!(event.getEntity().getShooter() instanceof Player)) {
+            return; // Only log events for players
+        }
+
+        String eventName = "PlayerProjectileLaunchEvent";
+
+        Player player = (Player) event.getEntity().getShooter();
+        SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
+
+        if (SlurpPlayerManager.checkNullSilent(slurpPlayer)) {
+            return;
+        }
+
+        JsonObject data = new JsonObject();
+        data.addProperty("Player", player.getName());
+        data.addProperty("Projectile", event.getEntity().getType().name());
+
+        EventLog eventLog = new EventLog(eventName, data);
+        logEvent(eventLog);
+
+        Slurp.logger.info("Event logged: " + eventName + " - " + data);
+    }
+
 }

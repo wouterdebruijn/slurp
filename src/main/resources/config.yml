@@ -1,6 +1,7 @@
 api:
   url: "https://pocketbase-sg44w4c4w8wggkwwg0ww048g.dev.hedium.nl/"
-  token: ""
+  username: "slurp"
+  password: "slurp"
 
 google-ai:
   token: ""

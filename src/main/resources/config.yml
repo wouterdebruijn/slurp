@@ -5,6 +5,7 @@ api:
 
 google-ai:
   token: ""
+  additional-instructions: ""
 
 chat:
   prefix: "§8[§6Slurp§8] §r"

@@ -8,33 +8,28 @@ import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.helper.SlurpConfig;
+
 public class Debug implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
             @NotNull String[] args) {
 
-        // ArrayList<EventLog> eventLogs = Slurp.aiHandlerEvent.getEventLogs();
+        // Read all provided text and set the setAdditionalInstructions
 
-        // if (eventLogs.isEmpty()) {
-        // sender.sendMessage("No events logged yet.");
-        // return true;
-        // }
+        StringBuilder instructions = new StringBuilder();
+        for (String arg : args) {
+            instructions.append(arg).append(" ");
+        }
+        String additionalInstructions = instructions.toString().trim();
 
-        // JsonArray jsonArray = new JsonArray();
-        // for (EventLog eventLog : eventLogs) {
-        // jsonArray.add(eventLog.toJson());
-        // }
+        SlurpConfig.setAdditionalInstructions(additionalInstructions);
+        Slurp.plugin.getLogger().info("Set additional instructions for Google AI to: " + additionalInstructions);
 
-        // Player player = (Player) sender;
-
-        // SlurpPlayer slurpPlayer = SlurpPlayerManager.getPlayer(player);
-
-        // if (args.length > 0 && args[0].equalsIgnoreCase("generate")) {
-
-        // } else {
-        // sender.sendMessage("Use /debug generate to generate actions.");
-        // }
+        // Send a confirmation message to the sender
+        sender.sendMessage(SlurpConfig.prefix() + "Additional instructions for Google AI have been set");
 
         return true;
     }

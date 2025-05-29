@@ -52,6 +52,15 @@ public class SlurpConfig {
         return getString("chat.prefix");
     }
 
+    public static String additionalInstructions() {
+        return getString("google-ai.additional-instructions");
+    }
+
+    public static void setAdditionalInstructions(String instructions) {
+        config.set("google-ai.additional-instructions", instructions);
+        saveConfig();
+    }
+
     /**
      * Returns the value from the config. Only applicable to Chance, Sips or Shots
      *

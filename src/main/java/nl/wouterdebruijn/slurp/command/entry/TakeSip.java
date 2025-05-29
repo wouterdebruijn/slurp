@@ -16,6 +16,7 @@ import nl.wouterdebruijn.slurp.helper.TextBuilder;
 import nl.wouterdebruijn.slurp.helper.game.api.SlurpEntryBuilder;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpEntry;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
+import nl.wouterdebruijn.slurp.helper.game.handlers.ConsumableGivingHandler;
 import nl.wouterdebruijn.slurp.helper.game.manager.SlurpPlayerManager;
 
 /**
@@ -35,11 +36,11 @@ public class TakeSip implements TabExecutor {
             return true;
         }
 
-        if (args.length != 1) {
-            return false;
-        }
+        int amount = 1; // Default to 1 sip
 
-        int amount = Integer.parseInt(args[0]);
+        if (args.length == 1) {
+            amount = Integer.parseInt(args[0]);
+        }
 
         if (amount < 1) {
             player.sendMessage(TextBuilder.error("You can't take less than 1 sip!"));
@@ -51,8 +52,10 @@ public class TakeSip implements TabExecutor {
             // Give the target player the shots
             SlurpEntryBuilder updateEntry = new SlurpEntryBuilder(-finalAmount, slurpPlayer.getId(),
                     slurpPlayer.getSession().getId(), false, false);
-            Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin,
-                    () -> SlurpEntry.createDirect(updateEntry).join());
+            SlurpEntry.createDirect(updateEntry).join();
+
+            player.sendMessage(
+                    TextBuilder.success("You took " + ConsumableGivingHandler.getUnitText(finalAmount) + "."));
         });
         return true;
     }

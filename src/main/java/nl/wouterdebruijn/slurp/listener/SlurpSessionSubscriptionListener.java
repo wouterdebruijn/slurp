@@ -1,12 +1,16 @@
 package nl.wouterdebruijn.slurp.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.google.gson.JsonObject;
+
 import nl.wouterdebruijn.slurp.Slurp;
+import nl.wouterdebruijn.slurp.endpoint.PocketBase;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpPlayer;
 import nl.wouterdebruijn.slurp.helper.game.entity.SlurpSession;
 import nl.wouterdebruijn.slurp.helper.game.manager.ActionGenerationManager;
@@ -38,6 +42,30 @@ public class SlurpSessionSubscriptionListener implements Listener {
 
         // Ensure the action generation handler is set up for the session
         ActionGenerationManager.ensureHandler(session);
+
+        Bukkit.getScheduler().runTaskAsynchronously(Slurp.plugin, () -> {
+            // Fetch the session data from PocketBase
+            try {
+                JsonObject playerStats = PocketBase.getPlayerStats(player.getId()).join();
+
+                if (playerStats != null) {
+                    int giveable = playerStats.get("giveable").getAsInt();
+                    int taken = playerStats.get("taken").getAsInt() * -1;
+                    int received = playerStats.get("received").getAsInt();
+
+                    player.setGiveable(giveable);
+                    player.setTaken(playerStats.get("taken").getAsInt());
+                    player.setRemaining(received - taken);
+                } else {
+                    Slurp.logger.warning("No session data found for player " + player.getId());
+                }
+
+            } catch (Exception e) {
+                Slurp.logger
+                        .severe("Failed to fetch session data for player " + player.getId() + ": " + e.getMessage());
+            }
+
+        });
 
         Slurp.logger.info("Restored session " + session.getShortcode());
     }
